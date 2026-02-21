@@ -87,6 +87,7 @@ h1 em{font-style:italic;color:var(--terra);}
 .restart-btn{margin-top:1rem;padding:.6rem 1.8rem;background:var(--terra);color:white;border:none;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;}
 .tbl-controls{display:none;margin-bottom:.8rem;}
 .tbl-controls.show{display:block;}
+.numbers-sub-bar{display:none;gap:.4rem;margin-bottom:1rem;flex-wrap:wrap;}
 </style>
 </head>
 <body>
@@ -101,6 +102,13 @@ h1 em{font-style:italic;color:var(--terra);}
     <button class="tab-btn" data-tab="business">Business</button>
     <button class="tab-btn" data-tab="verbs">Verbs</button>
     <button class="tab-btn" data-tab="mix">Mixed</button>
+    <button class="tab-btn" data-tab="numbers">Numbers</button>
+  </div>
+  <div class="numbers-sub-bar" id="numbersSubBar">
+    <button class="tense-btn active" data-nsub="prices" onclick="switchNumbersTab(this)">Prices</button>
+    <button class="tense-btn" data-nsub="quantities" onclick="switchNumbersTab(this)">Quantities</button>
+    <button class="tense-btn" data-nsub="calendar" onclick="switchNumbersTab(this)">Calendar</button>
+    <button class="tense-btn" data-nsub="business_dates" onclick="switchNumbersTab(this)">Business Dates</button>
   </div>
   <div class="verb-selector" id="verbSelector">
     <div class="verb-selector-label">Choose a verb</div>
@@ -126,7 +134,7 @@ h1 em{font-style:italic;color:var(--terra);}
     <div class="phonetic" id="phonetic"></div>
     <div class="bridges" id="bridges"></div>
     <div class="controls">
-      <button class="btn btn-play" id="btnPlay">▶ Hear it</button>
+      <button class="btn btn-play" id="btnPlay">&#9654; Hear it</button>
       <button class="btn btn-listen" id="btnListen"><span id="listenIcon">🎙</span> <span id="listenLabel">Speak</span></button>
       <button class="btn btn-next" id="btnNext">Next →</button>
     </div>
@@ -145,6 +153,49 @@ h1 em{font-style:italic;color:var(--terra);}
   </div>
 </div>
 <script>
+// ─── NUMBERS & DATES DATA ─────────────────────────────────────────────────────
+const numbersData = {
+prices: [
+  {it:"Quanto costa? — Costa tre euro e cinquanta.",phonetic:"[KWAN-to KOS-ta — KOS-ta TRE EH-u-ro e chin-KWAN-ta]",tts:"Quanto costa? Costa tre euro e cinquanta.",bridges:[{flag:"🇧🇷",text:"<strong>Quanto custa? — Custa três euros e cinquenta.</strong> — idêntico!"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"How much is it? — It costs three euros fifty."}],tip:"💡 Prices: say the euros, then 'e', then the cents. 'Tre euro e cinquanta' = €3.50. Drop 'centesimi' in speech.",keywords:["quanto","costa","euro","cinquanta"]},
+  {it:"Numeri 1–20: uno, due, tre, quattro, cinque, sei, sette, otto, nove, dieci — undici, dodici, tredici, quattordici, quindici, sedici, diciassette, diciotto, diciannove, venti.",phonetic:"[U-no DU-e TRE KWAT-tro CHIN-kwe SAY SET-te OT-to NO-ve DYE-chi — UN-di-chi DO-di-chi TRE-di-chi kwat-TOR-di-chi KWIN-di-chi SE-di-chi di-chas-SET-te di-CHOT-to di-chan-NO-ve VEN-ti]",tts:"uno due tre quattro cinque sei sette otto nove dieci undici dodici tredici quattordici quindici sedici diciassette diciotto diciannove venti",bridges:[{flag:"🇧🇷",text:"<strong>Um, dois, três, quatro, cinco, seis, sete, oito, nove, dez</strong> — roots identical, endings vary"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"One through twenty — listen and repeat each number"}],tip:"💡 11–16 follow a pattern: 'dici' prefix (from dieci). 17–19 flip: diciassette=dieci+sette. 'Venti'='vinte'.",keywords:["uno","due","tre","dieci","venti"]},
+  {it:"Numeri 30–1000: trenta, quaranta, cinquanta, sessanta, settanta, ottanta, novanta, cento — duecento, trecento — mille, duemila.",phonetic:"[TREN-ta kwa-RAN-ta chin-KWAN-ta ses-SAN-ta set-TAN-ta ot-TAN-ta no-VAN-ta CHEN-to — du-e-CHEN-to tre-CHEN-to — MIL-le du-e-MI-la]",tts:"trenta quaranta cinquanta sessanta settanta ottanta novanta cento duecento trecento mille duemila",bridges:[{flag:"🇧🇷",text:"<strong>Trinta, quarenta, cinquenta, sessenta, setenta, oitenta, noventa, cem, duzentos, trezentos, mil, dois mil</strong> — very close"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Tens and hundreds — combine freely: 'trentadue'=32, 'duecentocinquanta'=250"}],tip:"💡 Combine by joining: trenta+due=trentadue. No 'e' needed except before otto/ottanta: 'ventotto', 'trentotto'.",keywords:["trenta","cento","mille","duemila"]},
+  {it:"Vorrei due etti di prosciutto crudo.",phonetic:"[vor-RAY DU-e ET-ti di pro-SHUT-to KRU-do]",tts:"Vorrei due etti di prosciutto crudo.",bridges:[{flag:"🇧🇷",text:"<strong>Queria duzentos gramas de presunto cru.</strong> — 'etto'=100g, 'due etti'=200g"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I'd like 200 grams of cured ham. (at the deli counter)"}],tip:"💡 'Un etto'=100g. 'Due etti'=200g. The standard unit at Italian market counters — you'll use this every week in Liguria.",keywords:["vorrei","etti","prosciutto"]},
+  {it:"Mi fa lo scontrino? — Posso pagare con il bancomat?",phonetic:"[mi fa lo skon-TRI-no — POS-so pa-GA-re kon il ban-ko-MAT]",tts:"Mi fa lo scontrino? Posso pagare con il bancomat?",bridges:[{flag:"🇧🇷",text:"<strong>Pode me dar o recibo? — Posso pagar com o cartão?</strong> — 'scontrino'=recibo, 'bancomat'=cartão de débito"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Can I have the receipt? — Can I pay by debit card?"}],tip:"💡 'Bancomat' = debit card specifically (the ATM network brand that became the word). 'Carta di credito' = credit card.",keywords:["scontrino","bancomat","pagare"]},
+  {it:"Il totale è di quattrocentocinquanta euro.",phonetic:"[il to-TA-le EH di kwat-tro-chen-to-chin-KWAN-ta EH-u-ro]",tts:"Il totale è di quattrocentocinquanta euro.",bridges:[{flag:"🇧🇷",text:"<strong>O total é de quatrocentos e cinquenta euros.</strong> — 'totale'='total'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"The total is four hundred and fifty euros."}],tip:"💡 'Il totale è di...' — standard phrase for quoting an invoice total. Note: 'euro' doesn't change in the plural in Italian.",keywords:["totale","quattrocentocinquanta","euro"]},
+  {it:"Le faccio uno sconto del dieci per cento.",phonetic:"[le FAT-cho U-no SKON-to del DYE-chi per CHEN-to]",tts:"Le faccio uno sconto del dieci per cento.",bridges:[{flag:"🇧🇷",text:"<strong>Faço um desconto de dez por cento.</strong> — 'sconto'='desconto', 'per cento'='por cento'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I'll give you a 10% discount. (formal)"}],tip:"💡 'Sconto' (discount) — same root as Portuguese 'desconto'. 'Le faccio' = I'll do for you (formal). Very natural in negotiation.",keywords:["sconto","dieci","per cento"]},
+  {it:"Il prezzo al chilo è di otto euro.",phonetic:"[il PRET-tso al KI-lo EH di OT-to EH-u-ro]",tts:"Il prezzo al chilo è di otto euro.",bridges:[{flag:"🇧🇷",text:"<strong>O preço por quilo é de oito euros.</strong> — 'prezzo'='preço', 'al chilo'='por quilo'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"The price per kilo is eight euros."}],tip:"💡 'Al chilo'=per kilo, 'al litro'=per litre, 'al pezzo'=per piece, 'alla confezione'=per pack. Four patterns that cover most markets.",keywords:["prezzo","chilo","otto","euro"]}
+],
+quantities: [
+  {it:"Un chilo, mezzo chilo, un etto, due etti, un litro, mezzo litro.",phonetic:"[un KI-lo MED-zo KI-lo un ET-to DU-e ET-ti un LI-tro MED-zo LI-tro]",tts:"Un chilo, mezzo chilo, un etto, due etti, un litro, mezzo litro.",bridges:[{flag:"🇧🇷",text:"<strong>Um quilo, meio quilo, cem gramas, duzentos gramas, um litro, meio litro.</strong>"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"1kg, 500g, 100g, 200g, 1 litre, 500ml — your market vocabulary"}],tip:"💡 'Mezzo'=half. 'Un etto'=100g (ettogrammo). Deli counters, fishmongers and cheese stalls all use 'etti'. Master this and you'll shop like a local.",keywords:["chilo","mezzo","etto","litro"]},
+  {it:"Vorrei un pezzo di focaccia e una fetta di torta salata.",phonetic:"[vor-RAY un PEZ-zo di fo-KAT-cha e U-na FET-ta di TOR-ta sa-LA-ta]",tts:"Vorrei un pezzo di focaccia e una fetta di torta salata.",bridges:[{flag:"🇧🇷",text:"<strong>Queria um pedaço de focaccia e uma fatia de torta salgada.</strong> — 'pezzo'='pedaço', 'fetta'='fatia'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I'd like a piece of focaccia and a slice of savoury tart."}],tip:"💡 'Un pezzo'=a piece (chunkier), 'una fetta'=a slice (thinner). 'Torta salata' = savoury tart — a Ligurian staple.",keywords:["pezzo","fetta","focaccia"]},
+  {it:"Quante confezioni vuole? — Ne prendo tre.",phonetic:"[KWAN-te kon-fet-TSYO-ni VWO-le — ne PREN-do TRE]",tts:"Quante confezioni vuole? Ne prendo tre.",bridges:[{flag:"🇧🇷",text:"<strong>Quantas embalagens quer? — Pego três.</strong> — 'confezioni'='embalagens', 'ne prendo'='pego (disso)'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"How many packs would you like? — I'll take three."}],tip:"💡 'Ne' = of them/of it. 'Ne prendo tre' = I'll take three (of those). This tiny word is very Italian and makes you sound fluent.",keywords:["confezioni","quante","ne prendo"]},
+  {it:"Ordiniamo un pallet da venti scatole.",phonetic:"[or-di-NYA-mo un PAL-let da VEN-ti SKA-to-le]",tts:"Ordiniamo un pallet da venti scatole.",bridges:[{flag:"🇧🇷",text:"<strong>Pedimos um pallet de vinte caixas.</strong> — 'scatole'='caixas', 'pallet' same word"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We order a pallet of twenty boxes."}],tip:"💡 Commercial quantities: 'una scatola'=a box, 'un cartone'=a carton, 'un pallet'=a pallet, 'un container'=a container. Your supply chain vocabulary.",keywords:["pallet","venti","scatole"]},
+  {it:"La spedizione è di cinque tonnellate di riso.",phonetic:"[la spe-di-TSYO-ne EH di CHIN-kwe ton-nel-LA-te di RI-zo]",tts:"La spedizione è di cinque tonnellate di riso.",bridges:[{flag:"🇧🇷",text:"<strong>O envio é de cinco toneladas de arroz.</strong> — 'tonnellate'='toneladas'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"The shipment is five tonnes of rice."}],tip:"💡 'Tonnellata'=tonne. 'Quintale'=100kg (used in Italian agriculture). 'Quintali' you'll hear at wholesale markets.",keywords:["spedizione","tonnellate","riso"]},
+  {it:"Il lotto è di mille unità al prezzo di due euro cadauna.",phonetic:"[il LOT-to EH di MIL-le u-ni-TA al PRET-tso di DU-e EH-u-ro ka-da-U-na]",tts:"Il lotto è di mille unità al prezzo di due euro cadauna.",bridges:[{flag:"🇧🇷",text:"<strong>O lote é de mil unidades ao preço de dois euros cada uma.</strong> — 'lotto'='lote', 'cadauna'='cada uma'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"The lot is one thousand units at two euros each."}],tip:"💡 'Cadauno/cadauna' (each) = very commercial Italian. You'll see it on price lists and purchase orders.",keywords:["lotto","mille","unità","cadauna"]},
+  {it:"Abbiamo bisogno di almeno cinquecento chili a settimana.",phonetic:"[ab-BYA-mo bi-ZO-nyo di al-ME-no chin-kwe-CHEN-to KI-li a set-ti-MA-na]",tts:"Abbiamo bisogno di almeno cinquecento chili a settimana.",bridges:[{flag:"🇧🇷",text:"<strong>Precisamos de pelo menos quinhentos quilos por semana.</strong> — 'almeno'='pelo menos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We need at least 500 kilos per week."}],tip:"💡 'Abbiamo bisogno di'=we need (lit: we have need of). 'Almeno'=at least. 'Al massimo'=at most. Core negotiation vocabulary.",keywords:["bisogno","almeno","cinquecento","chili"]},
+  {it:"Quant'è in tutto? — In tutto fanno settantadue euro.",phonetic:"[kwan-TEH in TUT-to — in TUT-to FAN-no set-tan-ta-DU-e EH-u-ro]",tts:"Quant'è in tutto? In tutto fanno settantadue euro.",bridges:[{flag:"🇧🇷",text:"<strong>Quanto é no total? — No total são setenta e dois euros.</strong>"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"How much altogether? — Altogether it comes to seventy-two euros."}],tip:"💡 'In tutto'=altogether/in total. 'Fanno'=they make/come to (for prices). 'Quant'è'=how much is it — the most natural way to ask the total.",keywords:["quant'è","in tutto","fanno","settantadue"]}
+],
+calendar: [
+  {it:"Giorni: lunedì, martedì, mercoledì, giovedì, venerdì, sabato, domenica.",phonetic:"[lu-ne-DI mar-te-DI mer-ko-le-DI jo-ve-DI ve-ner-DI SA-ba-to do-ME-ni-ka]",tts:"lunedì martedì mercoledì giovedì venerdì sabato domenica",bridges:[{flag:"🇧🇷",text:"<strong>Segunda, terça, quarta, quinta, sexta, sábado, domingo.</strong> — Italian days end in accented vowel except sabato/domenica"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Monday through Sunday — days don't capitalise in Italian"}],tip:"💡 All week days end in '-ì' (stressed). Italian week starts on Monday. 'Il fine settimana'=the weekend (sabato+domenica).",keywords:["lunedì","martedì","mercoledì","venerdì","domenica"]},
+  {it:"Mesi: gennaio, febbraio, marzo, aprile, maggio, giugno — luglio, agosto, settembre, ottobre, novembre, dicembre.",phonetic:"[jen-NA-yo feb-BRA-yo MAR-tso a-PRI-le MAD-jo JUN-yo — LUL-yo a-GOS-to set-TEM-bre ot-TO-bre no-VEM-bre di-CHEM-bre]",tts:"gennaio febbraio marzo aprile maggio giugno luglio agosto settembre ottobre novembre dicembre",bridges:[{flag:"🇧🇷",text:"<strong>Janeiro, fevereiro, março, abril, maio, junho, julho, agosto, setembro, outubro, novembro, dezembro.</strong> — nearly identical"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"All twelve months — months don't capitalise in Italian either"}],tip:"💡 Months are very close to Portuguese. Watch 'luglio/julho'=July — different consonant.",keywords:["gennaio","marzo","giugno","settembre","dicembre"]},
+  {it:"Oggi è il quindici marzo duemilaventisei.",phonetic:"[OJ-ji EH il kwin-DI-chi MAR-tso du-e-mi-la-ven-ti-SEI]",tts:"Oggi è il quindici marzo duemilaventisei.",bridges:[{flag:"🇧🇷",text:"<strong>Hoje é o quinze de março de dois mil e vinte e seis.</strong> — Italian: il + day number + month + year"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Today is the 15th of March 2026."}],tip:"💡 Italian date format: 'il + cardinal number + month + year'. Exception: the 1st uses 'primo' (ordinal). 'Il primo gennaio'=January 1st.",keywords:["quindici","marzo","duemilaventisei"]},
+  {it:"La riunione è fissata per giovedì prossimo, il ventidue aprile.",phonetic:"[la ryu-NYO-ne EH fis-SA-ta per jo-ve-DI PROS-si-mo il ven-ti-DU-e a-PRI-le]",tts:"La riunione è fissata per giovedì prossimo, il ventidue aprile.",bridges:[{flag:"🇧🇷",text:"<strong>A reunião está marcada para a próxima quinta-feira, vinte e dois de abril.</strong> — 'prossimo'='próximo'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"The meeting is set for next Thursday, the 22nd of April."}],tip:"💡 'Prossimo'=next (coming). 'Scorso'=last (past). 'Lunedì prossimo'=next Monday. 'Lunedì scorso'=last Monday. Essential pair.",keywords:["riunione","giovedì","prossimo","ventidue","aprile"]},
+  {it:"La consegna è prevista per la settimana del tre giugno.",phonetic:"[la kon-SEN-ya EH pre-VIS-ta per la set-ti-MA-na del TRE JUN-yo]",tts:"La consegna è prevista per la settimana del tre giugno.",bridges:[{flag:"🇧🇷",text:"<strong>A entrega está prevista para a semana do três de junho.</strong> — 'prevista'='prevista'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Delivery is scheduled for the week of June 3rd."}],tip:"💡 'È previsto/a'=it is scheduled/expected. Very common in logistics and project planning.",keywords:["consegna","prevista","settimana","giugno"]},
+  {it:"Quando? — Ieri, oggi, domani, dopodomani, la settimana prossima, il mese prossimo.",phonetic:"[KWAN-do — YE-ri OJ-ji do-MA-ni do-po-do-MA-ni la set-ti-MA-na PROS-si-ma il ME-ze PROS-si-mo]",tts:"Ieri, oggi, domani, dopodomani, la settimana prossima, il mese prossimo.",bridges:[{flag:"🇧🇷",text:"<strong>Ontem, hoje, amanhã, depois de amanhã, a próxima semana, o próximo mês.</strong>"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Yesterday, today, tomorrow, the day after tomorrow, next week, next month."}],tip:"💡 'Dopodomani' (day after tomorrow) = 'depois de amanhã'. Italian has a single word for it! Extremely useful in scheduling.",keywords:["ieri","oggi","domani","dopodomani","prossima"]},
+  {it:"A che ora? — Alle nove, alle dodici e mezza, alle quindici e trenta, alle diciassette.",phonetic:"[a ke O-ra — AL-le NO-ve AL-le DO-di-chi e MED-za AL-le kwin-DI-chi e TREN-ta AL-le di-chas-SET-te]",tts:"A che ora? Alle nove, alle dodici e mezza, alle quindici e trenta, alle diciassette.",bridges:[{flag:"🇧🇷",text:"<strong>A que horas? — Às nove, ao meio-dia e meia, às quinze e trinta, às dezassete.</strong>"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"At what time? — At 9am, 12:30, 15:30, 17:00."}],tip:"💡 Italian business uses 24h clock formally: 'alle quindici'=3pm. 'E mezza'=half past. 'E un quarto'=quarter past. 'Meno un quarto'=quarter to.",keywords:["ore","alle","nove","mezzogiorno","diciassette"]},
+  {it:"Fra quanto? — Fra tre giorni, fra due settimane, fra un mese.",phonetic:"[fra KWAN-to — fra TRE JOR-ni fra DU-e set-ti-MA-ne fra un ME-ze]",tts:"Fra quanto? Fra tre giorni, fra due settimane, fra un mese.",bridges:[{flag:"🇧🇷",text:"<strong>Em quanto tempo? — Em três dias, em duas semanas, em um mês.</strong> — 'fra'='em' (future timeframe)"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"How long from now? — In three days, in two weeks, in a month."}],tip:"💡 'Fra' (or 'tra') = in (future time). 'Fra tre giorni'=in three days. Also means 'between': 'fra lunedì e mercoledì'=between Monday and Wednesday.",keywords:["fra","giorni","settimane","mese"]}
+],
+business_dates: [
+  {it:"Il pagamento è a trenta giorni dalla data di fattura.",phonetic:"[il pa-ga-MEN-to EH a TREN-ta JOR-ni DAL-la DA-ta di fat-TU-ra]",tts:"Il pagamento è a trenta giorni dalla data di fattura.",bridges:[{flag:"🇧🇷",text:"<strong>O pagamento é a trinta dias da data da fatura.</strong> — 'pagamento'='pagamento', 'fattura'='fatura'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Payment is net 30 days from invoice date."}],tip:"💡 'A trenta giorni'=net 30. 'A sessanta giorni'=net 60. 'A novanta giorni'=net 90. The standard Italian B2B payment terms.",keywords:["pagamento","trenta","giorni","fattura"]},
+  {it:"La scadenza per la consegna dei documenti è il dieci maggio.",phonetic:"[la ska-DEN-tsa per la kon-SEN-ya day do-KU-men-ti EH il DYE-chi MAD-jo]",tts:"La scadenza per la consegna dei documenti è il dieci maggio.",bridges:[{flag:"🇧🇷",text:"<strong>O prazo para a entrega dos documentos é o dez de maio.</strong> — 'scadenza'='prazo/vencimento'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"The deadline for document submission is May 10th."}],tip:"💡 'Scadenza'=deadline/expiry. 'Scade il...'=it expires on / it's due on. Essential word across compliance, invoices, and contracts.",keywords:["scadenza","consegna","documenti","maggio"]},
+  {it:"Dobbiamo consegnare entro il trenta giugno, altrimenti perdiamo il contratto.",phonetic:"[dob-BYA-mo kon-sen-YA-re EN-tro il TREN-ta JUN-yo al-tri-MEN-ti per-DYA-mo il kon-TRAT-to]",tts:"Dobbiamo consegnare entro il trenta giugno, altrimenti perdiamo il contratto.",bridges:[{flag:"🇧🇷",text:"<strong>Devemos entregar até trinta de junho, caso contrário perdemos o contrato.</strong> — 'altrimenti'='caso contrário'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We must deliver by June 30th, otherwise we lose the contract."}],tip:"💡 'Entro il + date'=by (deadline). 'Altrimenti'=otherwise. Two words that make any business sentence more precise.",keywords:["entro","trenta","giugno","altrimenti","contratto"]},
+  {it:"A partire dal primo gennaio, le nuove normative entrano in vigore.",phonetic:"[a par-TI-re dal PRI-mo jen-NA-yo le NWO-ve nor-ma-TI-ve EN-tra-no in vi-GO-re]",tts:"A partire dal primo gennaio, le nuove normative entrano in vigore.",bridges:[{flag:"🇧🇷",text:"<strong>A partir do primeiro de janeiro, as novas normativas entram em vigor.</strong> — quase idêntico!"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"As of January 1st, the new regulations come into force."}],tip:"💡 'A partire dal'=as of / starting from. 'Entrare in vigore'=to come into force. Both phrases appear constantly in EU regulatory texts.",keywords:["a partire","primo","gennaio","normative","vigore"]},
+  {it:"La validità del certificato è di dodici mesi, scade il tre ottobre.",phonetic:"[la va-li-di-TA del cher-ti-fi-KA-to EH di DO-di-chi ME-zi SKA-de il TRE ot-TO-bre]",tts:"La validità del certificato è di dodici mesi, scade il tre ottobre.",bridges:[{flag:"🇧🇷",text:"<strong>A validade do certificado é de doze meses, vence em três de outubro.</strong> — 'validità'='validade', 'scade'='vence'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"The certificate validity is 12 months, it expires on October 3rd."}],tip:"💡 'Validità'=validity period. 'Scade il...'=expires on. Core compliance vocabulary for health certificates and import authorisations.",keywords:["validità","certificato","dodici","mesi","scade"]},
+  {it:"Vi chiediamo una proroga di quindici giorni lavorativi.",phonetic:"[vi KYE-dya-mo U-na PRO-ro-ga di kwin-DI-chi JOR-ni la-vo-ra-TI-vi]",tts:"Vi chiediamo una proroga di quindici giorni lavorativi.",bridges:[{flag:"🇧🇷",text:"<strong>Solicitamos uma prorrogação de quinze dias úteis.</strong> — 'giorni lavorativi'='dias úteis'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We request an extension of 15 working days."}],tip:"💡 'Giorni lavorativi'=working days. 'Giorni di calendario'=calendar days. Critical distinction in contracts and compliance deadlines.",keywords:["proroga","quindici","giorni","lavorativi"]},
+  {it:"In riferimento alla fattura numero duemila e dodici del cinque febbraio.",phonetic:"[in ri-fe-ri-MEN-to AL-la fat-TU-ra NU-me-ro du-e-MI-la e DO-di-chi del CHIN-kwe feb-BRA-yo]",tts:"In riferimento alla fattura numero duemila e dodici del cinque febbraio.",bridges:[{flag:"🇧🇷",text:"<strong>Com referência à fatura número dois mil e doze do cinco de fevereiro.</strong>"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"With reference to invoice number 2012 dated February 5th."}],tip:"💡 Standard email/letter opening when referencing a document. 'In riferimento a'=with reference to. You'll write this weekly.",keywords:["riferimento","fattura","numero","febbraio"]},
+  {it:"Resto a disposizione per qualsiasi chiarimento. Cordiali saluti.",phonetic:"[RES-to a dis-po-zi-TSYO-ne per kwal-SYA-zi kya-ri-MEN-to — kor-DYA-li sa-LU-ti]",tts:"Resto a disposizione per qualsiasi chiarimento. Cordiali saluti.",bridges:[{flag:"🇧🇷",text:"<strong>Fico à disposição para qualquer esclarecimento. Cordiais cumprimentos.</strong>"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I remain available for any clarification. Kind regards. (standard email close)"}],tip:"💡 The standard Italian professional email closing pair. 'Resto a disposizione'=I remain available. 'Cordiali saluti'=Kind regards. Use these every day.",keywords:["disposizione","chiarimento","cordiali","saluti"]}
+]
+}; // end numbersData
 
 // ─── PHRASE DATA ───────────────────────────────────────────────────────────────
 const phraseData = {
@@ -578,7 +629,7 @@ const verbData = [
 ];
 
 // ─── STATE ─────────────────────────────────────────────────────────────────────
-let currentTab = 'daily', currentPhrases = [], currentIndex = 0, score = 0;
+let currentTab = 'daily', currentPhrases = [], currentIndex = 0, score = 0, numbersSubtab = 'prices';
 let isListening = false, recognition = null;
 let currentVerb = 0, currentTense = 'present', verbMode = false, tableVisible = false;
 const synth = window.speechSynthesis;
@@ -645,13 +696,22 @@ function buildConjTable(verb) {
   const phonetics = isPast
     ? pronouns.map(() => '')
     : pronouns.map(p => verb.phonetics.present[p]);
-
   const table = document.getElementById('conjTable');
   const label = isPast ? 'Passato Prossimo' : 'Presente';
   table.innerHTML = `<tr><th>Pronoun</th><th>${label}</th><th>Phonetic</th><th>🇧🇷 Portuguese</th></tr>` +
     pronouns.map((p,i) =>
       `<tr class="${i===currentIndex%6?'hl':''}"><td>${displayPronouns[i]}</td><td>${forms[i]}</td><td>${phonetics[i]}</td><td>${getPT(verb.inf,p,currentTense==='present'?'present':'past')}</td></tr>`
     ).join('');
+}
+
+// ─── NUMBERS SUB-TAB ─────────────────────────────────────────────────────────
+function switchNumbersTab(btn) {
+  document.querySelectorAll('#numbersSubBar .tense-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  numbersSubtab = btn.dataset.nsub;
+  currentPhrases = numbersData[numbersSubtab];
+  currentIndex = 0; score = 0;
+  renderPhrase(); renderDots();
 }
 
 // ─── SESSION LOADING ─────────────────────────────────────────────────────────
@@ -662,6 +722,7 @@ function loadSession(tab) {
   document.getElementById('tenseToggle').classList.toggle('show', verbMode);
   document.getElementById('verbHeader').classList.toggle('show', verbMode);
   document.getElementById('tblControls').classList.toggle('show', verbMode);
+  document.getElementById('numbersSubBar').style.display = (tab === 'numbers') ? 'flex' : 'none';
   document.getElementById('tableSection').classList.remove('show');
   document.getElementById('completeScreen').classList.remove('show');
   document.getElementById('mainCard').style.display = 'block';
@@ -670,6 +731,8 @@ function loadSession(tab) {
   else {
     currentPhrases = tab === 'mix'
       ? [...phraseData.daily,...phraseData.social,...phraseData.business].sort(()=>Math.random()-.5).slice(0,8)
+      : tab === 'numbers'
+      ? numbersData[numbersSubtab]
       : phraseData[tab];
     renderPhrase(); renderDots();
   }
@@ -759,7 +822,7 @@ function stopListening() {
 function norm(s) {
   return s.toLowerCase()
     .replace(/[àá]/g,'a').replace(/[èéê]/g,'e').replace(/[ìí]/g,'i')
-    .replace(/[òó]/g,'o').replace(/[ùú]/g,'u').replace(/[.,?!']/g,'').trim();
+    .replace(/[òó]/g,'o').replace(/[ùú]/g,'u').replace(/[.,?!\']/g,'').trim();
 }
 
 function evaluateSpeech(transcripts) {
@@ -819,9 +882,9 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 });
 
 // ─── TENSE TOGGLE ────────────────────────────────────────────────────────────
-document.querySelectorAll('.tense-btn').forEach(btn => {
+document.querySelectorAll('.tense-btn:not([data-nsub])').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.tense-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tense-btn:not([data-nsub])').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     currentTense = btn.dataset.tense;
     if (verbMode) loadVerbSession();
