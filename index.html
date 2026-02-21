@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parla Italiano</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--terra:#c1440e;--cream:#faf6f0;--warm-white:#fff9f3;--ink:#1a1208;--ink-soft:#4a3728;--stone:#b5a898;--stone-light:#e8e0d5;--gold:#c9a84c;--success:#3a7d44;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;background-image:radial-gradient(ellipse at 20% 10%,rgba(193,68,14,.06) 0%,transparent 50%),radial-gradient(ellipse at 80% 90%,rgba(201,168,76,.08) 0%,transparent 50%);}
+header{text-align:center;padding:2rem 2rem 1rem;border-bottom:1px solid var(--stone-light);}
+header::before{content:'';display:block;width:40px;height:2px;background:var(--terra);margin:0 auto 1rem;}
+h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3rem);font-weight:300;}
+h1 em{font-style:italic;color:var(--terra);}
+.subtitle{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--stone);margin-top:.3rem;}
+.container{max-width:720px;margin:0 auto;padding:1.5rem 1.5rem 4rem;}
+.tab-bar{display:flex;gap:0;margin-bottom:1.2rem;border-bottom:1px solid var(--stone-light);overflow-x:auto;scrollbar-width:none;}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab-btn{padding:.5rem 1rem;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--stone);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .2s;}
+.tab-btn:hover{color:var(--ink-soft);}
+.tab-btn.active{color:var(--terra);border-bottom-color:var(--terra);}
+.verb-selector{display:none;margin-bottom:1rem;}
+.verb-selector.show{display:block;}
+.verb-selector-label{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--stone);margin-bottom:.4rem;}
+.verb-grid{display:flex;flex-wrap:wrap;gap:.35rem;}
+.verb-chip{padding:.25rem .7rem;border:1px solid var(--stone-light);border-radius:2rem;font-size:.8rem;font-family:'Cormorant Garamond',serif;font-style:italic;color:var(--ink-soft);cursor:pointer;background:transparent;transition:all .15s;}
+.verb-chip:hover{border-color:var(--terra);color:var(--terra);}
+.verb-chip.active{background:var(--terra);border-color:var(--terra);color:white;font-style:normal;}
+.tense-toggle{display:none;gap:.4rem;margin-bottom:1rem;}
+.tense-toggle.show{display:flex;}
+.tense-btn{padding:.3rem .9rem;border:1px solid var(--stone-light);border-radius:2rem;font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;background:transparent;color:var(--ink-soft);cursor:pointer;transition:all .15s;}
+.tense-btn.active{background:var(--ink);border-color:var(--ink);color:white;}
+.card{background:var(--warm-white);border:1px solid var(--stone-light);border-radius:4px;padding:1.8rem 1.6rem;position:relative;box-shadow:0 4px 24px rgba(26,18,8,.06);}
+.card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:var(--terra);border-radius:4px 0 0 4px;}
+.verb-header{display:none;margin-bottom:1rem;padding-bottom:.8rem;border-bottom:1px solid var(--stone-light);}
+.verb-header.show{display:block;}
+.verb-infinitive{font-family:'Cormorant Garamond',serif;font-size:1.7rem;font-weight:400;font-style:italic;color:var(--terra);}
+.verb-meaning{font-size:.8rem;color:var(--stone);margin-top:.2rem;}
+.table-section{display:none;margin-bottom:1rem;overflow-x:auto;}
+.table-section.show{display:block;}
+.conj-table{width:100%;border-collapse:collapse;font-size:.82rem;}
+.conj-table th{text-align:left;font-weight:400;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;color:var(--stone);padding:.3rem .4rem;border-bottom:1px solid var(--stone-light);}
+.conj-table td{padding:.3rem .4rem;border-bottom:1px solid rgba(181,168,152,.2);vertical-align:top;}
+.conj-table td:first-child{color:var(--stone);width:12%;font-size:.75rem;}
+.conj-table td:nth-child(2){font-family:'Cormorant Garamond',serif;font-size:1.02rem;width:28%;}
+.conj-table td:nth-child(3){color:var(--terra);font-size:.75rem;width:24%;font-style:italic;}
+.conj-table td:nth-child(4){color:var(--ink-soft);font-size:.75rem;}
+.conj-table tr.hl td{background:rgba(193,68,14,.04);}
+.phrase-counter{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--stone);margin-bottom:1rem;}
+.italian-phrase{font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,3.5vw,2rem);font-weight:400;line-height:1.3;margin-bottom:.35rem;}
+.phonetic{font-size:.85rem;color:var(--terra);font-style:italic;letter-spacing:.03em;margin-bottom:.9rem;}
+.bridges{display:grid;gap:.35rem;margin-bottom:1.3rem;}
+.bridge{display:flex;align-items:baseline;gap:.5rem;font-size:.81rem;color:var(--ink-soft);padding:.4rem .65rem;background:rgba(181,168,152,.1);border-radius:3px;line-height:1.4;}
+.bridge-flag{flex-shrink:0;}
+.bridge-text strong{color:var(--ink);font-weight:500;}
+.controls{display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap;align-items:center;}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.5rem 1.1rem;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:.76rem;font-weight:400;letter-spacing:.05em;cursor:pointer;border:none;transition:all .2s;text-transform:uppercase;}
+.btn-play{background:var(--terra);color:white;}
+.btn-play:hover{background:#a83a0c;}
+.btn-play:disabled{background:var(--stone);cursor:not-allowed;}
+.btn-listen{background:transparent;color:var(--ink);border:1px solid var(--stone-light);}
+.btn-listen:hover{border-color:var(--ink);}
+.btn-listen.listening{border-color:var(--terra);color:var(--terra);animation:pulse-border 1.2s infinite;}
+.btn-listen:disabled{color:var(--stone);border-color:var(--stone-light);cursor:not-allowed;}
+.btn-next{background:transparent;color:var(--ink-soft);border:1px solid var(--stone-light);margin-left:auto;}
+.btn-next:hover{border-color:var(--gold);color:var(--gold);}
+.btn-table{background:transparent;color:var(--ink-soft);border:1px solid var(--stone-light);}
+.btn-table.active{background:var(--ink-soft);color:white;}
+@keyframes pulse-border{0%,100%{box-shadow:0 0 0 0 rgba(193,68,14,.3);}50%{box-shadow:0 0 0 6px rgba(193,68,14,0);}}
+.feedback{min-height:2.5rem;padding:.65rem .85rem;border-radius:3px;font-size:.83rem;line-height:1.5;display:none;}
+.feedback.show{display:block;}
+.feedback.success{background:rgba(58,125,68,.08);border:1px solid rgba(58,125,68,.25);color:var(--success);}
+.feedback.partial{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.3);color:#7a5f1a;}
+.feedback.retry{background:rgba(193,68,14,.06);border:1px solid rgba(193,68,14,.2);color:var(--terra);}
+.feedback-heard{font-size:.76rem;color:var(--stone);margin-top:.2rem;font-style:italic;}
+.progress{display:flex;gap:.4rem;justify-content:center;margin-top:1.5rem;flex-wrap:wrap;}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--stone-light);transition:background .3s;}
+.dot.done{background:var(--terra);}
+.dot.current{background:var(--terra);box-shadow:0 0 0 3px rgba(193,68,14,.2);}
+.tip{font-size:.75rem;color:var(--stone);margin-top:.9rem;padding-top:.8rem;border-top:1px solid var(--stone-light);line-height:1.5;}
+.complete{text-align:center;padding:2rem;display:none;}
+.complete.show{display:block;}
+.complete h2{font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;margin-bottom:.5rem;}
+.complete p{color:var(--ink-soft);font-size:.86rem;margin-bottom:1rem;}
+.score-display{font-family:'Cormorant Garamond',serif;font-size:3rem;color:var(--terra);font-weight:300;}
+.restart-btn{margin-top:1rem;padding:.6rem 1.8rem;background:var(--terra);color:white;border:none;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;}
+.tbl-controls{display:none;margin-bottom:.8rem;}
+.tbl-controls.show{display:block;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Parla <em>Italiano</em></h1>
+  <p class="subtitle">Pronunciation Trainer · Beginner · Standard Italian</p>
+</header>
+<div class="container">
+  <div class="tab-bar" id="tabBar">
+    <button class="tab-btn active" data-tab="daily">Daily Life</button>
+    <button class="tab-btn" data-tab="social">Social</button>
+    <button class="tab-btn" data-tab="business">Business</button>
+    <button class="tab-btn" data-tab="verbs">Verbs</button>
+    <button class="tab-btn" data-tab="mix">Mixed</button>
+  </div>
+  <div class="verb-selector" id="verbSelector">
+    <div class="verb-selector-label">Choose a verb</div>
+    <div class="verb-grid" id="verbGrid"></div>
+  </div>
+  <div class="tense-toggle" id="tenseToggle">
+    <button class="tense-btn active" data-tense="present">Present</button>
+    <button class="tense-btn" data-tense="past">Past</button>
+  </div>
+  <div class="card" id="mainCard">
+    <div class="verb-header" id="verbHeader">
+      <div class="verb-infinitive" id="verbInfinitive"></div>
+      <div class="verb-meaning" id="verbMeaning"></div>
+    </div>
+    <div class="tbl-controls" id="tblControls">
+      <button class="btn btn-table" id="btnToggleTable">Show conjugation table</button>
+    </div>
+    <div class="table-section" id="tableSection">
+      <table class="conj-table" id="conjTable"></table>
+    </div>
+    <div class="phrase-counter" id="counter">Phrase 1 of 6</div>
+    <div class="italian-phrase" id="italianPhrase"></div>
+    <div class="phonetic" id="phonetic"></div>
+    <div class="bridges" id="bridges"></div>
+    <div class="controls">
+      <button class="btn btn-play" id="btnPlay">▶ Hear it</button>
+      <button class="btn btn-listen" id="btnListen"><span id="listenIcon">🎙</span> <span id="listenLabel">Speak</span></button>
+      <button class="btn btn-next" id="btnNext">Next →</button>
+    </div>
+    <div class="feedback" id="feedback">
+      <div id="feedbackText"></div>
+      <div class="feedback-heard" id="feedbackHeard"></div>
+    </div>
+    <div class="tip" id="tip"></div>
+  </div>
+  <div class="progress" id="progressDots"></div>
+  <div class="complete" id="completeScreen">
+    <div class="score-display" id="scoreDisplay">5/6</div>
+    <h2 id="completeTitle">Ottimo lavoro!</h2>
+    <p>Session complete. Keep practising!</p>
+    <button class="restart-btn" id="restartBtn">Ricomincia — Try Again</button>
+  </div>
+</div>
+<script>
+
+// ─── PHRASE DATA ───────────────────────────────────────────────────────────────
+const phraseData = {
+daily: [
+  {it:"Quanto costa?",phonetic:"[KWAN-to KOS-ta]",tts:"Quanto costa",bridges:[{flag:"🇧🇷",text:"<strong>Quanto custa?</strong> — almost identical!"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"How much does it cost?"}],tip:"💡 'qu' in Italian = 'kw'. Same as Portuguese.",keywords:["quanto","costa"]},
+  {it:"Un caffè, per favore.",phonetic:"[un kaf-FEH per fa-VO-re]",tts:"Un caffè per favore",bridges:[{flag:"🇧🇷",text:"<strong>Um café, por favor.</strong> — nearly identical!"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"A coffee, please."}],tip:"💡 Hold the double 'ff' a beat longer. The accent on 'caffè' marks stress.",keywords:["caffè","caffe","per favore"]},
+  {it:"Dov'è la fermata?",phonetic:"[do-VEH la fer-MA-ta]",tts:"Dov'è la fermata",bridges:[{flag:"🇧🇷",text:"<strong>Onde é a parada?</strong> — 'dov'è' = 'onde é'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Where is the bus stop?"}],tip:"💡 'Dov'è' = contraction of 'dove è'. Use it constantly.",keywords:["dove","fermata"]},
+  {it:"Vorrei un biglietto.",phonetic:"[vor-RAY un bi-LYET-to]",tts:"Vorrei un biglietto",bridges:[{flag:"🇧🇷",text:"<strong>Queria um bilhete.</strong> — 'biglietto' ≈ 'bilhete'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I would like a ticket."}],tip:"💡 'Gli' sounds like 'lh' in 'bilhete'. You already know this sound!",keywords:["vorrei","biglietto"]},
+  {it:"Mi può aiutare?",phonetic:"[mi PWO ay-u-TA-re]",tts:"Mi può aiutare",bridges:[{flag:"🇧🇷",text:"<strong>Pode me ajudar?</strong> — 'aiutare' and 'ajudar' share the same Latin root"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Can you help me? (formal)"}],tip:"💡 'Può' = can (formal/Lei form). Accent marks stress.",keywords:["aiutare","può"]},
+  {it:"Devo andare alla stazione.",phonetic:"[DE-vo an-DA-re AL-la sta-TSYO-ne]",tts:"Devo andare alla stazione",bridges:[{flag:"🇧🇷",text:"<strong>Preciso ir à estação.</strong> — 'devo' = 'preciso/devo', 'stazione' = 'estação'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I need to go to the station."}],tip:"💡 'zi' in 'stazione' = 'ts'. Very common Italian sound.",keywords:["devo","andare","stazione"]}
+],
+social: [
+  {it:"Piacere di conoscerti.",phonetic:"[pya-CHEH-re di ko-NO-sher-ti]",tts:"Piacere di conoscerti",bridges:[{flag:"🇧🇷",text:"<strong>Prazer em te conhecer.</strong> — nearly identical structure"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Nice to meet you. (informal)"}],tip:"💡 'Sc' before 'e/i' = 'sh'. ko-NO-sheer-ti.",keywords:["piacere","conoscerti"]},
+  {it:"Come stai?",phonetic:"[KO-me STAY]",tts:"Come stai",bridges:[{flag:"🇧🇷",text:"<strong>Como vai?</strong> — 'come' = 'como', 'stai' = informal 'vai'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"How are you? (informal)"}],tip:"💡 Use 'Come sta?' (formal/Lei) with people you don't know well.",keywords:["come","stai"]},
+  {it:"Non capisco.",phonetic:"[non ka-PIS-ko]",tts:"Non capisco",bridges:[{flag:"🇧🇷",text:"<strong>Não entendo.</strong> — use this confidently"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I don't understand."}],tip:"💡 Say this often at first. Italians will slow down and rephrase.",keywords:["capisco","non capisco"]},
+  {it:"Puoi ripetere, per favore?",phonetic:"[PWO-i ri-PE-te-re per fa-VO-re]",tts:"Puoi ripetere per favore",bridges:[{flag:"🇧🇷",text:"<strong>Pode repetir, por favor?</strong> — 'ripetere' = 'repetir'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Can you repeat that? (informal)"}],tip:"💡 'Puoi' (can you, informal) — 'uo' diphthong: say 'woh-i' quickly.",keywords:["puoi","ripetere"]},
+  {it:"Di dove sei?",phonetic:"[di DO-ve SAY]",tts:"Di dove sei",bridges:[{flag:"🇧🇷",text:"<strong>De onde você é?</strong> — identical structure"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Where are you from? (informal)"}],tip:"💡 'Sei' = you are (informal). Also the number six!",keywords:["dove","sei"]},
+  {it:"Sono americano, vivo in Italia.",phonetic:"[SO-no a-me-ri-KA-no VI-vo in i-TA-lya]",tts:"Sono americano vivo in Italia",bridges:[{flag:"🇧🇷",text:"<strong>Sou americano, moro na Itália.</strong> — 'sono' = 'sou', 'vivo' = 'moro/vivo'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I'm American, I live in Italy."}],tip:"💡 'Vivo' is the same in Italian and Portuguese!",keywords:["sono","americano","vivo"]}
+],
+business: [
+  {it:"Ho un appuntamento.",phonetic:"[o un ap-pun-ta-MEN-to]",tts:"Ho un appuntamento",bridges:[{flag:"🇧🇷",text:"<strong>Tenho um compromisso.</strong> — 'ho' = 'tenho'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I have an appointment."}],tip:"💡 'Ho' = just 'o'. The H is always silent in Italian.",keywords:["ho","appuntamento"]},
+  {it:"Possiamo fissare una riunione?",phonetic:"[pos-SYA-mo fis-SA-re U-na ryu-NYO-ne]",tts:"Possiamo fissare una riunione",bridges:[{flag:"🇧🇷",text:"<strong>Podemos marcar uma reunião?</strong> — 'riunione' = 'reunião'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Can we schedule a meeting?"}],tip:"💡 'Riunione' — 'u' before vowel glides: 'ryoo-NYO-ne'.",keywords:["possiamo","riunione"]},
+  {it:"Le mando una mail.",phonetic:"[le MAN-do U-na mail]",tts:"Le mando una mail",bridges:[{flag:"🇧🇷",text:"<strong>Te mando um email.</strong> — 'Le' = formal 'you'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I'll send you an email. (formal)"}],tip:"💡 Always use 'Le' in business until told to use 'tu'.",keywords:["mando","mail"]},
+  {it:"In attesa di riscontro.",phonetic:"[in at-TE-sa di ris-KON-tro]",tts:"In attesa di riscontro",bridges:[{flag:"🇧🇷",text:"<strong>Aguardando retorno.</strong> — standard email closing"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Awaiting your response. (email)"}],tip:"💡 Double 't' in 'attesa' — hold it a fraction longer.",keywords:["attesa","riscontro"]},
+  {it:"Lavoro nel settore alimentare.",phonetic:"[la-VO-ro nel set-TO-re a-li-men-TA-re]",tts:"Lavoro nel settore alimentare",bridges:[{flag:"🇧🇷",text:"<strong>Trabalho no setor alimentar.</strong> — 'alimentare' = 'alimentar'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I work in the food sector."}],tip:"💡 Your professional introduction in Italian.",keywords:["lavoro","settore","alimentare"]},
+  {it:"Dobbiamo rispettare le normative EU.",phonetic:"[dob-BYA-mo ris-pet-TA-re le nor-ma-TI-ve EH-u]",tts:"Dobbiamo rispettare le normative EU",bridges:[{flag:"🇧🇷",text:"<strong>Devemos respeitar as normativas da UE.</strong> — 'normative' = 'normativas'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We must comply with EU regulations."}],tip:"💡 Core VeriPura sentence. 'Normative' = regulations.",keywords:["dobbiamo","normative","eu"]}
+]
+};
+// ─── VERB DATA ─────────────────────────────────────────────────────────────────
+const verbData = [
+  {
+    inf:"essere",meaning:"to be",aux:"essere",
+    present:{io:"sono",tu:"sei",lui:"è",noi:"siamo",voi:"siete",loro:"sono"},
+    past_participle:"stato/a",
+    phonetics:{present:{io:"[SO-no]",tu:"[SAY]",lui:"[EH]",noi:"[SYA-mo]",voi:"[SYE-te]",loro:"[SO-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Sono Thomas, sono americano.",phonetic:"[SO-no Thomas SO-no a-me-ri-KA-no]",tts:"Sono Thomas sono americano",bridges:[{flag:"🇧🇷",text:"Sou Thomas, sou americano. — idêntico!"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I am Thomas, I am American."}],tip:"💡 'Sono' = I am AND they are. Context tells you which.",keywords:["sono","americano"]},
+    {pronoun:"tu",it:"Sei molto gentile.",phonetic:"[SAY MOL-to jen-TI-le]",tts:"Sei molto gentile",bridges:[{flag:"🇧🇷",text:"Você é muito gentil. — 'sei'='é', 'molto'='muito'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"You are very kind."}],tip:"💡 Great phrase for locals who help you!",keywords:["sei","gentile"]},
+    {pronoun:"lui/lei",it:"Com'è il prodotto?",phonetic:"[ko-MEH il pro-DOT-to]",tts:"Com'è il prodotto",bridges:[{flag:"🇧🇷",text:"Como é o produto? — 'com'è'='como é'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"What is the product like?"}],tip:"💡 'Com'è' = 'come è' contracted. Useful in business.",keywords:["com'è","prodotto"]},
+    {pronoun:"noi",it:"Siamo pronti per la riunione.",phonetic:"[SYA-mo PRON-ti per la ryu-NYO-ne]",tts:"Siamo pronti per la riunione",bridges:[{flag:"🇧🇷",text:"Estamos prontos para a reunião. — 'siamo'='estamos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We are ready for the meeting."}],tip:"💡 'Pronti' agrees with group. -a for all-female: 'pronte'.",keywords:["siamo","pronti"]},
+    {pronoun:"voi",it:"Siete disponibili domani?",phonetic:"[SYE-te dis-po-NI-bi-li do-MA-ni]",tts:"Siete disponibili domani",bridges:[{flag:"🇧🇷",text:"Vocês estão disponíveis amanhã? — 'domani'='amanhã'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Are you all available tomorrow?"}],tip:"💡 'Domani' = tomorrow. One of the easiest Italian words!",keywords:["siete","disponibili","domani"]},
+    {pronoun:"loro",it:"Sono i nostri clienti principali.",phonetic:"[SO-no i NOS-tri klyen-TI prin-chi-PA-li]",tts:"Sono i nostri clienti principali",bridges:[{flag:"🇧🇷",text:"São nossos clientes principais. — quase idêntico!"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They are our main clients."}],tip:"💡 'Clienti' is the same word in Italian and Portuguese!",keywords:["sono","clienti"]}],
+      past:[{pronoun:"io",it:"Sono stato in riunione tutta la mattina.",phonetic:"[SO-no STA-to in ryu-NYO-ne TUT-ta la mat-TI-na]",tts:"Sono stato in riunione tutta la mattina",bridges:[{flag:"🇧🇷",text:"Estive em reunião a manhã toda. — 'sono stato'='estive'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I was in a meeting all morning."}],tip:"💡 'Essere' uses itself as auxiliary: sono + stato/a.",keywords:["sono stato","riunione"]},
+    {pronoun:"tu",it:"Sei stato gentile.",phonetic:"[SAY STA-to jen-TI-le]",tts:"Sei stato gentile",bridges:[{flag:"🇧🇷",text:"Você foi gentil. — 'sei stato'='foi'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"You were kind."}],tip:"💡 For a woman: 'Sei stata gentile'. Participle agrees!",keywords:["sei stato","gentile"]},
+    {pronoun:"lui/lei",it:"È stato un ottimo incontro.",phonetic:"[EH STA-to un OT-ti-mo in-KON-tro]",tts:"È stato un ottimo incontro",bridges:[{flag:"🇧🇷",text:"Foi um ótimo encontro. — 'ottimo'='ótimo', 'incontro'='encontro'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"It was an excellent meeting."}],tip:"💡 'Ottimo' is stronger than 'buono'. Use it as a compliment!",keywords:["è stato","ottimo","incontro"]},
+    {pronoun:"noi",it:"Siamo stati d'accordo.",phonetic:"[SYA-mo STA-ti dak-KOR-do]",tts:"Siamo stati d'accordo",bridges:[{flag:"🇧🇷",text:"Estivemos de acordo. — 'd'accordo'='de acordo'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We were in agreement."}],tip:"💡 'D'accordo' is extremely common — you'll hear it constantly.",keywords:["siamo stati","accordo"]},
+    {pronoun:"voi",it:"Siete stati molto professionali.",phonetic:"[SYE-te STA-ti MOL-to pro-fes-syo-NA-li]",tts:"Siete stati molto professionali",bridges:[{flag:"🇧🇷",text:"Vocês foram muito profissionais. — 'siete stati'='foram'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"You were all very professional."}],tip:"💡 Great compliment to end a business meeting with.",keywords:["siete stati","professionali"]},
+    {pronoun:"loro",it:"Sono stati puntuali.",phonetic:"[SO-no STA-ti pun-twa-LI]",tts:"Sono stati puntuali",bridges:[{flag:"🇧🇷",text:"Eles foram pontuais. — 'puntuali'='pontuais'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They were punctual."}],tip:"💡 Punctuality is valued in northern Italian business culture.",keywords:["sono stati","puntuali"]}]
+    }
+  },
+  {
+    inf:"avere",meaning:"to have",aux:"avere",
+    present:{io:"ho",tu:"hai",lui:"ha",noi:"abbiamo",voi:"avete",loro:"hanno"},
+    past_participle:"avuto",
+    phonetics:{present:{io:"[o]",tu:"[AY]",lui:"[a]",noi:"[ab-BYA-mo]",voi:"[a-VE-te]",loro:"[AN-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Ho una riunione alle dieci.",phonetic:"[O U-na ryu-NYO-ne AL-le DYE-chi]",tts:"Ho una riunione alle dieci",bridges:[{flag:"🇧🇷",text:"Tenho uma reunião às dez. — 'ho'='tenho'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I have a meeting at ten."}],tip:"💡 'Ho' = just the vowel 'o'. The H is silent!",keywords:["ho","riunione","dieci"]},
+    {pronoun:"tu",it:"Hai il numero di telefono?",phonetic:"[AY il NU-me-ro di te-LE-fo-no]",tts:"Hai il numero di telefono",bridges:[{flag:"🇧🇷",text:"Você tem o número de telefone? — 'hai'='tem'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you have the phone number?"}],tip:"💡 'Telefono' = same word, Italian stress: te-LE-fo-no.",keywords:["hai","numero","telefono"]},
+    {pronoun:"lui/lei",it:"Ha esperienza nel settore?",phonetic:"[a es-pe-RYEN-tsa nel set-TO-re]",tts:"Ha esperienza nel settore",bridges:[{flag:"🇧🇷",text:"Tem experiência no setor? — 'ha'='tem', 'esperienza'='experiência'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Does he/she have experience?"}],tip:"💡 'Ha' (he/she has) sounds like just 'a'. Silent H.",keywords:["ha","esperienza"]},
+    {pronoun:"noi",it:"Abbiamo un ufficio a Genova.",phonetic:"[ab-BYA-mo un uf-FI-cho a JE-no-va]",tts:"Abbiamo un ufficio a Genova",bridges:[{flag:"🇧🇷",text:"Temos um escritório em Gênova. — 'abbiamo'='temos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We have an office in Genoa."}],tip:"💡 'Ufficio' — double 'f', and 'ci'='ch' sound: uf-FI-cho.",keywords:["abbiamo","ufficio","genova"]},
+    {pronoun:"voi",it:"Avete un catalogo dei prodotti?",phonetic:"[a-VE-te un ka-TA-lo-go day pro-DOT-ti]",tts:"Avete un catalogo dei prodotti",bridges:[{flag:"🇧🇷",text:"Vocês têm um catálogo dos produtos? — 'avete'='têm'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you have a product catalogue?"}],tip:"💡 'Prodotti' = products. Same root as Portuguese 'produtos'.",keywords:["avete","catalogo","prodotti"]},
+    {pronoun:"loro",it:"Hanno molta esperienza.",phonetic:"[AN-no MOL-ta es-pe-RYEN-tsa]",tts:"Hanno molta esperienza",bridges:[{flag:"🇧🇷",text:"Eles têm muita experiência. — 'hanno'='têm', 'molta'='muita'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They have a lot of experience."}],tip:"💡 'Hanno' — H and first N silent. Sounds like 'AN-no'.",keywords:["hanno","esperienza"]}],
+      past:[{pronoun:"io",it:"Ho avuto un problema con il documento.",phonetic:"[o a-VU-to un pro-BLE-ma kon il do-KU-men-to]",tts:"Ho avuto un problema con il documento",bridges:[{flag:"🇧🇷",text:"Tive um problema com o documento. — 'ho avuto'='tive'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I had a problem with the document."}],tip:"💡 'Avere' uses itself as auxiliary: ho + avuto.",keywords:["ho avuto","problema","documento"]},
+    {pronoun:"tu",it:"Hai avuto tempo di leggere il contratto?",phonetic:"[AY a-VU-to TEM-po di LEJ-je-re il kon-TRAT-to]",tts:"Hai avuto tempo di leggere il contratto",bridges:[{flag:"🇧🇷",text:"Você teve tempo de ler o contrato? — 'contratto'='contrato'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you have time to read the contract?"}],tip:"💡 'Leggere' — 'gge' held soft-g: LEJ-je-re.",keywords:["hai avuto","contratto"]},
+    {pronoun:"lui/lei",it:"Ha avuto un buon risultato.",phonetic:"[a a-VU-to un BWON ri-zul-TA-to]",tts:"Ha avuto un buon risultato",bridges:[{flag:"🇧🇷",text:"Teve um bom resultado. — 'risultato'='resultado'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she had a good result."}],tip:"💡 Italian often drops the 'd': risultato vs resultado.",keywords:["ha avuto","risultato"]},
+    {pronoun:"noi",it:"Abbiamo avuto una buona risposta.",phonetic:"[ab-BYA-mo a-VU-to U-na BWO-na ris-POS-ta]",tts:"Abbiamo avuto una buona risposta",bridges:[{flag:"🇧🇷",text:"Tivemos uma boa resposta. — 'risposta'='resposta'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We had a good response."}],tip:"💡 'Risposta' = 'resposta'. Great word in business.",keywords:["abbiamo avuto","risposta"]},
+    {pronoun:"voi",it:"Avete avuto notizie dal cliente?",phonetic:"[a-VE-te a-VU-to no-TI-tsye dal klyen-TE]",tts:"Avete avuto notizie dal cliente",bridges:[{flag:"🇧🇷",text:"Vocês tiveram notícias do cliente? — 'notizie'='notícias'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you hear from the client?"}],tip:"💡 Italian uses plural 'notizie' like Portuguese 'notícias'.",keywords:["avete avuto","notizie","cliente"]},
+    {pronoun:"loro",it:"Hanno avuto ritardi alla dogana.",phonetic:"[AN-no a-VU-to ri-TAR-di al-la do-GA-na]",tts:"Hanno avuto ritardi alla dogana",bridges:[{flag:"🇧🇷",text:"Tiveram atrasos na alfândega. — 'ritardi'='atrasos', 'dogana'='alfândega'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They had delays at customs."}],tip:"💡 'Dogana' (customs) — essential for food import work!",keywords:["hanno avuto","ritardi","dogana"]}]
+    }
+  },
+  {
+    inf:"fare",meaning:"to do / make",aux:"avere",
+    present:{io:"faccio",tu:"fai",lui:"fa",noi:"facciamo",voi:"fate",loro:"fanno"},
+    past_participle:"fatto",
+    phonetics:{present:{io:"[FAT-cho]",tu:"[FAY]",lui:"[fa]",noi:"[fat-CHA-mo]",voi:"[FA-te]",loro:"[FAN-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Faccio il direttore operativo.",phonetic:"[FAT-cho il di-ret-TO-re o-pe-ra-TI-vo]",tts:"Faccio il direttore operativo",bridges:[{flag:"🇧🇷",text:"Faço o diretor operacional. — 'faccio'='faço'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I am the operations director."}],tip:"💡 'Faccio il + job title' is natural Italian. Very common!",keywords:["faccio","direttore"]},
+    {pronoun:"tu",it:"Cosa fai nel tempo libero?",phonetic:"[KO-za FAY nel TEM-po LI-be-ro]",tts:"Cosa fai nel tempo libero",bridges:[{flag:"🇧🇷",text:"O que você faz no tempo livre? — 'cosa fai'='o que você faz'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"What do you do in free time?"}],tip:"💡 'Cosa' = what / 'coisa'. 'Cosa fai?' = What are you doing?",keywords:["fai","cosa","tempo libero"]},
+    {pronoun:"lui/lei",it:"Fa parte del nostro team.",phonetic:"[fa PAR-te del NOS-tro team]",tts:"Fa parte del nostro team",bridges:[{flag:"🇧🇷",text:"Faz parte da nossa equipe. — 'fa parte'='faz parte'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she is part of our team."}],tip:"💡 'Fa parte di' = 'faz parte de'. Identical expression!",keywords:["fa","parte","team"]},
+    {pronoun:"noi",it:"Facciamo consulenza per le aziende.",phonetic:"[fat-CHA-mo kon-su-LEN-tsa per le a-TSYEN-de]",tts:"Facciamo consulenza per le aziende",bridges:[{flag:"🇧🇷",text:"Fazemos consultoria para as empresas. — 'aziende'='empresas'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We do consulting for companies."}],tip:"💡 'Aziende' = companies. Singular: 'azienda'. Key word!",keywords:["facciamo","consulenza","aziende"]},
+    {pronoun:"voi",it:"Fate import-export?",phonetic:"[FA-te IM-port EKS-port]",tts:"Fate import export",bridges:[{flag:"🇧🇷",text:"Vocês fazem importação e exportação? — 'fate'='fazem'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you do import-export?"}],tip:"💡 Direct business question. 'Fate' = you-all form of fare.",keywords:["fate","import","export"]},
+    {pronoun:"loro",it:"Fanno controllo qualità.",phonetic:"[FAN-no kon-TROL-lo kwa-li-TA]",tts:"Fanno controllo qualità",bridges:[{flag:"🇧🇷",text:"Eles fazem controle de qualidade. — 'controllo qualità'='controle de qualidade'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They do quality control."}],tip:"💡 'Qualità' — stress on final syllable, like 'qualidade'.",keywords:["fanno","controllo","qualità"]}],
+      past:[{pronoun:"io",it:"Ho fatto una proposta commerciale.",phonetic:"[o FAT-to U-na pro-POS-ta kom-mer-CHA-le]",tts:"Ho fatto una proposta commerciale",bridges:[{flag:"🇧🇷",text:"Fiz uma proposta comercial. — 'ho fatto'='fiz'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I made a commercial proposal."}],tip:"💡 'Fatto' is the irregular past participle of 'fare'. Very common!",keywords:["ho fatto","proposta","commerciale"]},
+    {pronoun:"tu",it:"Hai fatto bene.",phonetic:"[AY FAT-to BE-ne]",tts:"Hai fatto bene",bridges:[{flag:"🇧🇷",text:"Você fez bem / fez certo. — 'hai fatto'='você fez'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"You did the right thing."}],tip:"💡 'Hai fatto bene' = great phrase to affirm someone's decision.",keywords:["hai fatto","bene"]},
+    {pronoun:"lui/lei",it:"Ha fatto un'ottima impressione.",phonetic:"[a FAT-to u-NOT-ti-ma im-pres-SYO-ne]",tts:"Ha fatto un'ottima impressione",bridges:[{flag:"🇧🇷",text:"Causou uma ótima impressão. — 'impressione'='impressão'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she made an excellent impression."}],tip:"💡 Very useful after meetings: 'Ha fatto un'ottima impressione'.",keywords:["ha fatto","ottima","impressione"]},
+    {pronoun:"noi",it:"Abbiamo fatto un accordo.",phonetic:"[ab-BYA-mo FAT-to un ak-KOR-do]",tts:"Abbiamo fatto un accordo",bridges:[{flag:"🇧🇷",text:"Fizemos um acordo. — 'accordo'='acordo'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We made a deal."}],tip:"💡 'Accordo' = agreement. 'Essere d'accordo' = to agree.",keywords:["abbiamo fatto","accordo"]},
+    {pronoun:"voi",it:"Avete fatto i controlli necessari?",phonetic:"[a-VE-te FAT-to i kon-TROL-li ne-ches-SA-ri]",tts:"Avete fatto i controlli necessari",bridges:[{flag:"🇧🇷",text:"Vocês fizeram os controles necessários? — 'necessari'='necessários'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you carry out the necessary checks?"}],tip:"💡 Essential in food import/compliance contexts!",keywords:["avete fatto","controlli","necessari"]},
+    {pronoun:"loro",it:"Hanno fatto un errore nella documentazione.",phonetic:"[AN-no FAT-to un er-RO-re nel-la do-ku-men-ta-TSYO-ne]",tts:"Hanno fatto un errore nella documentazione",bridges:[{flag:"🇧🇷",text:"Cometeram um erro na documentação. — 'documentazione'='documentação'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They made an error in the documentation."}],tip:"💡 'Documentazione' — core VeriPura vocabulary!",keywords:["hanno fatto","errore","documentazione"]}]
+    }
+  },
+  {
+    inf:"andare",meaning:"to go",aux:"essere",
+    present:{io:"vado",tu:"vai",lui:"va",noi:"andiamo",voi:"andate",loro:"vanno"},
+    past_participle:"andato/a",
+    phonetics:{present:{io:"[VA-do]",tu:"[VAY]",lui:"[va]",noi:"[an-DYA-mo]",voi:"[an-DA-te]",loro:"[VAN-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Vado al mercato stamattina.",phonetic:"[VA-do al mer-KA-to sta-mat-TI-na]",tts:"Vado al mercato stamattina",bridges:[{flag:"🇧🇷",text:"Vou ao mercado esta manhã. — 'vado'='vou', 'mercato'='mercado'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I'm going to the market this morning."}],tip:"💡 'Stamattina' = this morning (sta+mattina). Italian loves fusions!",keywords:["vado","mercato"]},
+    {pronoun:"tu",it:"Vai in ufficio oggi?",phonetic:"[VAY in uf-FI-cho OJ-ji]",tts:"Vai in ufficio oggi",bridges:[{flag:"🇧🇷",text:"Você vai ao escritório hoje? — 'vai'='vai', 'oggi'='hoje'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Are you going to the office today?"}],tip:"💡 'Oggi'=today. 'Domani'=tomorrow. 'Ieri'=yesterday. Learn all three!",keywords:["vai","ufficio","oggi"]},
+    {pronoun:"lui/lei",it:"Va spesso in fiera.",phonetic:"[va SPES-so in FYE-ra]",tts:"Va spesso in fiera",bridges:[{flag:"🇧🇷",text:"Ele/ela vai frequentemente à feira. — 'spesso'='frequentemente', 'fiera'='feira'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she often goes to trade fairs."}],tip:"💡 'Fiera' = trade fair. 'Spesso' = often. Both useful professionally.",keywords:["va","spesso","fiera"]},
+    {pronoun:"noi",it:"Andiamo a pranzo insieme?",phonetic:"[an-DYA-mo a PRAN-tso in-SYE-me]",tts:"Andiamo a pranzo insieme",bridges:[{flag:"🇧🇷",text:"Vamos almoçar juntos? — 'pranzo'='almoço', 'insieme'='juntos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Shall we go to lunch together?"}],tip:"💡 'Andiamo!' = Let's go! One of the most useful Italian expressions.",keywords:["andiamo","pranzo","insieme"]},
+    {pronoun:"voi",it:"Andate alla fiera di Milano?",phonetic:"[an-DA-te AL-la FYE-ra di mi-LA-no]",tts:"Andate alla fiera di Milano",bridges:[{flag:"🇧🇷",text:"Vocês vão à feira de Milão? — 'andate'='vão (vocês)'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Are you going to the Milan fair?"}],tip:"💡 'Fiera di Milano' — one of Europe's biggest trade fair venues.",keywords:["andate","fiera","milano"]},
+    {pronoun:"loro",it:"Vanno in porto ogni settimana.",phonetic:"[VAN-no in POR-to ON-ji set-ti-MA-na]",tts:"Vanno in porto ogni settimana",bridges:[{flag:"🇧🇷",text:"Eles vão ao porto toda semana. — 'porto'='porto', 'ogni settimana'='toda semana'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They go to the port every week."}],tip:"💡 'Ogni' = every/each. 'Ogni giorno'=every day. 'Ogni settimana'=every week.",keywords:["vanno","porto","settimana"]}],
+      past:[{pronoun:"io",it:"Sono andato in dogana ieri.",phonetic:"[SO-no an-DA-to in do-GA-na YE-ri]",tts:"Sono andato in dogana ieri",bridges:[{flag:"🇧🇷",text:"Fui à alfândega ontem. — 'sono andato'='fui', 'ieri'='ontem'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I went to customs yesterday."}],tip:"💡 'Andare' uses 'essere'. 'Sono andato' (m) / 'sono andata' (f).",keywords:["sono andato","dogana","ieri"]},
+    {pronoun:"tu",it:"Sei andato alla riunione?",phonetic:"[SAY an-DA-to AL-la ryu-NYO-ne]",tts:"Sei andato alla riunione",bridges:[{flag:"🇧🇷",text:"Você foi à reunião? — 'sei andato'='você foi'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you go to the meeting?"}],tip:"💡 With 'essere' verbs, participle agrees with subject.",keywords:["sei andato","riunione"]},
+    {pronoun:"lui/lei",it:"È andato a Roma per il cliente.",phonetic:"[EH an-DA-to a RO-ma per il klyen-TE]",tts:"È andato a Roma per il cliente",bridges:[{flag:"🇧🇷",text:"Ele/ela foi a Roma pelo cliente. — 'è andato'='foi'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she went to Rome for the client."}],tip:"💡 'Per' works like 'para'+'por' in Portuguese.",keywords:["è andato","roma","cliente"]},
+    {pronoun:"noi",it:"Siamo andati al porto di Genova.",phonetic:"[SYA-mo an-DA-ti al POR-to di JE-no-va]",tts:"Siamo andati al porto di Genova",bridges:[{flag:"🇧🇷",text:"Fomos ao porto de Gênova. — 'siamo andati'='fomos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We went to the port of Genoa."}],tip:"💡 Genova — one of Italy's most important shipping ports!",keywords:["siamo andati","porto","genova"]},
+    {pronoun:"voi",it:"Siete andati alla dogana stamattina?",phonetic:"[SYE-te an-DA-ti AL-la do-GA-na sta-mat-TI-na]",tts:"Siete andati alla dogana stamattina",bridges:[{flag:"🇧🇷",text:"Vocês foram à alfândega esta manhã? — 'siete andati'='vocês foram'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you go to customs this morning?"}],tip:"💡 'Dogana' is crucial for food import work at European ports.",keywords:["siete andati","dogana"]},
+    {pronoun:"loro",it:"Sono andati in fiera a Parma.",phonetic:"[SO-no an-DA-ti in FYE-ra a PAR-ma]",tts:"Sono andati in fiera a Parma",bridges:[{flag:"🇧🇷",text:"Eles foram à feira em Parma. — 'sono andati'='foram'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They went to the fair in Parma."}],tip:"💡 Cibus in Parma — Italy's most important food trade fair.",keywords:["sono andati","fiera","parma"]}]
+    }
+  },
+  {
+    inf:"volere",meaning:"to want",aux:"avere",
+    present:{io:"voglio",tu:"vuoi",lui:"vuole",noi:"vogliamo",voi:"volete",loro:"vogliono"},
+    past_participle:"voluto",
+    phonetics:{present:{io:"[VOL-yo]",tu:"[VWO-i]",lui:"[VWO-le]",noi:"[vol-YA-mo]",voi:"[vo-LE-te]",loro:"[VOL-yo-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Voglio imparare l'italiano.",phonetic:"[VOL-yo im-pa-RA-re li-ta-LYA-no]",tts:"Voglio imparare l'italiano",bridges:[{flag:"🇧🇷",text:"Quero aprender o italiano. — 'voglio'='quero', 'imparare'='aprender'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I want to learn Italian."}],tip:"💡 'Imparare'=to learn (IT) ≠ 'imparar'=to hinder (PT). False friend!",keywords:["voglio","imparare","italiano"]},
+    {pronoun:"tu",it:"Vuoi un caffè?",phonetic:"[VWO-i un kaf-FEH]",tts:"Vuoi un caffè",bridges:[{flag:"🇧🇷",text:"Você quer um café? — 'vuoi'='quer'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you want a coffee?"}],tip:"💡 The most important question in Italy. The right answer is always 'sì'.",keywords:["vuoi","caffè"]},
+    {pronoun:"lui/lei",it:"Vuole vedere i documenti.",phonetic:"[VWO-le ve-DE-re i do-KU-men-ti]",tts:"Vuole vedere i documenti",bridges:[{flag:"🇧🇷",text:"Ele/ela quer ver os documentos. — 'vuole'='quer', 'documenti'='documentos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she wants to see the documents."}],tip:"💡 'Documenti' used in everyday life too — ID, certificates.",keywords:["vuole","vedere","documenti"]},
+    {pronoun:"noi",it:"Vogliamo espandere il mercato.",phonetic:"[vol-YA-mo es-pan-DE-re il mer-KA-to]",tts:"Vogliamo espandere il mercato",bridges:[{flag:"🇧🇷",text:"Queremos expandir o mercado. — 'vogliamo'='queremos', 'espandere'='expandir'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We want to expand the market."}],tip:"💡 'Espandere' almost identical to Portuguese 'expandir'.",keywords:["vogliamo","espandere","mercato"]},
+    {pronoun:"voi",it:"Volete visitare il nostro magazzino?",phonetic:"[vo-LE-te vi-zi-TA-re il NOS-tro ma-gad-ZI-no]",tts:"Volete visitare il nostro magazzino",bridges:[{flag:"🇧🇷",text:"Vocês querem visitar nosso armazém? — 'magazzino'='armazém'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Would you like to visit our warehouse?"}],tip:"💡 'Magazzino' = warehouse. Key logistics vocabulary.",keywords:["volete","visitare","magazzino"]},
+    {pronoun:"loro",it:"Vogliono una certificazione EU.",phonetic:"[VOL-yo-no U-na cher-ti-fi-ka-TSYO-ne EH-u]",tts:"Vogliono una certificazione EU",bridges:[{flag:"🇧🇷",text:"Eles querem uma certificação EU. — 'certificazione'='certificação'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They want an EU certification."}],tip:"💡 'Certificazione' — core VeriPura vocabulary!",keywords:["vogliono","certificazione","eu"]}],
+      past:[{pronoun:"io",it:"Ho voluto capire il processo.",phonetic:"[o vo-LU-to ka-PI-re il pro-CHES-so]",tts:"Ho voluto capire il processo",bridges:[{flag:"🇧🇷",text:"Quis entender o processo. — 'ho voluto'='quis', 'processo'='processo'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I wanted to understand the process."}],tip:"💡 'Processo' is the same word in Italian and Portuguese.",keywords:["ho voluto","capire","processo"]},
+    {pronoun:"tu",it:"Hai voluto aspettare?",phonetic:"[AY vo-LU-to as-pet-TA-re]",tts:"Hai voluto aspettare",bridges:[{flag:"🇧🇷",text:"Você quis esperar? — 'aspettare'='esperar'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you want to wait?"}],tip:"💡 'Aspettare' = to wait. 'Aspetta!' = Wait! Very useful.",keywords:["hai voluto","aspettare"]},
+    {pronoun:"lui/lei",it:"Ha voluto un incontro urgente.",phonetic:"[a vo-LU-to un in-KON-tro ur-JEN-te]",tts:"Ha voluto un incontro urgente",bridges:[{flag:"🇧🇷",text:"Ele/ela quis um encontro urgente. — 'urgente'='urgente'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she wanted an urgent meeting."}],tip:"💡 'Urgente' is the same in Italian, Portuguese, and Spanish!",keywords:["ha voluto","incontro","urgente"]},
+    {pronoun:"noi",it:"Abbiamo voluto verificare i dati.",phonetic:"[ab-BYA-mo vo-LU-to ve-ri-fi-KA-re i DA-ti]",tts:"Abbiamo voluto verificare i dati",bridges:[{flag:"🇧🇷",text:"Quisemos verificar os dados. — 'verificare'='verificar', 'dati'='dados'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We wanted to verify the data."}],tip:"💡 'Dati' = data. 'Dato' = single data point. Very common.",keywords:["abbiamo voluto","verificare","dati"]},
+    {pronoun:"voi",it:"Avete voluto modificare il contratto?",phonetic:"[a-VE-te vo-LU-to mo-di-fi-KA-re il kon-TRAT-to]",tts:"Avete voluto modificare il contratto",bridges:[{flag:"🇧🇷",text:"Vocês quiseram modificar o contrato? — 'modificare'='modificar'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you want to modify the contract?"}],tip:"💡 'Contratto' = contract. Double 't' — hold it: kon-TRAT-to.",keywords:["avete voluto","modificare","contratto"]},
+    {pronoun:"loro",it:"Hanno voluto più tempo per decidere.",phonetic:"[AN-no vo-LU-to pyU TEM-po per de-CHI-de-re]",tts:"Hanno voluto più tempo per decidere",bridges:[{flag:"🇧🇷",text:"Quiseram mais tempo para decidir. — 'più'='mais', 'decidere'='decidir'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They wanted more time to decide."}],tip:"💡 'Più' (more) — always with accent. Without it, doesn't exist.",keywords:["hanno voluto","decidere","più tempo"]}]
+    }
+  },
+  {
+    inf:"potere",meaning:"to be able to / can",aux:"avere",
+    present:{io:"posso",tu:"puoi",lui:"può",noi:"possiamo",voi:"potete",loro:"possono"},
+    past_participle:"potuto",
+    phonetics:{present:{io:"[POS-so]",tu:"[PWO-i]",lui:"[PWO]",noi:"[pos-SYA-mo]",voi:"[po-TE-te]",loro:"[POS-so-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Posso aiutarla con i documenti.",phonetic:"[POS-so ay-u-TAR-la kon i do-KU-men-ti]",tts:"Posso aiutarla con i documenti",bridges:[{flag:"🇧🇷",text:"Posso ajudá-la com os documentos. — estrutura quase idêntica!"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I can help you with the documents."}],tip:"💡 '-la' attached = 'her' or formal 'you (f)'. Elegant Italian.",keywords:["posso","aiutare","documenti"]},
+    {pronoun:"tu",it:"Puoi mandare il file adesso?",phonetic:"[PWO-i man-DA-re il file a-DES-so]",tts:"Puoi mandare il file adesso",bridges:[{flag:"🇧🇷",text:"Você pode mandar o arquivo agora? — 'adesso'='agora'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Can you send the file now?"}],tip:"💡 'Adesso' = now (colloquial). Also 'ora'. Both are used.",keywords:["puoi","mandare","adesso"]},
+    {pronoun:"lui/lei",it:"Può richiamarmi più tardi?",phonetic:"[PWO ri-kya-MAR-mi pyU TAR-di]",tts:"Può richiamarmi più tardi",bridges:[{flag:"🇧🇷",text:"Pode me ligar de volta mais tarde? — 'richiamare'='ligar de volta'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Can you call me back later? (formal)"}],tip:"💡 'Richiamare' = to call back. '-mi' attached = 'me'.",keywords:["può","richiamarmi","tardi"]},
+    {pronoun:"noi",it:"Possiamo offrire una soluzione.",phonetic:"[pos-SYA-mo of-FRI-re U-na so-lu-TSYO-ne]",tts:"Possiamo offrire una soluzione",bridges:[{flag:"🇧🇷",text:"Podemos oferecer uma solução. — 'soluzione'='solução'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We can offer a solution."}],tip:"💡 Great business phrase. 'Soluzione' nearly identical to 'solução'.",keywords:["possiamo","offrire","soluzione"]},
+    {pronoun:"voi",it:"Potete consegnare entro venerdì?",phonetic:"[po-TE-te kon-sen-YA-re EN-tro ve-ner-DI]",tts:"Potete consegnare entro venerdì",bridges:[{flag:"🇧🇷",text:"Vocês podem entregar até sexta-feira? — 'entro'='até', 'venerdì'='sexta-feira'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Can you deliver by Friday?"}],tip:"💡 'Entro' = by/within (deadline). Days don't capitalise in Italian.",keywords:["potete","consegnare","venerdì"]},
+    {pronoun:"loro",it:"Possono processare l'ordine oggi?",phonetic:"[POS-so-no pro-CHES-sa-re LOR-di-ne OJ-ji]",tts:"Possono processare l'ordine oggi",bridges:[{flag:"🇧🇷",text:"Eles podem processar o pedido hoje? — 'ordine'='pedido/ordem'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Can they process the order today?"}],tip:"💡 'Ordine' = order (commercial). 'Ordini' = plural.",keywords:["possono","processare","ordine"]}],
+      past:[{pronoun:"io",it:"Non ho potuto rispondere prima.",phonetic:"[non o po-TU-to ris-PON-de-re PRI-ma]",tts:"Non ho potuto rispondere prima",bridges:[{flag:"🇧🇷",text:"Não pude responder antes. — 'rispondere'='responder', 'prima'='antes'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I wasn't able to respond earlier."}],tip:"💡 Useful email opener. 'Prima'=before. 'Dopo'=after.",keywords:["ho potuto","rispondere","prima"]},
+    {pronoun:"tu",it:"Hai potuto parlare con il responsabile?",phonetic:"[AY po-TU-to par-LA-re kon il res-pon-SA-bi-le]",tts:"Hai potuto parlare con il responsabile",bridges:[{flag:"🇧🇷",text:"Você pôde falar com o responsável? — 'responsabile'='responsável'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Were you able to speak with the manager?"}],tip:"💡 'Responsabile' = person in charge. Key Italian business word.",keywords:["hai potuto","parlare","responsabile"]},
+    {pronoun:"lui/lei",it:"Non ha potuto partecipare alla chiamata.",phonetic:"[non a po-TU-to par-te-chi-PA-re AL-la kya-MA-ta]",tts:"Non ha potuto partecipare alla chiamata",bridges:[{flag:"🇧🇷",text:"Não pôde participar da chamada. — 'chiamata'='chamada'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she couldn't join the call."}],tip:"💡 'Chiamata' = call (phone). 'Chiamare' = to call.",keywords:["ha potuto","partecipare","chiamata"]},
+    {pronoun:"noi",it:"Abbiamo potuto risolvere il problema.",phonetic:"[ab-BYA-mo po-TU-to ri-ZOL-ve-re il pro-BLE-ma]",tts:"Abbiamo potuto risolvere il problema",bridges:[{flag:"🇧🇷",text:"Pudemos resolver o problema. — 'risolvere'='resolver'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We were able to resolve the problem."}],tip:"💡 'Risolvere' = to resolve. 'Problema' is the same in both!",keywords:["abbiamo potuto","risolvere","problema"]},
+    {pronoun:"voi",it:"Avete potuto verificare i certificati?",phonetic:"[a-VE-te po-TU-to ve-ri-fi-KA-re i cher-ti-fi-KA-ti]",tts:"Avete potuto verificare i certificati",bridges:[{flag:"🇧🇷",text:"Vocês puderam verificar os certificados? — 'certificati'='certificados'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Were you able to verify the certificates?"}],tip:"💡 'Certificati' — essential compliance vocabulary for VeriPura!",keywords:["avete potuto","verificare","certificati"]},
+    {pronoun:"loro",it:"Non hanno potuto completare l'ispezione.",phonetic:"[non AN-no po-TU-to kom-ple-TA-re lis-pe-TSYO-ne]",tts:"Non hanno potuto completare l'ispezione",bridges:[{flag:"🇧🇷",text:"Não puderam completar a inspeção. — 'ispezione'='inspeção'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They weren't able to complete the inspection."}],tip:"💡 'Ispezione' — key in food import compliance.",keywords:["hanno potuto","completare","ispezione"]}]
+    }
+  },
+  {
+    inf:"dovere",meaning:"to have to / must",aux:"avere",
+    present:{io:"devo",tu:"devi",lui:"deve",noi:"dobbiamo",voi:"dovete",loro:"devono"},
+    past_participle:"dovuto",
+    phonetics:{present:{io:"[DE-vo]",tu:"[DE-vi]",lui:"[DE-ve]",noi:"[dob-BYA-mo]",voi:"[do-VE-te]",loro:"[DE-vo-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Devo inviare i documenti entro domani.",phonetic:"[DE-vo in-VYA-re i do-KU-men-ti EN-tro do-MA-ni]",tts:"Devo inviare i documenti entro domani",bridges:[{flag:"🇧🇷",text:"Devo enviar os documentos até amanhã. — 'inviare'='enviar'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I have to send the documents by tomorrow."}],tip:"💡 'Inviare' = to send (formal/digital). 'Mandare' = general.",keywords:["devo","inviare","documenti"]},
+    {pronoun:"tu",it:"Devi firmare il contratto.",phonetic:"[DE-vi fir-MA-re il kon-TRAT-to]",tts:"Devi firmare il contratto",bridges:[{flag:"🇧🇷",text:"Você deve assinar o contrato. — 'firmare'='assinar', 'firma'='assinatura'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"You must sign the contract."}],tip:"💡 'Firmare' from 'firma' (signature). Same in Portuguese!",keywords:["devi","firmare","contratto"]},
+    {pronoun:"lui/lei",it:"Deve presentare i certificati sanitari.",phonetic:"[DE-ve pre-zen-TA-re i cher-ti-fi-KA-ti sa-ni-TA-ri]",tts:"Deve presentare i certificati sanitari",bridges:[{flag:"🇧🇷",text:"Deve apresentar os certificados sanitários. — quase idêntico!"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she must present the health certificates."}],tip:"💡 'Certificati sanitari' — core food import vocabulary.",keywords:["deve","certificati","sanitari"]},
+    {pronoun:"noi",it:"Dobbiamo rispettare le normative EU.",phonetic:"[dob-BYA-mo ris-pet-TA-re le nor-ma-TI-ve EH-u]",tts:"Dobbiamo rispettare le normative EU",bridges:[{flag:"🇧🇷",text:"Devemos respeitar as normativas da UE. — 'normative'='normativas'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We must comply with EU regulations."}],tip:"💡 'Normative' = regulations. Essential VeriPura word.",keywords:["dobbiamo","normative","eu"]},
+    {pronoun:"voi",it:"Dovete allegare la fattura.",phonetic:"[do-VE-te al-le-GA-re la fat-TU-ra]",tts:"Dovete allegare la fattura",bridges:[{flag:"🇧🇷",text:"Vocês devem anexar a fatura. — 'allegare'='anexar', 'fattura'='fatura'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"You must attach the invoice."}],tip:"💡 'Fattura'=invoice. 'Allegare'=to attach. Daily compliance words.",keywords:["dovete","allegare","fattura"]},
+    {pronoun:"loro",it:"Devono rispettare la catena del freddo.",phonetic:"[DE-vo-no ris-pet-TA-re la ka-TE-na del FRED-do]",tts:"Devono rispettare la catena del freddo",bridges:[{flag:"🇧🇷",text:"Devem respeitar a cadeia do frio. — 'catena del freddo'='cadeia do frio'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They must maintain the cold chain."}],tip:"💡 'Catena del freddo' = cold chain. Essential food safety vocab!",keywords:["devono","catena","freddo"]}],
+      past:[{pronoun:"io",it:"Ho dovuto richiedere una proroga.",phonetic:"[o do-VU-to ri-kye-DE-re U-na PRO-ro-ga]",tts:"Ho dovuto richiedere una proroga",bridges:[{flag:"🇧🇷",text:"Tive que pedir uma prorrogação. — 'proroga'='prorrogação'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I had to request an extension."}],tip:"💡 'Proroga' = extension (deadline). Very useful in compliance.",keywords:["ho dovuto","richiedere","proroga"]},
+    {pronoun:"tu",it:"Hai dovuto aspettare molto?",phonetic:"[AY do-VU-to as-pet-TA-re MOL-to]",tts:"Hai dovuto aspettare molto",bridges:[{flag:"🇧🇷",text:"Você teve que esperar muito? — 'molto'='muito'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you have to wait long?"}],tip:"💡 'Aspettare' again — one of the most useful Italian verbs.",keywords:["hai dovuto","aspettare","molto"]},
+    {pronoun:"lui/lei",it:"Ha dovuto contattare le autorità.",phonetic:"[a do-VU-to kon-tat-TA-re le ow-to-ri-TA]",tts:"Ha dovuto contattare le autorità",bridges:[{flag:"🇧🇷",text:"Teve que contatar as autoridades. — 'autorità'='autoridades'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she had to contact the authorities."}],tip:"💡 'Autorità' — no plural change. Words with accented final vowel stay the same.",keywords:["ha dovuto","contattare","autorità"]},
+    {pronoun:"noi",it:"Abbiamo dovuto rifare la documentazione.",phonetic:"[ab-BYA-mo do-VU-to ri-FA-re la do-ku-men-ta-TSYO-ne]",tts:"Abbiamo dovuto rifare la documentazione",bridges:[{flag:"🇧🇷",text:"Tivemos que refazer a documentação. — 'rifare'='refazer'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We had to redo the documentation."}],tip:"💡 'Ri-' prefix = re-. Rifare=redo, ritornare=return. Like Portuguese 're-'.",keywords:["abbiamo dovuto","rifare","documentazione"]},
+    {pronoun:"voi",it:"Avete dovuto pagare una multa?",phonetic:"[a-VE-te do-VU-to pa-GA-re U-na MUL-ta]",tts:"Avete dovuto pagare una multa",bridges:[{flag:"🇧🇷",text:"Vocês tiveram que pagar uma multa? — 'multa'='multa' — idêntico!"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you have to pay a fine?"}],tip:"💡 'Multa' is the same in Italian, Portuguese, and Spanish!",keywords:["avete dovuto","pagare","multa"]},
+    {pronoun:"loro",it:"Hanno dovuto ritirare il prodotto.",phonetic:"[AN-no do-VU-to ri-ti-RA-re il pro-DOT-to]",tts:"Hanno dovuto ritirare il prodotto",bridges:[{flag:"🇧🇷",text:"Tiveram que retirar o produto. — 'ritirare'='retirar'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They had to recall the product."}],tip:"💡 'Ritirare il prodotto' = product recall. Critical food safety vocab.",keywords:["hanno dovuto","ritirare","prodotto"]}]
+    }
+  },
+  {
+    inf:"sapere",meaning:"to know (facts/how to)",aux:"avere",
+    present:{io:"so",tu:"sai",lui:"sa",noi:"sappiamo",voi:"sapete",loro:"sanno"},
+    past_participle:"saputo",
+    phonetics:{present:{io:"[so]",tu:"[SAY]",lui:"[sa]",noi:"[sap-PYA-mo]",voi:"[sa-PE-te]",loro:"[SAN-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"So parlare portoghese e inglese.",phonetic:"[so par-LA-re por-to-GE-ze e in-GLE-ze]",tts:"So parlare portoghese e inglese",bridges:[{flag:"🇧🇷",text:"Sei falar português e inglês. — 'so'='sei' (saber)"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I know how to speak Portuguese and English."}],tip:"💡 'Sapere + infinitive' = know how to do something. Like 'saber'.",keywords:["so","parlare","portoghese"]},
+    {pronoun:"tu",it:"Sai dove si trova l'ufficio doganale?",phonetic:"[SAY DO-ve si TRO-va luf-FI-cho do-ga-NA-le]",tts:"Sai dove si trova l'ufficio doganale",bridges:[{flag:"🇧🇷",text:"Você sabe onde fica o escritório da alfândega?"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you know where the customs office is?"}],tip:"💡 'Si trova' = is located (it finds itself). Very natural Italian.",keywords:["sai","dove","doganale"]},
+    {pronoun:"lui/lei",it:"Sa usare il software di conformità?",phonetic:"[sa u-ZA-re il SOFTWARE di kon-for-mi-TA]",tts:"Sa usare il software di conformità",bridges:[{flag:"🇧🇷",text:"Ele/ela sabe usar o software de conformidade? — 'conformità'='conformidade'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Does he/she know how to use the software?"}],tip:"💡 'Conformità' = compliance/conformity. Key regulatory word.",keywords:["sa","usare","conformità"]},
+    {pronoun:"noi",it:"Sappiamo come funziona il sistema.",phonetic:"[sap-PYA-mo KO-me fun-TSYO-na il sis-TE-ma]",tts:"Sappiamo come funziona il sistema",bridges:[{flag:"🇧🇷",text:"Sabemos como o sistema funciona. — 'funziona'='funciona', 'sistema'='sistema'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We know how the system works."}],tip:"💡 'Sistema' and 'funziona' are both the same as in Portuguese!",keywords:["sappiamo","funziona","sistema"]},
+    {pronoun:"voi",it:"Sapete quali documenti servono?",phonetic:"[sa-PE-te KWA-li do-KU-men-ti SER-vo-no]",tts:"Sapete quali documenti servono",bridges:[{flag:"🇧🇷",text:"Vocês sabem quais documentos são necessários? — 'servono'='são necessários'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you know which documents are needed?"}],tip:"💡 'Servono' = they are needed. Very useful impersonal construction.",keywords:["sapete","quali","documenti"]},
+    {pronoun:"loro",it:"Sanno già le procedure doganali.",phonetic:"[SAN-no JA le pro-CHE-du-re do-ga-NA-li]",tts:"Sanno già le procedure doganali",bridges:[{flag:"🇧🇷",text:"Eles já sabem os procedimentos aduaneiros. — 'procedure'='procedimentos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They already know the customs procedures."}],tip:"💡 'Già' = already. 'Non ancora' = not yet. Very useful pair.",keywords:["sanno","procedure","doganali"]}],
+      past:[{pronoun:"io",it:"Non ho saputo della modifica.",phonetic:"[non o sa-PU-to DEL-la mo-DI-fi-ka]",tts:"Non ho saputo della modifica",bridges:[{flag:"🇧🇷",text:"Não soube da modificação. — 'saputo' here = 'found out'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I didn't know about the change."}],tip:"💡 'Sapere' in past = to find out/hear about something.",keywords:["ho saputo","modifica"]},
+    {pronoun:"tu",it:"Hai saputo del nuovo regolamento?",phonetic:"[AY sa-PU-to del NWO-vo re-go-la-MEN-to]",tts:"Hai saputo del nuovo regolamento",bridges:[{flag:"🇧🇷",text:"Você soube do novo regulamento? — 'regolamento'='regulamento'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you hear about the new regulation?"}],tip:"💡 'Regolamento' = regulation. Core compliance vocabulary.",keywords:["hai saputo","regolamento"]},
+    {pronoun:"lui/lei",it:"Ha saputo come risolvere il blocco.",phonetic:"[a sa-PU-to KO-me ri-ZOL-ve-re il BLOK-ko]",tts:"Ha saputo come risolvere il blocco",bridges:[{flag:"🇧🇷",text:"Ele/ela soube como resolver o bloqueio. — 'blocco'='bloqueio'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she figured out how to resolve the hold."}],tip:"💡 'Blocco' = hold, block. Common in shipping and customs.",keywords:["ha saputo","risolvere","blocco"]},
+    {pronoun:"noi",it:"Abbiamo saputo in anticipo.",phonetic:"[ab-BYA-mo sa-PU-to in an-TI-chi-po]",tts:"Abbiamo saputo in anticipo",bridges:[{flag:"🇧🇷",text:"Soubemos com antecedência. — 'in anticipo'='com antecedência'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We found out in advance."}],tip:"💡 'In anticipo'=early/advance. 'In ritardo'=late. Essential pair!",keywords:["abbiamo saputo","anticipo"]},
+    {pronoun:"voi",it:"Avete saputo dei cambiamenti normativi?",phonetic:"[a-VE-te sa-PU-to day kam-bya-MEN-ti nor-ma-TI-vi]",tts:"Avete saputo dei cambiamenti normativi",bridges:[{flag:"🇧🇷",text:"Vocês souberam das mudanças normativas? — 'cambiamenti'='mudanças'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you hear about the regulatory changes?"}],tip:"💡 'Cambiamenti normativi' — you'll use this in food compliance constantly.",keywords:["avete saputo","cambiamenti","normativi"]},
+    {pronoun:"loro",it:"Hanno saputo rispondere a tutte le domande.",phonetic:"[AN-no sa-PU-to ris-PON-de-re a TUT-te le do-MAN-de]",tts:"Hanno saputo rispondere a tutte le domande",bridges:[{flag:"🇧🇷",text:"Souberam responder a todas as perguntas. — 'domande'='perguntas'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They knew how to answer all the questions."}],tip:"💡 'Domande'=questions. 'Fare una domanda'=to ask a question.",keywords:["hanno saputo","rispondere","domande"]}]
+    }
+  },
+  {
+    inf:"parlare",meaning:"to speak / talk",aux:"avere",
+    present:{io:"parlo",tu:"parli",lui:"parla",noi:"parliamo",voi:"parlate",loro:"parlano"},
+    past_participle:"parlato",
+    phonetics:{present:{io:"[PAR-lo]",tu:"[PAR-li]",lui:"[PAR-la]",noi:"[par-LYA-mo]",voi:"[par-LA-te]",loro:"[PAR-la-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Parlo italiano da poco tempo.",phonetic:"[PAR-lo i-ta-LYA-no da PO-ko TEM-po]",tts:"Parlo italiano da poco tempo",bridges:[{flag:"🇧🇷",text:"Falo italiano há pouco tempo. — 'da poco tempo'='há pouco tempo'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I've been speaking Italian for a short time."}],tip:"💡 'Da' + time = for (duration up to now). Very common structure.",keywords:["parlo","italiano","poco tempo"]},
+    {pronoun:"tu",it:"Parli inglese?",phonetic:"[PAR-li in-GLE-ze]",tts:"Parli inglese",bridges:[{flag:"🇧🇷",text:"Você fala inglês? — 'parli'='fala (você)'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you speak English?"}],tip:"💡 No need for 'tu' — verb ending tells you. Dropping pronouns is natural.",keywords:["parli","inglese"]},
+    {pronoun:"lui/lei",it:"Parla molto velocemente.",phonetic:"[PAR-la MOL-to ve-lo-CHE-men-te]",tts:"Parla molto velocemente",bridges:[{flag:"🇧🇷",text:"Ele/ela fala muito rapidamente. — 'velocemente'='rapidamente'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she speaks very fast."}],tip:"💡 You will think this about every Italian at first!",keywords:["parla","velocemente"]},
+    {pronoun:"noi",it:"Parliamo con i fornitori asiatici.",phonetic:"[par-LYA-mo kon i for-ni-TO-ri a-ZYA-ti-chi]",tts:"Parliamo con i fornitori asiatici",bridges:[{flag:"🇧🇷",text:"Falamos com os fornecedores asiáticos. — 'fornitori'='fornecedores'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We speak with the Asian suppliers."}],tip:"💡 'Fornitori' = suppliers. Critical for your supply chain work!",keywords:["parliamo","fornitori","asiatici"]},
+    {pronoun:"voi",it:"Parlate con il responsabile della logistica.",phonetic:"[par-LA-te kon il res-pon-SA-bi-le DEL-la lo-JIS-ti-ka]",tts:"Parlate con il responsabile della logistica",bridges:[{flag:"🇧🇷",text:"Vocês falam com o responsável da logística. — 'logistica'='logística'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Speak with the logistics manager."}],tip:"💡 'Logistica' same root as Portuguese. Italy's logistics is massive.",keywords:["parlate","responsabile","logistica"]},
+    {pronoun:"loro",it:"Parlano solo cinese e inglese.",phonetic:"[PAR-la-no SO-lo chi-NE-ze e in-GLE-ze]",tts:"Parlano solo cinese e inglese",bridges:[{flag:"🇧🇷",text:"Eles falam apenas chinês e inglês. — 'solo'='somente', 'cinese'='chinês'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They only speak Chinese and English."}],tip:"💡 'Solo' = only/just. 'Da solo' = alone, by oneself.",keywords:["parlano","solo","cinese"]}],
+      past:[{pronoun:"io",it:"Ho parlato con il direttore.",phonetic:"[o par-LA-to kon il di-ret-TO-re]",tts:"Ho parlato con il direttore",bridges:[{flag:"🇧🇷",text:"Falei com o diretor. — 'ho parlato'='falei'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I spoke with the director."}],tip:"💡 Regular -are verbs: parlare→ho parlato. Same: lavorare→ho lavorato.",keywords:["ho parlato","direttore"]},
+    {pronoun:"tu",it:"Hai parlato con la dogana?",phonetic:"[AY par-LA-to kon la do-GA-na]",tts:"Hai parlato con la dogana",bridges:[{flag:"🇧🇷",text:"Você falou com a alfândega? — 'hai parlato'='você falou'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you speak with customs?"}],tip:"💡 A question you may genuinely ask or be asked in your work!",keywords:["hai parlato","dogana"]},
+    {pronoun:"lui/lei",it:"Ha parlato in italiano per tutta la riunione.",phonetic:"[a par-LA-to in i-ta-LYA-no per TUT-ta la ryu-NYO-ne]",tts:"Ha parlato in italiano per tutta la riunione",bridges:[{flag:"🇧🇷",text:"Ele/ela falou em italiano durante toda a reunião. — 'per tutta'='durante toda'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she spoke Italian for the entire meeting."}],tip:"💡 Your goal! 'Per tutta la riunione' = for the entire meeting.",keywords:["ha parlato","italiano","riunione"]},
+    {pronoun:"noi",it:"Abbiamo parlato dei termini di consegna.",phonetic:"[ab-BYA-mo par-LA-to day TER-mi-ni di kon-SEN-ya]",tts:"Abbiamo parlato dei termini di consegna",bridges:[{flag:"🇧🇷",text:"Falamos sobre os termos de entrega. — 'termini di consegna'='termos de entrega'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We talked about the delivery terms."}],tip:"💡 'Termini di consegna' = delivery terms. Core logistics vocabulary.",keywords:["abbiamo parlato","termini","consegna"]},
+    {pronoun:"voi",it:"Avete parlato con i fornitori del Sud-Est asiatico?",phonetic:"[a-VE-te par-LA-to kon i for-ni-TO-ri del sud est a-ZYA-ti-ko]",tts:"Avete parlato con i fornitori del Sud-Est asiatico",bridges:[{flag:"🇧🇷",text:"Vocês falaram com os fornecedores do Sudeste Asiático?"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you speak with the Southeast Asian suppliers?"}],tip:"💡 'Sud-Est asiatico' — directly relevant to your VeriPura supply chains!",keywords:["avete parlato","fornitori","asiatico"]},
+    {pronoun:"loro",it:"Hanno parlato di blockchain e tracciabilità.",phonetic:"[AN-no par-LA-to di BLOCKCHAIN e trat-cha-bi-li-TA]",tts:"Hanno parlato di blockchain e tracciabilità",bridges:[{flag:"🇧🇷",text:"Falaram sobre blockchain e rastreabilidade. — 'tracciabilità'='rastreabilidade'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They talked about blockchain and traceability."}],tip:"💡 'Tracciabilità' — your exact field. Now you can discuss it in Italian!",keywords:["hanno parlato","blockchain","tracciabilità"]}]
+    }
+  },
+  {
+    inf:"lavorare",meaning:"to work",aux:"avere",
+    present:{io:"lavoro",tu:"lavori",lui:"lavora",noi:"lavoriamo",voi:"lavorate",loro:"lavorano"},
+    past_participle:"lavorato",
+    phonetics:{present:{io:"[la-VO-ro]",tu:"[la-VO-ri]",lui:"[la-VO-ra]",noi:"[la-vo-RYA-mo]",voi:"[la-vo-RA-te]",loro:"[la-VO-ra-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Lavoro nel settore della compliance alimentare.",phonetic:"[la-VO-ro nel set-TO-re DEL-la COMPLIANCE a-li-men-TA-re]",tts:"Lavoro nel settore della compliance alimentare",bridges:[{flag:"🇧🇷",text:"Trabalho no setor de compliance alimentar. — 'lavoro'='trabalho'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I work in the food compliance sector."}],tip:"💡 Your elevator pitch in Italian! 'Compliance' used as loanword.",keywords:["lavoro","compliance","alimentare"]},
+    {pronoun:"tu",it:"Dove lavori di solito?",phonetic:"[DO-ve la-VO-ri di SO-li-to]",tts:"Dove lavori di solito",bridges:[{flag:"🇧🇷",text:"Onde você trabalha normalmente? — 'di solito'='normalmente'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Where do you usually work?"}],tip:"💡 'Di solito'=usually. 'A volte'=sometimes. 'Sempre'=always.",keywords:["lavori","dove","solito"]},
+    {pronoun:"lui/lei",it:"Lavora per un'azienda di import.",phonetic:"[la-VO-ra per u-na-TSYEN-da di IM-port]",tts:"Lavora per un'azienda di import",bridges:[{flag:"🇧🇷",text:"Ele/ela trabalha para uma empresa de importação."},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she works for an import company."}],tip:"💡 'Lavorare per'=work for. 'Lavorare con'=work with. Big difference!",keywords:["lavora","azienda","import"]},
+    {pronoun:"noi",it:"Lavoriamo da remoto e in ufficio.",phonetic:"[la-vo-RYA-mo da RE-mo-to e in uf-FI-cho]",tts:"Lavoriamo da remoto e in ufficio",bridges:[{flag:"🇧🇷",text:"Trabalhamos remotamente e no escritório. — 'da remoto'='remotamente'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We work remotely and in the office."}],tip:"💡 'Da remoto' entered common use after 2020 and is now standard.",keywords:["lavoriamo","remoto","ufficio"]},
+    {pronoun:"voi",it:"Lavorate anche nel fine settimana?",phonetic:"[la-vo-RA-te AN-ke nel FI-ne set-ti-MA-na]",tts:"Lavorate anche nel fine settimana",bridges:[{flag:"🇧🇷",text:"Vocês também trabalham no fim de semana? — 'fine settimana'='fim de semana'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you also work on weekends?"}],tip:"💡 'Fine settimana'=weekend. 'Anche'=also/too. 'Neanche'=neither.",keywords:["lavorate","fine settimana","anche"]},
+    {pronoun:"loro",it:"Lavorano con clienti europei e asiatici.",phonetic:"[la-VO-ra-no kon klyen-TI eu-ro-PEI e a-ZYA-ti-chi]",tts:"Lavorano con clienti europei e asiatici",bridges:[{flag:"🇧🇷",text:"Eles trabalham com clientes europeus e asiáticos."},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They work with European and Asian clients."}],tip:"💡 'Europei' = European (m.pl.). Adjectives agree with nouns!",keywords:["lavorano","clienti","europei"]}],
+      past:[{pronoun:"io",it:"Ho lavorato in Brasile per molti anni.",phonetic:"[o la-vo-RA-to in bra-ZI-le per MOL-ti AN-ni]",tts:"Ho lavorato in Brasile per molti anni",bridges:[{flag:"🇧🇷",text:"Trabalhei no Brasil por muitos anos. — 'ho lavorato'='trabalhei'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I worked in Brazil for many years."}],tip:"💡 A sentence that might actually be true for you!",keywords:["ho lavorato","brasile","anni"]},
+    {pronoun:"tu",it:"Hai lavorato nel settore pubblico?",phonetic:"[AY la-vo-RA-to nel set-TO-re PUB-bli-ko]",tts:"Hai lavorato nel settore pubblico",bridges:[{flag:"🇧🇷",text:"Você trabalhou no setor público? — 'pubblico'='público'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you work in the public sector?"}],tip:"💡 'Settore pubblico' vs 'settore privato'. Useful in introductions.",keywords:["hai lavorato","settore","pubblico"]},
+    {pronoun:"lui/lei",it:"Ha lavorato per una multinazionale.",phonetic:"[a la-vo-RA-to per U-na mul-ti-na-tsyo-NA-le]",tts:"Ha lavorato per una multinazionale",bridges:[{flag:"🇧🇷",text:"Ele/ela trabalhou para uma multinacional. — palavra idêntica!"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she worked for a multinational."}],tip:"💡 'Multinazionale' is the same in both languages.",keywords:["ha lavorato","multinazionale"]},
+    {pronoun:"noi",it:"Abbiamo lavorato su questo progetto per mesi.",phonetic:"[ab-BYA-mo la-vo-RA-to su KWES-to pro-JET-to per ME-zi]",tts:"Abbiamo lavorato su questo progetto per mesi",bridges:[{flag:"🇧🇷",text:"Trabalhamos neste projeto por meses. — 'progetto'='projeto'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We worked on this project for months."}],tip:"💡 'Su questo progetto' = on this project. 'Su' = on (working on).",keywords:["abbiamo lavorato","progetto","mesi"]},
+    {pronoun:"voi",it:"Avete lavorato con aziende alimentari?",phonetic:"[a-VE-te la-vo-RA-to kon a-TSYEN-de a-li-men-TA-ri]",tts:"Avete lavorato con aziende alimentari",bridges:[{flag:"🇧🇷",text:"Vocês trabalharam com empresas alimentares?"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you work with food companies?"}],tip:"💡 'Aziende alimentari' = food companies. Your sector!",keywords:["avete lavorato","aziende","alimentari"]},
+    {pronoun:"loro",it:"Hanno lavorato molto per ottenere la certificazione.",phonetic:"[AN-no la-vo-RA-to MOL-to per ot-te-NE-re la cher-ti-fi-ka-TSYO-ne]",tts:"Hanno lavorato molto per ottenere la certificazione",bridges:[{flag:"🇧🇷",text:"Trabalharam muito para obter a certificação. — 'ottenere'='obter'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They worked hard to obtain the certification."}],tip:"💡 'Ottenere'=to obtain. 'Ottenuto'=obtained. Core compliance vocab.",keywords:["hanno lavorato","ottenere","certificazione"]}]
+    }
+  },
+  {
+    inf:"capire",meaning:"to understand",aux:"avere",
+    present:{io:"capisco",tu:"capisci",lui:"capisce",noi:"capiamo",voi:"capite",loro:"capiscono"},
+    past_participle:"capito",
+    phonetics:{present:{io:"[ka-PIS-ko]",tu:"[ka-PI-shi]",lui:"[ka-PI-she]",noi:"[ka-PYA-mo]",voi:"[ka-PI-te]",loro:"[ka-PIS-ko-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Non capisco questo regolamento.",phonetic:"[non ka-PIS-ko KWES-to re-go-la-MEN-to]",tts:"Non capisco questo regolamento",bridges:[{flag:"🇧🇷",text:"Não entendo este regulamento. — 'regolamento'='regulamento'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I don't understand this regulation."}],tip:"💡 You'll say this often in regulatory work AND daily Italian life.",keywords:["capisco","regolamento"]},
+    {pronoun:"tu",it:"Capisci il contratto?",phonetic:"[ka-PI-shi il kon-TRAT-to]",tts:"Capisci il contratto",bridges:[{flag:"🇧🇷",text:"Você entende o contrato? — 'capisci'='você entende'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you understand the contract?"}],tip:"💡 Note 'sc' spelling but 'sh' sound in 'capisci'. Softens before 'i'.",keywords:["capisci","contratto"]},
+    {pronoun:"lui/lei",it:"Capisce bene le normative europee.",phonetic:"[ka-PI-she BE-ne le nor-ma-TI-ve eu-ro-PE-e]",tts:"Capisce bene le normative europee",bridges:[{flag:"🇧🇷",text:"Ele/ela entende bem as normativas europeias."},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she understands EU regulations well."}],tip:"💡 A compliment worth giving to a regulatory expert!",keywords:["capisce","normative","europee"]},
+    {pronoun:"noi",it:"Capiamo le esigenze del cliente.",phonetic:"[ka-PYA-mo le e-zi-JEN-tse del klyen-TE]",tts:"Capiamo le esigenze del cliente",bridges:[{flag:"🇧🇷",text:"Entendemos as necessidades do cliente. — 'esigenze'='necessidades/exigências'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We understand the client's needs."}],tip:"💡 'Esigenze'=needs/requirements. 'Esigente'=demanding.",keywords:["capiamo","esigenze","cliente"]},
+    {pronoun:"voi",it:"Capite la differenza tra le due opzioni?",phonetic:"[ka-PI-te la dif-fe-REN-tsa tra le DU-e op-TSYO-ni]",tts:"Capite la differenza tra le due opzioni",bridges:[{flag:"🇧🇷",text:"Vocês entendem a diferença entre as duas opções? — 'differenza'='diferença'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you understand the difference between the two options?"}],tip:"💡 'Tra'=between. 'Opzioni'=options. Both very close to Portuguese.",keywords:["capite","differenza","opzioni"]},
+    {pronoun:"loro",it:"Capiscono le procedure di importazione.",phonetic:"[ka-PIS-ko-no le pro-CHE-du-re di im-por-ta-TSYO-ne]",tts:"Capiscono le procedure di importazione",bridges:[{flag:"🇧🇷",text:"Eles entendem os procedimentos de importação. — 'importazione'='importação'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They understand the import procedures."}],tip:"💡 'Importazione' — your daily word. Same root as 'importação'.",keywords:["capiscono","procedure","importazione"]}],
+      past:[{pronoun:"io",it:"Ho capito il problema principale.",phonetic:"[o ka-PI-to il pro-BLE-ma prin-chi-PA-le]",tts:"Ho capito il problema principale",bridges:[{flag:"🇧🇷",text:"Entendi o problema principal. — 'ho capito'='entendi'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I understood the main problem."}],tip:"💡 'Ho capito!' alone = 'I see! Got it!' — incredibly useful phrase.",keywords:["ho capito","problema","principale"]},
+    {pronoun:"tu",it:"Hai capito le istruzioni?",phonetic:"[AY ka-PI-to le is-tru-TSYO-ni]",tts:"Hai capito le istruzioni",bridges:[{flag:"🇧🇷",text:"Você entendeu as instruções? — 'istruzioni'='instruções'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you understand the instructions?"}],tip:"💡 'Istruzioni'=instructions. You'll see this on every Italian product.",keywords:["hai capito","istruzioni"]},
+    {pronoun:"lui/lei",it:"Ha capito subito la situazione.",phonetic:"[a ka-PI-to SU-bi-to la si-twa-TSYO-ne]",tts:"Ha capito subito la situazione",bridges:[{flag:"🇧🇷",text:"Entendeu a situação imediatamente. — 'subito'='imediatamente'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she immediately understood the situation."}],tip:"💡 'Subito'=immediately/right away. One of the most common Italian adverbs.",keywords:["ha capito","subito","situazione"]},
+    {pronoun:"noi",it:"Abbiamo capito cosa è andato storto.",phonetic:"[ab-BYA-mo ka-PI-to KO-za EH an-DA-to STOR-to]",tts:"Abbiamo capito cosa è andato storto",bridges:[{flag:"🇧🇷",text:"Entendemos o que deu errado. — 'cosa è andato storto'='o que deu errado'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We understood what went wrong."}],tip:"💡 'Andare storto'=to go wrong (go crooked). Very common idiom.",keywords:["abbiamo capito","storto","cosa"]},
+    {pronoun:"voi",it:"Avete capito i requisiti del bando?",phonetic:"[a-VE-te ka-PI-to i re-kwi-ZI-ti del BAN-do]",tts:"Avete capito i requisiti del bando",bridges:[{flag:"🇧🇷",text:"Vocês entenderam os requisitos do edital? — 'requisiti'='requisitos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you understand the tender requirements?"}],tip:"💡 'Bando'=public tender/call for applications. Important for EU grants.",keywords:["avete capito","requisiti","bando"]},
+    {pronoun:"loro",it:"Non hanno capito la nostra proposta.",phonetic:"[non AN-no ka-PI-to la NOS-tra pro-POS-ta]",tts:"Non hanno capito la nostra proposta",bridges:[{flag:"🇧🇷",text:"Eles não entenderam nossa proposta. — 'proposta'='proposta'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They didn't understand our proposal."}],tip:"💡 Common post-meeting reflection. Cue to improve the pitch!",keywords:["hanno capito","proposta","nostra"]}]
+    }
+  },
+  {
+    inf:"mangiare",meaning:"to eat",aux:"avere",
+    present:{io:"mangio",tu:"mangi",lui:"mangia",noi:"mangiamo",voi:"mangiate",loro:"mangiano"},
+    past_participle:"mangiato",
+    phonetics:{present:{io:"[MAN-jo]",tu:"[MAN-ji]",lui:"[MAN-ja]",noi:"[man-JA-mo]",voi:"[man-JA-te]",loro:"[MAN-ja-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Mangio spesso al mercato coperto.",phonetic:"[MAN-jo SPES-so al mer-KA-to ko-PER-to]",tts:"Mangio spesso al mercato coperto",bridges:[{flag:"🇧🇷",text:"Como frequentemente no mercado coberto. — 'mangio'='como', 'mercato'='mercado'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I often eat at the covered market."}],tip:"💡 'Mercato coperto'=indoor market. Liguria has incredible ones.",keywords:["mangio","mercato","coperto"]},
+    {pronoun:"tu",it:"Mangi prodotti biologici?",phonetic:"[MAN-ji pro-DOT-ti bio-LO-ji-chi]",tts:"Mangi prodotti biologici",bridges:[{flag:"🇧🇷",text:"Você come produtos orgânicos? — 'biologici'='orgânicos/biológicos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you eat organic products?"}],tip:"💡 'Biologico'=organic in Italy. Look for the BIO label.",keywords:["mangi","biologici","prodotti"]},
+    {pronoun:"lui/lei",it:"Mangia sempre a casa a mezzogiorno.",phonetic:"[MAN-ja SEM-pre a KA-za a med-zo-JOR-no]",tts:"Mangia sempre a casa a mezzogiorno",bridges:[{flag:"🇧🇷",text:"Ele/ela sempre come em casa ao meio-dia. — 'mezzogiorno'='meio-dia'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she always eats at home at noon."}],tip:"💡 'Mezzogiorno'=noon (mezzo+giorno). Also the name for southern Italy!",keywords:["mangia","sempre","mezzogiorno"]},
+    {pronoun:"noi",it:"Mangiamo fuori stasera?",phonetic:"[man-JA-mo FWO-ri sta-SE-ra]",tts:"Mangiamo fuori stasera",bridges:[{flag:"🇧🇷",text:"Vamos comer fora esta noite? — 'stasera'='esta noite', 'fuori'='fora'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Shall we eat out tonight?"}],tip:"💡 'Mangiamo!' as suggestion = 'Let's eat!' Italian meals open doors.",keywords:["mangiamo","fuori","stasera"]},
+    {pronoun:"voi",it:"Mangiate pesce spesso qui in Liguria?",phonetic:"[man-JA-te PE-she SPES-so kwi in li-GU-rya]",tts:"Mangiate pesce spesso qui in Liguria",bridges:[{flag:"🇧🇷",text:"Vocês comem peixe frequentemente aqui na Ligúria? — 'pesce'='peixe'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you often eat fish here in Liguria?"}],tip:"💡 Ligurian cuisine: focaccia, pesto, fresh seafood. Essential vocabulary!",keywords:["mangiate","pesce","liguria"]},
+    {pronoun:"loro",it:"Mangiano prodotti importati dall'Asia.",phonetic:"[MAN-ja-no pro-DOT-ti im-por-TA-ti dal-LA-zya]",tts:"Mangiano prodotti importati dall'Asia",bridges:[{flag:"🇧🇷",text:"Eles comem produtos importados da Ásia."},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They eat products imported from Asia."}],tip:"💡 'Importati'=imported (past participle as adjective). Very natural.",keywords:["mangiano","importati","asia"]}],
+      past:[{pronoun:"io",it:"Ho mangiato una focaccia ligure stamattina.",phonetic:"[o man-JA-to U-na fo-KAT-cha LI-gu-re sta-mat-TI-na]",tts:"Ho mangiato una focaccia ligure stamattina",bridges:[{flag:"🇧🇷",text:"Comi uma focaccia lígure esta manhã. — 'ho mangiato'='comi'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I ate a Ligurian focaccia this morning."}],tip:"💡 A sentence you can make true every day in Liguria. Say it proudly!",keywords:["ho mangiato","focaccia","ligure"]},
+    {pronoun:"tu",it:"Hai mangiato la pansoti?",phonetic:"[AY man-JA-to la pan-SO-ti]",tts:"Hai mangiato la pansoti",bridges:[{flag:"🇧🇷",text:"Você comeu a pansoti? — Ligurian herb-filled pasta"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Have you tried pansoti?"}],tip:"💡 Pansoti al sugo di noci — the classic Ligurian pasta!",keywords:["hai mangiato","pansoti"]},
+    {pronoun:"lui/lei",it:"Ha mangiato troppo al pranzo di lavoro.",phonetic:"[a man-JA-to TROP-po al PRAN-tso di la-VO-ro]",tts:"Ha mangiato troppo al pranzo di lavoro",bridges:[{flag:"🇧🇷",text:"Ele/ela comeu demais no almoço de trabalho. — 'troppo'='demais'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she ate too much at the business lunch."}],tip:"💡 Italian business lunches are serious. 'Troppo'=too much.",keywords:["ha mangiato","troppo","pranzo"]},
+    {pronoun:"noi",it:"Abbiamo mangiato benissimo ieri sera.",phonetic:"[ab-BYA-mo man-JA-to be-NIS-si-mo YE-ri SE-ra]",tts:"Abbiamo mangiato benissimo ieri sera",bridges:[{flag:"🇧🇷",text:"Comemos muitíssimo bem ontem à noite. — 'ieri sera'='ontem à noite'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We ate incredibly well last night."}],tip:"💡 '-issimo'=superlative intensifier. Buono→buonissimo, bello→bellissimo.",keywords:["abbiamo mangiato","benissimo","ieri sera"]},
+    {pronoun:"voi",it:"Avete mangiato al ristorante del porto?",phonetic:"[a-VE-te man-JA-to al ris-to-RAN-te del POR-to]",tts:"Avete mangiato al ristorante del porto",bridges:[{flag:"🇧🇷",text:"Vocês comeram no restaurante do porto? — 'ristorante'='restaurante'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you eat at the restaurant by the port?"}],tip:"💡 Genoa's port area has excellent seafood restaurants.",keywords:["avete mangiato","ristorante","porto"]},
+    {pronoun:"loro",it:"Hanno mangiato i prodotti senza certificazione.",phonetic:"[AN-no man-JA-to i pro-DOT-ti SEN-tsa cher-ti-fi-ka-TSYO-ne]",tts:"Hanno mangiato i prodotti senza certificazione",bridges:[{flag:"🇧🇷",text:"Eles comeram os produtos sem certificação. — 'senza'='sem'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They ate the products without certification."}],tip:"💡 'Senza'=without. And this is basically why VeriPura exists!",keywords:["hanno mangiato","senza","certificazione"]}]
+    }
+  },
+  {
+    inf:"venire",meaning:"to come",aux:"essere",
+    present:{io:"vengo",tu:"vieni",lui:"viene",noi:"veniamo",voi:"venite",loro:"vengono"},
+    past_participle:"venuto/a",
+    phonetics:{present:{io:"[VEN-go]",tu:"[VYE-ni]",lui:"[VYE-ne]",noi:"[ve-NYA-mo]",voi:"[ve-NI-te]",loro:"[VEN-go-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Vengo dalla California, ora vivo in Italia.",phonetic:"[VEN-go DAL-la ka-li-FOR-nya O-ra VI-vo in i-TA-lya]",tts:"Vengo dalla California ora vivo in Italia",bridges:[{flag:"🇧🇷",text:"Venho da Califórnia, agora moro na Itália. — 'vengo'='venho', 'ora'='agora'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I come from California, now I live in Italy."}],tip:"💡 'Venire da'=come from (origin). 'Venire a'=come to (destination).",keywords:["vengo","california","italia"]},
+    {pronoun:"tu",it:"Vieni alla riunione di domani?",phonetic:"[VYE-ni AL-la ryu-NYO-ne di do-MA-ni]",tts:"Vieni alla riunione di domani",bridges:[{flag:"🇧🇷",text:"Você vem à reunião de amanhã? — 'vieni'='vem (você)'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Are you coming to tomorrow's meeting?"}],tip:"💡 'Vieni?' also used as 'Are you coming along?' in social contexts.",keywords:["vieni","riunione","domani"]},
+    {pronoun:"lui/lei",it:"Il corriere viene giovedì mattina.",phonetic:"[il kor-RYE-re VYE-ne jo-ve-DI mat-TI-na]",tts:"Il corriere viene giovedì mattina",bridges:[{flag:"🇧🇷",text:"O correio/entregador vem quinta-feira de manhã. — 'corriere'='correio'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"The courier comes Thursday morning."}],tip:"💡 'Corriere'=courier. 'Spedizioniere'=freight forwarder.",keywords:["corriere","viene","giovedì"]},
+    {pronoun:"noi",it:"Veniamo a Genova per la fiera.",phonetic:"[ve-NYA-mo a JE-no-va per la FYE-ra]",tts:"Veniamo a Genova per la fiera",bridges:[{flag:"🇧🇷",text:"Viemos a Gênova para a feira. — 'veniamo'='vimos/viemos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We're coming to Genoa for the trade fair."}],tip:"💡 Genova hosts major industry events. 'Fiera'=trade fair.",keywords:["veniamo","genova","fiera"]},
+    {pronoun:"voi",it:"Venite con noi al porto?",phonetic:"[ve-NI-te kon NOY al POR-to]",tts:"Venite con noi al porto",bridges:[{flag:"🇧🇷",text:"Vocês vêm com a gente ao porto? — 'venite'='vêm (vocês)'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Are you coming with us to the port?"}],tip:"💡 'Con noi'=with us. 'Con me'=with me. 'Con loro'=with them.",keywords:["venite","porto","noi"]},
+    {pronoun:"loro",it:"Vengono dalla Thailandia.",phonetic:"[VEN-go-no DAL-la tai-LAN-dya]",tts:"Vengono dalla Thailandia",bridges:[{flag:"🇧🇷",text:"Eles vêm da Tailândia. — 'Thailandia'='Tailândia'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They come from Thailand."}],tip:"💡 Southeast Asian suppliers. Good context for your food import work.",keywords:["vengono","thailandia"]}],
+      past:[{pronoun:"io",it:"Sono venuto in Italia per lavoro.",phonetic:"[SO-no ve-NU-to in i-TA-lya per la-VO-ro]",tts:"Sono venuto in Italia per lavoro",bridges:[{flag:"🇧🇷",text:"Vim para a Itália por trabalho. — 'sono venuto'='vim'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I came to Italy for work."}],tip:"💡 'Venire' uses 'essere'. 'Sono venuto' (m) / 'sono venuta' (f).",keywords:["sono venuto","italia","lavoro"]},
+    {pronoun:"tu",it:"Sei venuto alla presentazione?",phonetic:"[SAY ve-NU-to AL-la pre-zen-ta-TSYO-ne]",tts:"Sei venuto alla presentazione",bridges:[{flag:"🇧🇷",text:"Você veio à apresentação? — 'presentazione'='apresentação'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you come to the presentation?"}],tip:"💡 'Presentazione'=presentation. Same word, similar stress.",keywords:["sei venuto","presentazione"]},
+    {pronoun:"lui/lei",it:"È venuto dall'ufficio di Bangkok.",phonetic:"[EH ve-NU-to dal-luf-FI-cho di BANGKOK]",tts:"È venuto dall'ufficio di Bangkok",bridges:[{flag:"🇧🇷",text:"Ele/ela veio do escritório de Bangcoc."},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she came from the Bangkok office."}],tip:"💡 Relevant to Onno's base! 'Dall'ufficio'=from the office.",keywords:["è venuto","bangkok","ufficio"]},
+    {pronoun:"noi",it:"Siamo venuti a trovare i fornitori.",phonetic:"[SYA-mo ve-NU-ti a tro-VA-re i for-ni-TO-ri]",tts:"Siamo venuti a trovare i fornitori",bridges:[{flag:"🇧🇷",text:"Viemos visitar os fornecedores. — 'trovare'='encontrar/visitar'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We came to visit the suppliers."}],tip:"💡 'Venire a trovare'=to come to visit someone. Very natural Italian.",keywords:["siamo venuti","trovare","fornitori"]},
+    {pronoun:"voi",it:"Siete venuti con tutti i documenti?",phonetic:"[SYE-te ve-NU-ti kon TUT-ti i do-KU-men-ti]",tts:"Siete venuti con tutti i documenti",bridges:[{flag:"🇧🇷",text:"Vocês vieram com todos os documentos? — 'tutti i'='todos os'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you come with all the documents?"}],tip:"💡 'Tutti i'=all the (m.pl.). 'Tutte le'=all the (f.pl.).",keywords:["siete venuti","tutti","documenti"]},
+    {pronoun:"loro",it:"Sono venuti dalla Cina per l'ispezione.",phonetic:"[SO-no ve-NU-ti DAL-la CHI-na per lis-pe-TSYO-ne]",tts:"Sono venuti dalla Cina per l'ispezione",bridges:[{flag:"🇧🇷",text:"Eles vieram da China para a inspeção. — 'ispezione'='inspeção'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They came from China for the inspection."}],tip:"💡 A scenario you might encounter in supply chain work!",keywords:["sono venuti","cina","ispezione"]}]
+    }
+  },
+  {
+    inf:"comprare",meaning:"to buy",aux:"avere",
+    present:{io:"compro",tu:"compri",lui:"compra",noi:"compriamo",voi:"comprate",loro:"comprano"},
+    past_participle:"comprato",
+    phonetics:{present:{io:"[KOM-pro]",tu:"[KOM-pri]",lui:"[KOM-pra]",noi:"[kom-PRYA-mo]",voi:"[kom-PRA-te]",loro:"[KOM-pra-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Compro la verdura al mercato.",phonetic:"[KOM-pro la ver-DU-ra al mer-KA-to]",tts:"Compro la verdura al mercato",bridges:[{flag:"🇧🇷",text:"Compro as verduras no mercado. — 'compro'='compro', 'verdura'='verduras'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I buy vegetables at the market."}],tip:"💡 'Verdura' in Italian = vegetables (not green colour). 'Verde'=colour.",keywords:["compro","verdura","mercato"]},
+    {pronoun:"tu",it:"Compri prodotti locali o importati?",phonetic:"[KOM-pri pro-DOT-ti lo-KA-li o im-por-TA-ti]",tts:"Compri prodotti locali o importati",bridges:[{flag:"🇧🇷",text:"Você compra produtos locais ou importados? — quase idêntico!"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you buy local or imported products?"}],tip:"💡 Highly relevant question for your work and everyday shopping.",keywords:["compri","locali","importati"]},
+    {pronoun:"lui/lei",it:"Compra sempre prodotti biologici certificati.",phonetic:"[KOM-pra SEM-pre pro-DOT-ti bio-LO-ji-chi cher-ti-fi-KA-ti]",tts:"Compra sempre prodotti biologici certificati",bridges:[{flag:"🇧🇷",text:"Ele/ela sempre compra produtos orgânicos certificados."},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she always buys certified organic products."}],tip:"💡 'Certificati'=certified. 'Biologici certificati'=gold standard.",keywords:["compra","biologici","certificati"]},
+    {pronoun:"noi",it:"Compriamo direttamente dai produttori asiatici.",phonetic:"[kom-PRYA-mo di-ret-ta-MEN-te day pro-dut-TO-ri a-ZYA-ti-chi]",tts:"Compriamo direttamente dai produttori asiatici",bridges:[{flag:"🇧🇷",text:"Compramos diretamente dos produtores asiáticos. — 'produttori'='produtores'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We buy directly from Asian producers."}],tip:"💡 'Direttamente dai produttori'=direct sourcing. Core food import model.",keywords:["compriamo","direttamente","produttori"]},
+    {pronoun:"voi",it:"Comprate in grandi quantità?",phonetic:"[kom-PRA-te in GRAN-di kwan-ti-TA]",tts:"Comprate in grandi quantità",bridges:[{flag:"🇧🇷",text:"Vocês compram em grandes quantidades? — 'quantità'='quantidade'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you buy in large quantities?"}],tip:"💡 'Quantità'=quantity. No plural form change — same word for both.",keywords:["comprate","grandi","quantità"]},
+    {pronoun:"loro",it:"Comprano prodotti freschi ogni giorno.",phonetic:"[KOM-pra-no pro-DOT-ti FRE-ski ON-ji JOR-no]",tts:"Comprano prodotti freschi ogni giorno",bridges:[{flag:"🇧🇷",text:"Eles compram produtos frescos todo dia. — 'freschi'='frescos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They buy fresh products every day."}],tip:"💡 'Freschi' (fresh, m.pl.) — quality marker in Italian food culture.",keywords:["comprano","freschi","ogni giorno"]}],
+      past:[{pronoun:"io",it:"Ho comprato un software di compliance.",phonetic:"[o kom-PRA-to un SOFTWARE di kom-PLYAN-tse]",tts:"Ho comprato un software di compliance",bridges:[{flag:"🇧🇷",text:"Comprei um software de compliance. — 'ho comprato'='comprei'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I bought a compliance software."}],tip:"💡 Regular -are verb: comprare→ho comprato. Easy pattern!",keywords:["ho comprato","software","compliance"]},
+    {pronoun:"tu",it:"Hai comprato il biglietto del treno?",phonetic:"[AY kom-PRA-to il bi-LYET-to del TRE-no]",tts:"Hai comprato il biglietto del treno",bridges:[{flag:"🇧🇷",text:"Você comprou a passagem de trem? — 'biglietto del treno'='passagem de trem'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you buy the train ticket?"}],tip:"💡 'Biglietto del treno'=train ticket. 'Binario'=platform. Essential travel words.",keywords:["hai comprato","biglietto","treno"]},
+    {pronoun:"lui/lei",it:"Ha comprato merce senza documentazione.",phonetic:"[a kom-PRA-to MER-che SEN-tsa do-ku-men-ta-TSYO-ne]",tts:"Ha comprato merce senza documentazione",bridges:[{flag:"🇧🇷",text:"Ele/ela comprou mercadoria sem documentação. — 'merce'='mercadoria'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she bought goods without documentation."}],tip:"💡 'Merce'=goods. 'Documentazione'=documentation. Core VeriPura vocab!",keywords:["ha comprato","merce","documentazione"]},
+    {pronoun:"noi",it:"Abbiamo comprato partite di riso thai certificato.",phonetic:"[ab-BYA-mo kom-PRA-to par-TI-te di RI-zo TAY cher-ti-fi-KA-to]",tts:"Abbiamo comprato partite di riso thai certificato",bridges:[{flag:"🇧🇷",text:"Compramos lotes de arroz tailandês certificado. — 'partite'='lotes', 'riso'='arroz'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We bought batches of certified Thai rice."}],tip:"💡 'Partite'=batches/lots (commercial). Core supply chain vocabulary.",keywords:["abbiamo comprato","partite","riso"]},
+    {pronoun:"voi",it:"Avete comprato la piattaforma SaaS?",phonetic:"[a-VE-te kom-PRA-to la pyat-ta-FOR-ma SAAS]",tts:"Avete comprato la piattaforma SaaS",bridges:[{flag:"🇧🇷",text:"Vocês compraram a plataforma SaaS? — 'piattaforma'='plataforma'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you buy the SaaS platform?"}],tip:"💡 'Piattaforma'=platform. Directly relevant to VeriPura!",keywords:["avete comprato","piattaforma","saas"]},
+    {pronoun:"loro",it:"Hanno comprato senza verificare l'origine.",phonetic:"[AN-no kom-PRA-to SEN-tsa ve-ri-fi-KA-re lo-RI-ji-ne]",tts:"Hanno comprato senza verificare l'origine",bridges:[{flag:"🇧🇷",text:"Eles compraram sem verificar a origem. — 'origine'='origem'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They bought without verifying the origin."}],tip:"💡 'Origine'=origin. 'Tracciabilità dell'origine'=origin traceability.",keywords:["hanno comprato","verificare","origine"]}]
+    }
+  },
+  {
+    inf:"mandare",meaning:"to send",aux:"avere",
+    present:{io:"mando",tu:"mandi",lui:"manda",noi:"mandiamo",voi:"mandate",loro:"mandano"},
+    past_participle:"mandato",
+    phonetics:{present:{io:"[MAN-do]",tu:"[MAN-di]",lui:"[MAN-da]",noi:"[man-DYA-mo]",voi:"[man-DA-te]",loro:"[MAN-da-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Mando il preventivo entro oggi.",phonetic:"[MAN-do il pre-ven-TI-vo EN-tro OJ-ji]",tts:"Mando il preventivo entro oggi",bridges:[{flag:"🇧🇷",text:"Envio o orçamento até hoje. — 'preventivo'='orçamento/proposta de preço'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I'll send the quote by today."}],tip:"💡 'Preventivo'=quote/estimate. Essential business word.",keywords:["mando","preventivo","oggi"]},
+    {pronoun:"tu",it:"Mandi la fattura via email?",phonetic:"[MAN-di la fat-TU-ra VYA EMAIL]",tts:"Mandi la fattura via email",bridges:[{flag:"🇧🇷",text:"Você manda a fatura por email? — 'fattura'='fatura', 'via'='por/via'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you send the invoice by email?"}],tip:"💡 'Via email' used exactly like English. 'Via fax' still used in Italy!",keywords:["mandi","fattura","email"]},
+    {pronoun:"lui/lei",it:"Manda i documenti al controllo doganale.",phonetic:"[MAN-da i do-KU-men-ti al kon-TROL-lo do-ga-NA-le]",tts:"Manda i documenti al controllo doganale",bridges:[{flag:"🇧🇷",text:"Ele/ela manda os documentos ao controle aduaneiro."},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she sends the documents to customs control."}],tip:"💡 'Controllo doganale'=customs control. Daily food import vocabulary.",keywords:["manda","documenti","doganale"]},
+    {pronoun:"noi",it:"Mandiamo le notifiche automaticamente.",phonetic:"[man-DYA-mo le no-TI-fi-ke ow-to-ma-ti-KA-men-te]",tts:"Mandiamo le notifiche automaticamente",bridges:[{flag:"🇧🇷",text:"Enviamos as notificações automaticamente. — 'notifiche'='notificações'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We send notifications automatically."}],tip:"💡 This is literally what VeriPura does! 'Automaticamente'=automaticamente.",keywords:["mandiamo","notifiche","automaticamente"]},
+    {pronoun:"voi",it:"Mandate i certificati prima della spedizione?",phonetic:"[man-DA-te i cher-ti-fi-KA-ti PRI-ma DEL-la spe-di-TSYO-ne]",tts:"Mandate i certificati prima della spedizione",bridges:[{flag:"🇧🇷",text:"Vocês mandam os certificados antes do envio? — 'spedizione'='envio/expedição'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you send the certificates before shipment?"}],tip:"💡 'Spedizione'=shipment. 'Spedire'=to ship. 'Spedizioniere'=freight forwarder.",keywords:["mandate","certificati","spedizione"]},
+    {pronoun:"loro",it:"Mandano le notifiche RASFF ai partner.",phonetic:"[MAN-da-no le no-TI-fi-ke RASFF ay PAR-tner]",tts:"Mandano le notifiche RASFF ai partner",bridges:[{flag:"🇧🇷",text:"Eles enviam as notificações RASFF aos parceiros."},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They send RASFF notifications to partners."}],tip:"💡 RASFF=EU Rapid Alert System for Food and Feed. Core to your sector!",keywords:["mandano","rasff","partner"]}],
+      past:[{pronoun:"io",it:"Ho mandato la documentazione ieri.",phonetic:"[o man-DA-to la do-ku-men-ta-TSYO-ne YE-ri]",tts:"Ho mandato la documentazione ieri",bridges:[{flag:"🇧🇷",text:"Mandei a documentação ontem. — 'ho mandato'='mandei'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I sent the documentation yesterday."}],tip:"💡 Standard update after completing compliance tasks.",keywords:["ho mandato","documentazione","ieri"]},
+    {pronoun:"tu",it:"Hai mandato la conferma d'ordine?",phonetic:"[AY man-DA-to la kon-FER-ma DOR-di-ne]",tts:"Hai mandato la conferma d'ordine",bridges:[{flag:"🇧🇷",text:"Você mandou a confirmação do pedido? — 'conferma'='confirmação'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you send the order confirmation?"}],tip:"💡 'Conferma d'ordine'=order confirmation. Standard B2B phrase.",keywords:["hai mandato","conferma","ordine"]},
+    {pronoun:"lui/lei",it:"Ha mandato i dati in ritardo.",phonetic:"[a man-DA-to i DA-ti in ri-TAR-do]",tts:"Ha mandato i dati in ritardo",bridges:[{flag:"🇧🇷",text:"Ele/ela enviou os dados com atraso. — 'in ritardo'='com atraso'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she sent the data late."}],tip:"💡 'In ritardo'=late. 'In anticipo'=early. 'In orario'=on time. Essential trio.",keywords:["ha mandato","dati","ritardo"]},
+    {pronoun:"noi",it:"Abbiamo mandato l'offerta commerciale.",phonetic:"[ab-BYA-mo man-DA-to lof-FER-ta kom-mer-CHA-le]",tts:"Abbiamo mandato l'offerta commerciale",bridges:[{flag:"🇧🇷",text:"Enviamos a proposta comercial. — 'offerta'='oferta/proposta'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We sent the commercial offer."}],tip:"💡 'Offerta commerciale'=commercial offer. You'll use this regularly.",keywords:["abbiamo mandato","offerta","commerciale"]},
+    {pronoun:"voi",it:"Avete mandato tutti i certificati richiesti?",phonetic:"[a-VE-te man-DA-to TUT-ti i cher-ti-fi-KA-ti ri-KYE-sti]",tts:"Avete mandato tutti i certificati richiesti",bridges:[{flag:"🇧🇷",text:"Vocês mandaram todos os certificados solicitados? — 'richiesti'='solicitados'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you send all the required certificates?"}],tip:"💡 'Richiesti'=requested/required. Core compliance verb.",keywords:["avete mandato","certificati","richiesti"]},
+    {pronoun:"loro",it:"Hanno mandato la merce senza i documenti.",phonetic:"[AN-no man-DA-to la MER-che SEN-tsa i do-KU-men-ti]",tts:"Hanno mandato la merce senza i documenti",bridges:[{flag:"🇧🇷",text:"Eles mandaram a mercadoria sem os documentos."},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They sent the goods without the documents."}],tip:"💡 The nightmare scenario that VeriPura prevents. Say it in Italian!",keywords:["hanno mandato","merce","documenti"]}]
+    }
+  },
+  {
+    inf:"pagare",meaning:"to pay",aux:"avere",
+    present:{io:"pago",tu:"paghi",lui:"paga",noi:"paghiamo",voi:"pagate",loro:"pagano"},
+    past_participle:"pagato",
+    phonetics:{present:{io:"[PA-go]",tu:"[PA-gi]",lui:"[PA-ga]",noi:"[pa-GYA-mo]",voi:"[pa-GA-te]",loro:"[PA-ga-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Pago con carta o contanti?",phonetic:"[PA-go kon KAR-ta o kon-TAN-ti]",tts:"Pago con carta o contanti",bridges:[{flag:"🇧🇷",text:"Pago com cartão ou dinheiro? — 'carta'='cartão', 'contanti'='dinheiro'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Shall I pay by card or cash?"}],tip:"💡 'Contanti'=cash. Still widely used in Italy, especially at markets.",keywords:["pago","carta","contanti"]},
+    {pronoun:"tu",it:"Paghi subito o a 30 giorni?",phonetic:"[PA-gi SU-bi-to o a TREN-ta JOR-ni]",tts:"Paghi subito o a 30 giorni",bridges:[{flag:"🇧🇷",text:"Você paga à vista ou a 30 dias? — 'a 30 giorni'='a 30 dias'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you pay immediately or net 30?"}],tip:"💡 'A 30/60/90 giorni'=net 30/60/90. Standard Italian payment terms.",keywords:["paghi","subito","giorni"]},
+    {pronoun:"lui/lei",it:"Paga sempre puntuale.",phonetic:"[PA-ga SEM-pre pun-twa-LE]",tts:"Paga sempre puntuale",bridges:[{flag:"🇧🇷",text:"Ele/ela sempre paga pontualmente. — 'puntuale'='pontual'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she always pays on time."}],tip:"💡 'Paga in ritardo'=pays late. 'Puntuale'=on time. Important distinction!",keywords:["paga","puntuale","sempre"]},
+    {pronoun:"noi",it:"Paghiamo tramite bonifico bancario.",phonetic:"[pa-GYA-mo TRA-mi-te bo-NI-fi-ko ban-KA-ryo]",tts:"Paghiamo tramite bonifico bancario",bridges:[{flag:"🇧🇷",text:"Pagamos via transferência bancária. — 'bonifico bancario'='transferência bancária'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We pay by bank transfer."}],tip:"💡 'Bonifico bancario'=bank transfer. Standard B2B payment in Italy.",keywords:["paghiamo","bonifico","bancario"]},
+    {pronoun:"voi",it:"Pagate le tasse doganali in anticipo?",phonetic:"[pa-GA-te le TAS-se do-ga-NA-li in an-TI-chi-po]",tts:"Pagate le tasse doganali in anticipo",bridges:[{flag:"🇧🇷",text:"Vocês pagam as taxas aduaneiras antecipadamente? — 'tasse doganali'='taxas alfandegárias'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you pay customs duties in advance?"}],tip:"💡 'Tasse doganali'=customs duties. 'In anticipo'=in advance.",keywords:["pagate","tasse","doganali"]},
+    {pronoun:"loro",it:"Pagano con lettere di credito.",phonetic:"[PA-ga-no kon LET-te-re di KRE-di-to]",tts:"Pagano con lettere di credito",bridges:[{flag:"🇧🇷",text:"Eles pagam com cartas de crédito. — 'lettere di credito'='cartas de crédito'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They pay with letters of credit."}],tip:"💡 'Lettera di credito'=letter of credit (L/C). Key trade finance instrument.",keywords:["pagano","lettere","credito"]}],
+      past:[{pronoun:"io",it:"Ho pagato la fattura stamattina.",phonetic:"[o pa-GA-to la fat-TU-ra sta-mat-TI-na]",tts:"Ho pagato la fattura stamattina",bridges:[{flag:"🇧🇷",text:"Paguei a fatura esta manhã. — 'ho pagato'='paguei'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I paid the invoice this morning."}],tip:"💡 Simple confirmation after completing a payment.",keywords:["ho pagato","fattura","stamattina"]},
+    {pronoun:"tu",it:"Hai pagato il dazio doganale?",phonetic:"[AY pa-GA-to il DA-tsyo do-ga-NA-le]",tts:"Hai pagato il dazio doganale",bridges:[{flag:"🇧🇷",text:"Você pagou o imposto alfandegário? — 'dazio doganale'='direito aduaneiro'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you pay the customs duty?"}],tip:"💡 'Dazio doganale'=customs duty. Important distinction from general 'tasse'.",keywords:["hai pagato","dazio","doganale"]},
+    {pronoun:"lui/lei",it:"Ha pagato in ritardo anche questa volta.",phonetic:"[a pa-GA-to in ri-TAR-do AN-ke KWES-ta VOL-ta]",tts:"Ha pagato in ritardo anche questa volta",bridges:[{flag:"🇧🇷",text:"Ele/ela pagou com atraso desta vez também. — 'questa volta'='desta vez'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she paid late again this time."}],tip:"💡 'Questa volta'=this time. 'La prossima volta'=next time.",keywords:["ha pagato","ritardo","questa volta"]},
+    {pronoun:"noi",it:"Abbiamo pagato tramite SWIFT.",phonetic:"[ab-BYA-mo pa-GA-to TRA-mi-te SWIFT]",tts:"Abbiamo pagato tramite SWIFT",bridges:[{flag:"🇧🇷",text:"Pagamos via SWIFT. — 'tramite'='via/por meio de'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We paid via SWIFT."}],tip:"💡 'Tramite'=via/through. 'Tramite email'=via email. Very versatile.",keywords:["abbiamo pagato","swift","tramite"]},
+    {pronoun:"voi",it:"Avete pagato tutte le tasse di importazione?",phonetic:"[a-VE-te pa-GA-to TUT-te le TAS-se di im-por-ta-TSYO-ne]",tts:"Avete pagato tutte le tasse di importazione",bridges:[{flag:"🇧🇷",text:"Vocês pagaram todos os impostos de importação?"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you pay all the import taxes?"}],tip:"💡 The final compliance checklist for any food import shipment.",keywords:["avete pagato","tasse","importazione"]},
+    {pronoun:"loro",it:"Non hanno ancora pagato.",phonetic:"[non AN-no an-KO-ra pa-GA-to]",tts:"Non hanno ancora pagato",bridges:[{flag:"🇧🇷",text:"Eles ainda não pagaram. — 'non...ancora'='ainda não'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They haven't paid yet."}],tip:"💡 'Non...ancora'=not yet. 'Non ho ancora risposto'=I haven't replied yet.",keywords:["non hanno","ancora","pagato"]}]
+    }
+  },
+  {
+    inf:"tornare",meaning:"to return / come back",aux:"essere",
+    present:{io:"torno",tu:"torni",lui:"torna",noi:"torniamo",voi:"tornate",loro:"tornano"},
+    past_participle:"tornato/a",
+    phonetics:{present:{io:"[TOR-no]",tu:"[TOR-ni]",lui:"[TOR-na]",noi:"[tor-NYA-mo]",voi:"[tor-NA-te]",loro:"[TOR-na-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Torno in ufficio dopo il pranzo.",phonetic:"[TOR-no in uf-FI-cho DO-po il PRAN-tso]",tts:"Torno in ufficio dopo il pranzo",bridges:[{flag:"🇧🇷",text:"Volto ao escritório depois do almoço. — 'torno'='volto', 'dopo'='depois'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I'm returning to the office after lunch."}],tip:"💡 'Dopo'=after. 'Prima di'=before. 'Durante'=during. Structure your day.",keywords:["torno","ufficio","pranzo"]},
+    {pronoun:"tu",it:"Torni spesso in Brasile?",phonetic:"[TOR-ni SPES-so in bra-ZI-le]",tts:"Torni spesso in Brasile",bridges:[{flag:"🇧🇷",text:"Você volta frequentemente ao Brasil? — 'torni'='volta (você)'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you often return to Brazil?"}],tip:"💡 A natural question you might be asked living in Italy.",keywords:["torni","brasile","spesso"]},
+    {pronoun:"lui/lei",it:"Il container torna al porto domani.",phonetic:"[il kon-te-I-ner TOR-na al POR-to do-MA-ni]",tts:"Il container torna al porto domani",bridges:[{flag:"🇧🇷",text:"O container volta ao porto amanhã. — 'container' used in Italian too!"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"The container returns to the port tomorrow."}],tip:"💡 'Container' used as loanword in Italian logistics. Many English terms are adopted.",keywords:["container","torna","porto"]},
+    {pronoun:"noi",it:"Torniamo dalla fiera martedì sera.",phonetic:"[tor-NYA-mo DAL-la FYE-ra mar-te-DI SE-ra]",tts:"Torniamo dalla fiera martedì sera",bridges:[{flag:"🇧🇷",text:"Voltamos da feira na terça-feira à noite. — 'martedì'='terça-feira', 'sera'='noite'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We return from the fair on Tuesday evening."}],tip:"💡 Italian days: lunedì, martedì, mercoledì, giovedì, venerdì, sabato, domenica.",keywords:["torniamo","fiera","martedì"]},
+    {pronoun:"voi",it:"Tornate sempre dallo stesso fornitore?",phonetic:"[tor-NA-te SEM-pre DAL-lo STES-so for-ni-TO-re]",tts:"Tornate sempre dallo stesso fornitore",bridges:[{flag:"🇧🇷",text:"Vocês sempre voltam ao mesmo fornecedor? — 'stesso'='mesmo'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you always return to the same supplier?"}],tip:"💡 'Stesso'=same. 'Lo stesso'=the same one. 'Allo stesso modo'=in the same way.",keywords:["tornate","stesso","fornitore"]},
+    {pronoun:"loro",it:"Tornano dall'Asia con nuovi campioni.",phonetic:"[TOR-na-no dal-LA-zya kon NWO-vi kam-PYO-ni]",tts:"Tornano dall'Asia con nuovi campioni",bridges:[{flag:"🇧🇷",text:"Eles voltam da Ásia com novas amostras. — 'campioni'='amostras (comerciais)'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They return from Asia with new samples."}],tip:"💡 'Campioni'=samples (commercial) OR champions. Context is key!",keywords:["tornano","asia","campioni"]}],
+      past:[{pronoun:"io",it:"Sono tornato da Bangkok ieri.",phonetic:"[SO-no tor-NA-to da BANGKOK YE-ri]",tts:"Sono tornato da Bangkok ieri",bridges:[{flag:"🇧🇷",text:"Voltei de Bangcoc ontem. — 'sono tornato'='voltei'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I returned from Bangkok yesterday."}],tip:"💡 'Tornare' uses 'essere'. Bangkok = Onno's city!",keywords:["sono tornato","bangkok","ieri"]},
+    {pronoun:"tu",it:"Sei tornato dalla riunione?",phonetic:"[SAY tor-NA-to DAL-la ryu-NYO-ne]",tts:"Sei tornato dalla riunione",bridges:[{flag:"🇧🇷",text:"Você voltou da reunião? — 'sei tornato'='você voltou'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you get back from the meeting?"}],tip:"💡 Natural question to a colleague after they step out.",keywords:["sei tornato","riunione"]},
+    {pronoun:"lui/lei",it:"È tornato in Italia per firmare.",phonetic:"[EH tor-NA-to in i-TA-lya per fir-MA-re]",tts:"È tornato in Italia per firmare",bridges:[{flag:"🇧🇷",text:"Ele/ela voltou para a Itália para assinar."},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she returned to Italy to sign."}],tip:"💡 'Per + infinitive'=in order to. Tornare per firmare=returned to sign.",keywords:["è tornato","italia","firmare"]},
+    {pronoun:"noi",it:"Siamo tornati con un contratto firmato.",phonetic:"[SYA-mo tor-NA-ti kon un kon-TRAT-to fir-MA-to]",tts:"Siamo tornati con un contratto firmato",bridges:[{flag:"🇧🇷",text:"Voltamos com um contrato assinado. — 'firmato'='assinado'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We came back with a signed contract."}],tip:"💡 A triumphant sentence! 'Firmato'=signed. Great outcome to report.",keywords:["siamo tornati","contratto","firmato"]},
+    {pronoun:"voi",it:"Siete tornati dalla missione commerciale?",phonetic:"[SYE-te tor-NA-ti DAL-la mis-SYO-ne kom-mer-CHA-le]",tts:"Siete tornati dalla missione commerciale",bridges:[{flag:"🇧🇷",text:"Vocês voltaram da missão comercial? — 'missione commerciale'='missão comercial'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you return from the business trip?"}],tip:"💡 'Missione commerciale'=trade mission/business trip. Formal and professional.",keywords:["siete tornati","missione","commerciale"]},
+    {pronoun:"loro",it:"Sono tornati senza la merce sdoganata.",phonetic:"[SO-no tor-NA-ti SEN-tsa la MER-che zdo-ga-NA-ta]",tts:"Sono tornati senza la merce sdoganata",bridges:[{flag:"🇧🇷",text:"Eles voltaram sem a mercadoria desembaraçada. — 'sdoganata'='desembaraçada'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They came back without the cleared goods."}],tip:"💡 'Sdoganare'=to clear customs. 'Merce sdoganata'=cleared goods. Essential!",keywords:["sono tornati","merce","sdoganata"]}]
+    }
+  },
+  {
+    inf:"aspettare",meaning:"to wait / expect",aux:"avere",
+    present:{io:"aspetto",tu:"aspetti",lui:"aspetta",noi:"aspettiamo",voi:"aspettate",loro:"aspettano"},
+    past_participle:"aspettato",
+    phonetics:{present:{io:"[as-PET-to]",tu:"[as-PET-ti]",lui:"[as-PET-ta]",noi:"[as-pet-TYA-mo]",voi:"[as-pet-TA-te]",loro:"[as-PET-ta-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Aspetto la risposta dalla dogana.",phonetic:"[as-PET-to la ris-POS-ta DAL-la do-GA-na]",tts:"Aspetto la risposta dalla dogana",bridges:[{flag:"🇧🇷",text:"Aguardo a resposta da alfândega. — 'aspetto'='aguardo/espero'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I'm waiting for the response from customs."}],tip:"💡 'Aspettare'=to wait for/expect. No separate word for 'for' needed.",keywords:["aspetto","risposta","dogana"]},
+    {pronoun:"tu",it:"Aspetti qualcuno?",phonetic:"[as-PET-ti kwal-KU-no]",tts:"Aspetti qualcuno",bridges:[{flag:"🇧🇷",text:"Você está esperando alguém? — 'qualcuno'='alguém'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Are you waiting for someone?"}],tip:"💡 'Qualcuno'=someone. 'Qualcosa'=something. Easy pair.",keywords:["aspetti","qualcuno"]},
+    {pronoun:"lui/lei",it:"Aspetta il visto per entrare nell'UE.",phonetic:"[as-PET-ta il VIS-to per en-TRA-re nel-LUE]",tts:"Aspetta il visto per entrare nell'UE",bridges:[{flag:"🇧🇷",text:"Ele/ela aguarda o visto para entrar na UE. — 'visto'='visto'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she is waiting for the visa to enter the EU."}],tip:"💡 'Visto'=visa AND 'seen' (past participle of vedere). Context!",keywords:["aspetta","visto","ue"]},
+    {pronoun:"noi",it:"Aspettiamo conferma prima di procedere.",phonetic:"[as-pet-TYA-mo kon-FER-ma PRI-ma di pro-CHE-de-re]",tts:"Aspettiamo conferma prima di procedere",bridges:[{flag:"🇧🇷",text:"Aguardamos confirmação antes de prosseguir. — 'procedere'='prosseguir'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We're waiting for confirmation before proceeding."}],tip:"💡 Standard professional phrase showing thoroughness.",keywords:["aspettiamo","conferma","procedere"]},
+    {pronoun:"voi",it:"Aspettate l'approvazione della commissione?",phonetic:"[as-pet-TA-te lap-pro-va-TSYO-ne DEL-la kom-mis-SYO-ne]",tts:"Aspettate l'approvazione della commissione",bridges:[{flag:"🇧🇷",text:"Vocês aguardam a aprovação da comissão? — 'approvazione'='aprovação'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Are you waiting for the committee's approval?"}],tip:"💡 'Commissione'=committee/commission. Also the EU Commission!",keywords:["aspettate","approvazione","commissione"]},
+    {pronoun:"loro",it:"Aspettano l'autorizzazione all'importazione.",phonetic:"[as-PET-ta-no law-to-riz-za-TSYO-ne al-lim-por-ta-TSYO-ne]",tts:"Aspettano l'autorizzazione all'importazione",bridges:[{flag:"🇧🇷",text:"Eles aguardam a autorização de importação. — 'autorizzazione'='autorização'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They are waiting for the import authorisation."}],tip:"💡 'Autorizzazione all'importazione'=import authorisation. Critical document!",keywords:["aspettano","autorizzazione","importazione"]}],
+      past:[{pronoun:"io",it:"Ho aspettato tre ore alla dogana.",phonetic:"[o as-pet-TA-to TRE O-re AL-la do-GA-na]",tts:"Ho aspettato tre ore alla dogana",bridges:[{flag:"🇧🇷",text:"Esperei três horas na alfândega. — 'tre ore'='três horas'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I waited three hours at customs."}],tip:"💡 Unfortunately realistic for food importers. 'Ore'=hours.",keywords:["ho aspettato","ore","dogana"]},
+    {pronoun:"tu",it:"Hai aspettato la risposta del cliente?",phonetic:"[AY as-pet-TA-to la ris-POS-ta del klyen-TE]",tts:"Hai aspettato la risposta del cliente",bridges:[{flag:"🇧🇷",text:"Você esperou a resposta do cliente?"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you wait for the client's response?"}],tip:"💡 'Risposta del cliente'=client's response. Useful in follow-ups.",keywords:["hai aspettato","risposta","cliente"]},
+    {pronoun:"lui/lei",it:"Ha aspettato l'approvazione per mesi.",phonetic:"[a as-pet-TA-to lap-pro-va-TSYO-ne per ME-zi]",tts:"Ha aspettato l'approvazione per mesi",bridges:[{flag:"🇧🇷",text:"Ele/ela esperou a aprovação por meses."},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she waited months for the approval."}],tip:"💡 'Per mesi'=for months. 'Per anni'=for years. 'Per settimane'=for weeks.",keywords:["ha aspettato","approvazione","mesi"]},
+    {pronoun:"noi",it:"Abbiamo aspettato troppo per rispondere.",phonetic:"[ab-BYA-mo as-pet-TA-to TROP-po per ris-PON-de-re]",tts:"Abbiamo aspettato troppo per rispondere",bridges:[{flag:"🇧🇷",text:"Esperamos demais para responder. — 'troppo'='demais'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We waited too long to respond."}],tip:"💡 Candid reflection after a missed opportunity.",keywords:["abbiamo aspettato","troppo","rispondere"]},
+    {pronoun:"voi",it:"Avete aspettato il nulla osta?",phonetic:"[a-VE-te as-pet-TA-to il NUL-la OS-ta]",tts:"Avete aspettato il nulla osta",bridges:[{flag:"🇧🇷",text:"Vocês aguardaram o nulla osta (autorização)?"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you wait for the clearance?"}],tip:"💡 'Nulla osta'=official clearance. Used in Italian bureaucracy and legal contexts.",keywords:["avete aspettato","nulla osta"]},
+    {pronoun:"loro",it:"Hanno aspettato il via libera dalla commissione.",phonetic:"[AN-no as-pet-TA-to il VYA li-BE-ra DAL-la kom-mis-SYO-ne]",tts:"Hanno aspettato il via libera dalla commissione",bridges:[{flag:"🇧🇷",text:"Eles aguardaram o aval da comissão. — 'via libera'='aval/sinal verde'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They waited for the green light from the committee."}],tip:"💡 'Via libera'=green light/go-ahead. Very common Italian idiom in business.",keywords:["hanno aspettato","via libera","commissione"]}]
+    }
+  },
+  {
+    inf:"bere",meaning:"to drink",aux:"avere",
+    present:{io:"bevo",tu:"bevi",lui:"beve",noi:"beviamo",voi:"bevete",loro:"bevono"},
+    past_participle:"bevuto",
+    phonetics:{present:{io:"[BE-vo]",tu:"[BE-vi]",lui:"[BE-ve]",noi:"[be-VYA-mo]",voi:"[be-VE-te]",loro:"[BE-vo-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Bevo un caffè ogni mattina al bar.",phonetic:"[BE-vo un kaf-FEH ON-ji mat-TI-na al bar]",tts:"Bevo un caffè ogni mattina al bar",bridges:[{flag:"🇧🇷",text:"Tomo um café todas as manhãs no bar. — 'bevo'='tomo'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I drink a coffee every morning at the bar."}],tip:"💡 Italian 'bar'=café. You drink standing at the counter. It's culture!",keywords:["bevo","caffè","mattina"]},
+    {pronoun:"tu",it:"Bevi vino ligure?",phonetic:"[BE-vi VI-no LI-gu-re]",tts:"Bevi vino ligure",bridges:[{flag:"🇧🇷",text:"Você bebe vinho lígure? — 'bevi'='bebe', 'vino'='vinho'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you drink Ligurian wine?"}],tip:"💡 Liguria produces excellent Vermentino and Pigato wines. Ask by name!",keywords:["bevi","vino","ligure"]},
+    {pronoun:"lui/lei",it:"Beve solo acqua minerale.",phonetic:"[BE-ve SO-lo AK-kwa mi-ne-RA-le]",tts:"Beve solo acqua minerale",bridges:[{flag:"🇧🇷",text:"Ele/ela bebe somente água mineral. — 'acqua minerale'='água mineral'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she only drinks mineral water."}],tip:"💡 'Acqua naturale'=still. 'Acqua frizzante'=sparkling. Asked every time!",keywords:["beve","acqua","minerale"]},
+    {pronoun:"noi",it:"Beviamo un bicchiere di vino?",phonetic:"[be-VYA-mo un bik-KYE-re di VI-no]",tts:"Beviamo un bicchiere di vino",bridges:[{flag:"🇧🇷",text:"Tomamos uma taça de vinho? — 'bicchiere'='copo/taça'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Shall we have a glass of wine?"}],tip:"💡 'Beviamo!'=Let's drink! A social invitation after work in Liguria.",keywords:["beviamo","bicchiere","vino"]},
+    {pronoun:"voi",it:"Bevete aperitivo prima di cena?",phonetic:"[be-VE-te a-pe-ri-TI-vo PRI-ma di CHE-na]",tts:"Bevete aperitivo prima di cena",bridges:[{flag:"🇧🇷",text:"Vocês tomam aperitivo antes do jantar? — 'cena'='jantar'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you have aperitivo before dinner?"}],tip:"💡 Aperitivo culture is huge in Liguria. Typically 6-8pm. Often with free snacks!",keywords:["bevete","aperitivo","cena"]},
+    {pronoun:"loro",it:"Bevono il vino del territorio.",phonetic:"[BE-vo-no il VI-no del ter-ri-TO-ryo]",tts:"Bevono il vino del territorio",bridges:[{flag:"🇧🇷",text:"Eles bebem o vinho da região. — 'territorio'='território/região'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They drink the local wine."}],tip:"💡 'Vino del territorio'=local/regional wine. You'll hear this in restaurants.",keywords:["bevono","vino","territorio"]}],
+      past:[{pronoun:"io",it:"Ho bevuto un ottimo Vermentino ieri.",phonetic:"[o be-VU-to un OT-ti-mo ver-men-TI-no YE-ri]",tts:"Ho bevuto un ottimo Vermentino ieri",bridges:[{flag:"🇧🇷",text:"Bebi um ótimo Vermentino ontem. — 'ho bevuto'='bebi', 'ottimo'='ótimo'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I drank an excellent Vermentino yesterday."}],tip:"💡 Vermentino — Liguria's signature white wine. Say this and sound like a local!",keywords:["ho bevuto","vermentino","ieri"]},
+    {pronoun:"tu",it:"Hai bevuto il caffè stamattina?",phonetic:"[AY be-VU-to il kaf-FEH sta-mat-TI-na]",tts:"Hai bevuto il caffè stamattina",bridges:[{flag:"🇧🇷",text:"Você tomou o café esta manhã? — 'hai bevuto'='você tomou'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you have your coffee this morning?"}],tip:"💡 A perfectly natural Italian conversation starter!",keywords:["hai bevuto","caffè","stamattina"]},
+    {pronoun:"lui/lei",it:"Ha bevuto troppo al pranzo di lavoro.",phonetic:"[a be-VU-to TROP-po al PRAN-tso di la-VO-ro]",tts:"Ha bevuto troppo al pranzo di lavoro",bridges:[{flag:"🇧🇷",text:"Ele/ela bebeu demais no almoço de trabalho. — 'troppo'='demais'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she drank too much at the business lunch."}],tip:"💡 Italian business lunches can be generous with wine!",keywords:["ha bevuto","troppo","pranzo"]},
+    {pronoun:"noi",it:"Abbiamo bevuto del buon Prosecco.",phonetic:"[ab-BYA-mo be-VU-to del BWON pro-SEK-ko]",tts:"Abbiamo bevuto del buon Prosecco",bridges:[{flag:"🇧🇷",text:"Bebemos um bom Prosecco. — sparkling wine from Veneto"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We drank some good Prosecco."}],tip:"💡 'Del' before food/drink = some. 'Del vino', 'della pasta', 'dell'acqua'.",keywords:["abbiamo bevuto","prosecco"]},
+    {pronoun:"voi",it:"Avete bevuto l'acqua di fonte?",phonetic:"[a-VE-te be-VU-to LAK-kwa di FON-te]",tts:"Avete bevuto l'acqua di fonte",bridges:[{flag:"🇧🇷",text:"Vocês beberam a água de fonte? — 'acqua di fonte'='água de fonte'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you drink the spring water?"}],tip:"💡 Liguria has excellent mountain spring water. 'Acqua di fonte'=spring water.",keywords:["avete bevuto","acqua","fonte"]},
+    {pronoun:"loro",it:"Hanno bevuto il limoncino locale.",phonetic:"[AN-no be-VU-to il li-mon-CHI-no lo-KA-le]",tts:"Hanno bevuto il limoncino locale",bridges:[{flag:"🇧🇷",text:"Eles beberam o limoncino local. — 'locale'='local'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They drank the local limoncino."}],tip:"💡 Limoncino (limoncello) = classic Ligurian digestivo. Offered after meals!",keywords:["hanno bevuto","limoncino","locale"]}]
+    }
+  },
+  {
+    inf:"chiamare",meaning:"to call",aux:"avere",
+    present:{io:"chiamo",tu:"chiami",lui:"chiama",noi:"chiamiamo",voi:"chiamate",loro:"chiamano"},
+    past_participle:"chiamato",
+    phonetics:{present:{io:"[KYA-mo]",tu:"[KYA-mi]",lui:"[KYA-ma]",noi:"[kya-MYA-mo]",voi:"[kya-MA-te]",loro:"[KYA-ma-no]"}},
+    sentences:{
+      present:[{pronoun:"io",it:"Mi chiamo Thomas.",phonetic:"[mi KYA-mo Thomas]",tts:"Mi chiamo Thomas",bridges:[{flag:"🇧🇷",text:"Me chamo Thomas. — 'mi chiamo'='me chamo' — estrutura idêntica!"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"My name is Thomas."}],tip:"💡 'Mi chiamo'='Me chamo'. Perfect match — your most important phrase!",keywords:["mi chiamo","thomas"]},
+    {pronoun:"tu",it:"Come ti chiami?",phonetic:"[KO-me ti KYA-mi]",tts:"Come ti chiami",bridges:[{flag:"🇧🇷",text:"Como você se chama? — estrutura reflexiva idêntica"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"What is your name? (informal)"}],tip:"💡 'Come si chiama?'=formal. 'Come ti chiami?'=informal. Master both.",keywords:["come","chiami","ti chiami"]},
+    {pronoun:"lui/lei",it:"Si chiama Onno, è olandese.",phonetic:"[si KYA-ma Onno EH o-lan-DE-ze]",tts:"Si chiama Onno è olandese",bridges:[{flag:"🇧🇷",text:"Chama-se Onno, é holandês. — 'olandese'='holandês'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"His name is Onno, he is Dutch."}],tip:"💡 Introducing your CEO! 'Si chiama'=formal 'his/her name is'.",keywords:["si chiama","olandese"]},
+    {pronoun:"noi",it:"Ci chiamiamo ogni settimana per una call.",phonetic:"[chi kya-MYA-mo ON-ji set-ti-MA-na per U-na call]",tts:"Ci chiamiamo ogni settimana per una call",bridges:[{flag:"🇧🇷",text:"Nos ligamos toda semana para uma call. — 'ci chiamiamo'='nos ligamos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We call each other every week for a call."}],tip:"💡 'Ci + verb'=reciprocal action (each other). 'Ci vediamo'=we see each other.",keywords:["ci chiamiamo","settimana","call"]},
+    {pronoun:"voi",it:"Chiamate il cliente prima di procedere.",phonetic:"[kya-MA-te il klyen-TE PRI-ma di pro-CHE-de-re]",tts:"Chiamate il cliente prima di procedere",bridges:[{flag:"🇧🇷",text:"Liguem para o cliente antes de prosseguir."},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Call the client before proceeding."}],tip:"💡 Imperative form of voi = same as present indicative. 'Chiamate!'=Call!",keywords:["chiamate","cliente","procedere"]},
+    {pronoun:"loro",it:"Chiamano sempre prima di spedire.",phonetic:"[KYA-ma-no SEM-pre PRI-ma di spe-DI-re]",tts:"Chiamano sempre prima di spedire",bridges:[{flag:"🇧🇷",text:"Eles sempre ligam antes de enviar. — 'spedire'='enviar/expedir'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They always call before shipping."}],tip:"💡 'Spedire'=to ship. 'Spedizione'=shipment. 'Spedizioniere'=freight forwarder.",keywords:["chiamano","sempre","spedire"]}],
+      past:[{pronoun:"io",it:"Ho chiamato il fornitore stamattina.",phonetic:"[o kya-MA-to il for-ni-TO-re sta-mat-TI-na]",tts:"Ho chiamato il fornitore stamattina",bridges:[{flag:"🇧🇷",text:"Liguei para o fornecedor esta manhã. — 'ho chiamato'='liguei'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I called the supplier this morning."}],tip:"💡 Standard work update. Regular -are verb: chiamare→ho chiamato.",keywords:["ho chiamato","fornitore","stamattina"]},
+    {pronoun:"tu",it:"Hai chiamato l'agenzia doganale?",phonetic:"[AY kya-MA-to la-JEN-tsya do-ga-NA-le]",tts:"Hai chiamato l'agenzia doganale",bridges:[{flag:"🇧🇷",text:"Você ligou para a agência aduaneira? — 'agenzia doganale'='agência aduaneira'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you call the customs agency?"}],tip:"💡 'Agenzia doganale'=customs broker/agency. You'll need one for food imports.",keywords:["hai chiamato","agenzia","doganale"]},
+    {pronoun:"lui/lei",it:"Ha chiamato da Bangkok questa notte.",phonetic:"[a kya-MA-to da BANGKOK KWES-ta NOT-te]",tts:"Ha chiamato da Bangkok questa notte",bridges:[{flag:"🇧🇷",text:"Ele/ela ligou de Bangcoc esta noite. — 'questa notte'='esta noite'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she called from Bangkok last night."}],tip:"💡 'Notte'=night (late). 'Sera'=evening. 'Notte' is typically after 9pm.",keywords:["ha chiamato","bangkok","notte"]},
+    {pronoun:"noi",it:"Abbiamo chiamato tutti i clienti per aggiornare.",phonetic:"[ab-BYA-mo kya-MA-to TUT-ti i klyen-TI per aj-jor-NA-re]",tts:"Abbiamo chiamato tutti i clienti per aggiornare",bridges:[{flag:"🇧🇷",text:"Ligamos para todos os clientes para atualizar. — 'aggiornare'='atualizar'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We called all the clients to update them."}],tip:"💡 'Aggiornare'=to update. 'Aggiornamento'=update. Common in tech and compliance.",keywords:["abbiamo chiamato","clienti","aggiornare"]},
+    {pronoun:"voi",it:"Avete chiamato il numero sbagliato.",phonetic:"[a-VE-te kya-MA-to il NU-me-ro zba-LYA-to]",tts:"Avete chiamato il numero sbagliato",bridges:[{flag:"🇧🇷",text:"Vocês ligaram para o número errado. — 'sbagliato'='errado'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"You called the wrong number."}],tip:"💡 'Sbagliato'=wrong/mistaken. 'Ho sbagliato'=I made a mistake.",keywords:["avete chiamato","numero","sbagliato"]},
+    {pronoun:"loro",it:"Hanno chiamato per confermare la consegna.",phonetic:"[AN-no kya-MA-to per kon-fer-MA-re la kon-SEN-ya]",tts:"Hanno chiamato per confermare la consegna",bridges:[{flag:"🇧🇷",text:"Eles ligaram para confirmar a entrega. — 'consegna'='entrega'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They called to confirm the delivery."}],tip:"💡 'Consegna'=delivery. 'Data di consegna'=delivery date. 'Consegnare'=to deliver.",keywords:["hanno chiamato","confermare","consegna"]}]
+    }
+  },
+];
+
+// ─── STATE ─────────────────────────────────────────────────────────────────────
+let currentTab = 'daily', currentPhrases = [], currentIndex = 0, score = 0;
+let isListening = false, recognition = null;
+let currentVerb = 0, currentTense = 'present', verbMode = false, tableVisible = false;
+const synth = window.speechSynthesis;
+const hasTTS = 'speechSynthesis' in window;
+const hasSTT = 'SpeechRecognition' in window || 'webkitSpeechRecognition' in window;
+
+// ─── PT BRIDGES TABLE ─────────────────────────────────────────────────────────
+const PT = {
+  essere:{p:{io:"sou",tu:"é",lui:"é",noi:"somos",voi:"são",loro:"são"},r:{io:"fui",tu:"foi",lui:"foi",noi:"fomos",voi:"foram",loro:"foram"}},
+  avere:{p:{io:"tenho",tu:"tem",lui:"tem",noi:"temos",voi:"têm",loro:"têm"},r:{io:"tive",tu:"teve",lui:"teve",noi:"tivemos",voi:"tiveram",loro:"tiveram"}},
+  fare:{p:{io:"faço",tu:"faz",lui:"faz",noi:"fazemos",voi:"fazem",loro:"fazem"},r:{io:"fiz",tu:"fez",lui:"fez",noi:"fizemos",voi:"fizeram",loro:"fizeram"}},
+  andare:{p:{io:"vou",tu:"vai",lui:"vai",noi:"vamos",voi:"vão",loro:"vão"},r:{io:"fui",tu:"foi",lui:"foi",noi:"fomos",voi:"foram",loro:"foram"}},
+  volere:{p:{io:"quero",tu:"quer",lui:"quer",noi:"queremos",voi:"querem",loro:"querem"},r:{io:"quis",tu:"quis",lui:"quis",noi:"quisemos",voi:"quiseram",loro:"quiseram"}},
+  potere:{p:{io:"posso",tu:"pode",lui:"pode",noi:"podemos",voi:"podem",loro:"podem"},r:{io:"pude",tu:"pôde",lui:"pôde",noi:"pudemos",voi:"puderam",loro:"puderam"}},
+  dovere:{p:{io:"devo",tu:"deve",lui:"deve",noi:"devemos",voi:"devem",loro:"devem"},r:{io:"tive de",tu:"teve de",lui:"teve de",noi:"tivemos de",voi:"tiveram de",loro:"tiveram de"}},
+  sapere:{p:{io:"sei",tu:"sabe",lui:"sabe",noi:"sabemos",voi:"sabem",loro:"sabem"},r:{io:"soube",tu:"soube",lui:"soube",noi:"soubemos",voi:"souberam",loro:"souberam"}},
+  parlare:{p:{io:"falo",tu:"fala",lui:"fala",noi:"falamos",voi:"falam",loro:"falam"},r:{io:"falei",tu:"falou",lui:"falou",noi:"falamos",voi:"falaram",loro:"falaram"}},
+  lavorare:{p:{io:"trabalho",tu:"trabalha",lui:"trabalha",noi:"trabalhamos",voi:"trabalham",loro:"trabalham"},r:{io:"trabalhei",tu:"trabalhou",lui:"trabalhou",noi:"trabalhamos",voi:"trabalharam",loro:"trabalharam"}},
+  capire:{p:{io:"entendo",tu:"entende",lui:"entende",noi:"entendemos",voi:"entendem",loro:"entendem"},r:{io:"entendi",tu:"entendeu",lui:"entendeu",noi:"entendemos",voi:"entenderam",loro:"entenderam"}},
+  mangiare:{p:{io:"como",tu:"come",lui:"come",noi:"comemos",voi:"comem",loro:"comem"},r:{io:"comi",tu:"comeu",lui:"comeu",noi:"comemos",voi:"comeram",loro:"comeram"}},
+  venire:{p:{io:"venho",tu:"vem",lui:"vem",noi:"vimos",voi:"vêm",loro:"vêm"},r:{io:"vim",tu:"veio",lui:"veio",noi:"viemos",voi:"vieram",loro:"vieram"}},
+  comprare:{p:{io:"compro",tu:"compra",lui:"compra",noi:"compramos",voi:"compram",loro:"compram"},r:{io:"comprei",tu:"comprou",lui:"comprou",noi:"compramos",voi:"compraram",loro:"compraram"}},
+  mandare:{p:{io:"mando",tu:"manda",lui:"manda",noi:"mandamos",voi:"mandam",loro:"mandam"},r:{io:"mandei",tu:"mandou",lui:"mandou",noi:"mandamos",voi:"mandaram",loro:"mandaram"}},
+  pagare:{p:{io:"pago",tu:"paga",lui:"paga",noi:"pagamos",voi:"pagam",loro:"pagam"},r:{io:"paguei",tu:"pagou",lui:"pagou",noi:"pagamos",voi:"pagaram",loro:"pagaram"}},
+  tornare:{p:{io:"volto",tu:"volta",lui:"volta",noi:"voltamos",voi:"voltam",loro:"voltam"},r:{io:"voltei",tu:"voltou",lui:"voltou",noi:"voltamos",voi:"voltaram",loro:"voltaram"}},
+  aspettare:{p:{io:"espero",tu:"espera",lui:"espera",noi:"esperamos",voi:"esperam",loro:"esperam"},r:{io:"esperei",tu:"esperou",lui:"esperou",noi:"esperamos",voi:"esperaram",loro:"esperaram"}},
+  bere:{p:{io:"bebo",tu:"bebe",lui:"bebe",noi:"bebemos",voi:"bebem",loro:"bebem"},r:{io:"bebi",tu:"bebeu",lui:"bebeu",noi:"bebemos",voi:"beberam",loro:"beberam"}},
+  chiamare:{p:{io:"me chamo",tu:"chama",lui:"chama",noi:"chamamos",voi:"chamam",loro:"chamam"},r:{io:"liguei",tu:"ligou",lui:"ligou",noi:"ligamos",voi:"ligaram",loro:"ligaram"}}
+};
+
+function getPT(inf, pronoun, tense) {
+  const d = PT[inf]; if (!d) return '—';
+  const t = tense === 'present' ? d.p : d.r;
+  return t[pronoun] || '—';
+}
+
+// ─── BUILD VERB GRID ─────────────────────────────────────────────────────────
+function buildVerbGrid() {
+  const grid = document.getElementById('verbGrid');
+  grid.innerHTML = verbData.map((v,i) =>
+    `<button class="verb-chip${i===0?' active':''}" data-verb="${i}">${v.inf}</button>`
+  ).join('');
+  grid.querySelectorAll('.verb-chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      grid.querySelectorAll('.verb-chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentVerb = parseInt(btn.dataset.verb);
+      loadVerbSession();
+    });
+  });
+}
+
+// ─── CONJUGATION TABLE ───────────────────────────────────────────────────────
+function buildConjTable(verb) {
+  const pronouns = ['io','tu','lui','noi','voi','loro'];
+  const displayPronouns = ['io','tu','lui/lei','noi','voi','loro'];
+  const isPast = currentTense === 'past';
+  const auxForms = verb.aux === 'essere'
+    ? ['sono','sei','è','siamo','siete','sono']
+    : ['ho','hai','ha','abbiamo','avete','hanno'];
+  const forms = isPast
+    ? pronouns.map((_,i) => auxForms[i] + ' ' + verb.past_participle)
+    : pronouns.map(p => verb.present[p]);
+  const phonetics = isPast
+    ? pronouns.map(() => '')
+    : pronouns.map(p => verb.phonetics.present[p]);
+
+  const table = document.getElementById('conjTable');
+  const label = isPast ? 'Passato Prossimo' : 'Presente';
+  table.innerHTML = `<tr><th>Pronoun</th><th>${label}</th><th>Phonetic</th><th>🇧🇷 Portuguese</th></tr>` +
+    pronouns.map((p,i) =>
+      `<tr class="${i===currentIndex%6?'hl':''}"><td>${displayPronouns[i]}</td><td>${forms[i]}</td><td>${phonetics[i]}</td><td>${getPT(verb.inf,p,currentTense==='present'?'present':'past')}</td></tr>`
+    ).join('');
+}
+
+// ─── SESSION LOADING ─────────────────────────────────────────────────────────
+function loadSession(tab) {
+  currentTab = tab; verbMode = tab === 'verbs';
+  currentIndex = 0; score = 0; tableVisible = false;
+  document.getElementById('verbSelector').classList.toggle('show', verbMode);
+  document.getElementById('tenseToggle').classList.toggle('show', verbMode);
+  document.getElementById('verbHeader').classList.toggle('show', verbMode);
+  document.getElementById('tblControls').classList.toggle('show', verbMode);
+  document.getElementById('tableSection').classList.remove('show');
+  document.getElementById('completeScreen').classList.remove('show');
+  document.getElementById('mainCard').style.display = 'block';
+  document.getElementById('progressDots').style.display = 'flex';
+  if (verbMode) { currentVerb = 0; loadVerbSession(); }
+  else {
+    currentPhrases = tab === 'mix'
+      ? [...phraseData.daily,...phraseData.social,...phraseData.business].sort(()=>Math.random()-.5).slice(0,8)
+      : phraseData[tab];
+    renderPhrase(); renderDots();
+  }
+}
+
+function loadVerbSession() {
+  const verb = verbData[currentVerb];
+  currentPhrases = verb.sentences[currentTense];
+  currentIndex = 0; score = 0; tableVisible = false;
+  document.getElementById('tableSection').classList.remove('show');
+  document.getElementById('btnToggleTable').textContent = 'Show conjugation table';
+  document.getElementById('btnToggleTable').classList.remove('active');
+  document.getElementById('verbInfinitive').textContent = verb.inf;
+  document.getElementById('verbMeaning').textContent = verb.meaning;
+  buildConjTable(verb);
+  renderPhrase(); renderDots();
+}
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+function renderPhrase() {
+  const p = currentPhrases[currentIndex];
+  const total = currentPhrases.length;
+  document.getElementById('counter').textContent = verbMode
+    ? `${verbData[currentVerb].inf} · ${currentTense==='present'?'Present':'Passato Prossimo'} · ${currentIndex+1}/${total}`
+    : `Phrase ${currentIndex+1} of ${total}`;
+  document.getElementById('italianPhrase').textContent = p.it;
+  document.getElementById('phonetic').textContent = p.phonetic;
+  document.getElementById('tip').textContent = p.tip;
+  document.getElementById('bridges').innerHTML = p.bridges.map(b =>
+    `<div class="bridge"><span class="bridge-flag">${b.flag}</span><span class="bridge-text">${b.text}</span></div>`
+  ).join('');
+  if (verbMode) buildConjTable(verbData[currentVerb]);
+  hideFeedback();
+  document.getElementById('btnNext').textContent = currentIndex < total-1 ? 'Next →' : 'Finish';
+}
+
+function renderDots() {
+  document.getElementById('progressDots').innerHTML = currentPhrases.map((_,i) => {
+    let c='dot'; if(i<currentIndex)c+=' done'; if(i===currentIndex)c+=' current';
+    return `<div class="${c}"></div>`;
+  }).join('');
+}
+
+// ─── TTS ─────────────────────────────────────────────────────────────────────
+document.getElementById('btnPlay').addEventListener('click', () => {
+  if (!hasTTS) return;
+  synth.cancel();
+  const u = new SpeechSynthesisUtterance(currentPhrases[currentIndex].tts);
+  u.lang = 'it-IT'; u.rate = 0.82; u.pitch = 1;
+  const v = synth.getVoices().find(v => v.lang.startsWith('it'));
+  if (v) u.voice = v;
+  synth.speak(u);
+});
+if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = () => {};
+
+// ─── STT ─────────────────────────────────────────────────────────────────────
+document.getElementById('btnListen').addEventListener('click', () => {
+  if (!hasSTT || isListening) return;
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.lang = 'it-IT'; recognition.continuous = false;
+  recognition.interimResults = false; recognition.maxAlternatives = 3;
+  isListening = true;
+  document.getElementById('btnListen').classList.add('listening');
+  document.getElementById('listenLabel').textContent = 'Listening…';
+  document.getElementById('listenIcon').textContent = '🔴';
+  recognition.start();
+  recognition.onresult = e => {
+    const heard = Array.from(e.results[0]).map(r=>r.transcript.toLowerCase().trim());
+    evaluateSpeech(heard);
+  };
+  recognition.onerror = e => {
+    stopListening();
+    if (e.error==='no-speech') showFeedback('retry',"Didn't catch that — try again.",'');
+    else if (e.error==='not-allowed') showFeedback('retry','Microphone access denied. Allow mic in browser settings.','');
+  };
+  recognition.onend = () => stopListening();
+});
+
+function stopListening() {
+  isListening = false;
+  document.getElementById('btnListen').classList.remove('listening');
+  document.getElementById('listenLabel').textContent = 'Speak';
+  document.getElementById('listenIcon').textContent = '🎙';
+}
+
+function norm(s) {
+  return s.toLowerCase()
+    .replace(/[àá]/g,'a').replace(/[èéê]/g,'e').replace(/[ìí]/g,'i')
+    .replace(/[òó]/g,'o').replace(/[ùú]/g,'u').replace(/[.,?!']/g,'').trim();
+}
+
+function evaluateSpeech(transcripts) {
+  const p = currentPhrases[currentIndex];
+  const heard = transcripts[0], heardN = norm(heard), targetN = norm(p.it);
+  const kHit = p.keywords.filter(k => heardN.includes(norm(k)));
+  const kScore = kHit.length / p.keywords.length;
+  const tw = targetN.split(' '), hw = heardN.split(' ');
+  const wHit = tw.filter(w => hw.some(h => h.includes(w)||w.includes(h)));
+  const combined = kScore*0.6 + (wHit.length/tw.length)*0.4;
+  if (combined >= 0.75 || heardN === targetN) {
+    score++;
+    showFeedback('success','✓ Ottimo! That sounded great.',`Heard: "${heard}"`);
+  } else if (combined >= 0.4) {
+    showFeedback('partial','Almost — you got part of it. Try once more.',`Heard: "${heard}" · Target: "${p.it}"`);
+  } else {
+    showFeedback('retry','Not quite. Listen again, then speak slowly.',`Heard: "${heard}" · Target: "${p.it}"`);
+  }
+}
+
+// ─── FEEDBACK ────────────────────────────────────────────────────────────────
+function showFeedback(type,text,heard) {
+  const el = document.getElementById('feedback');
+  el.className = `feedback show ${type}`;
+  document.getElementById('feedbackText').textContent = text;
+  document.getElementById('feedbackHeard').textContent = heard;
+}
+function hideFeedback() { document.getElementById('feedback').className = 'feedback'; }
+
+// ─── NAVIGATION ──────────────────────────────────────────────────────────────
+document.getElementById('btnNext').addEventListener('click', () => {
+  if (currentIndex < currentPhrases.length-1) { currentIndex++; renderPhrase(); renderDots(); }
+  else showComplete();
+});
+
+function showComplete() {
+  document.getElementById('mainCard').style.display = 'none';
+  document.getElementById('progressDots').style.display = 'none';
+  document.getElementById('completeScreen').classList.add('show');
+  document.getElementById('scoreDisplay').textContent = `${score}/${currentPhrases.length}`;
+  const titles = ['Perfetto! Bravissimo!','Ottimo lavoro!','Buon inizio — keep going!'];
+  const ratio = score/currentPhrases.length;
+  document.getElementById('completeTitle').textContent = ratio===1?titles[0]:ratio>=0.7?titles[1]:titles[2];
+}
+
+document.getElementById('restartBtn').addEventListener('click', () => {
+  if (verbMode) loadVerbSession(); else loadSession(currentTab);
+});
+
+// ─── TAB BAR ─────────────────────────────────────────────────────────────────
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    loadSession(btn.dataset.tab);
+  });
+});
+
+// ─── TENSE TOGGLE ────────────────────────────────────────────────────────────
+document.querySelectorAll('.tense-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tense-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentTense = btn.dataset.tense;
+    if (verbMode) loadVerbSession();
+  });
+});
+
+// ─── TABLE TOGGLE ────────────────────────────────────────────────────────────
+document.getElementById('btnToggleTable').addEventListener('click', () => {
+  tableVisible = !tableVisible;
+  document.getElementById('tableSection').classList.toggle('show', tableVisible);
+  const btn = document.getElementById('btnToggleTable');
+  btn.textContent = tableVisible ? 'Hide table' : 'Show conjugation table';
+  btn.classList.toggle('active', tableVisible);
+});
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+buildVerbGrid();
+loadSession('daily');
+</script>
+</body>
+</html>
