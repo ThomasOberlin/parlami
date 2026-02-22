@@ -102,7 +102,6 @@ h1 em{font-style:italic;color:var(--terra);}
       <button class="tab-btn active" data-tab="daily">Daily Life</button>
       <button class="tab-btn" data-tab="social">Social</button>
       <button class="tab-btn" data-tab="business">Business</button>
-      <button class="tab-btn" data-tab="mix">Mixed</button>
     </div>
     <div class="tab-row">
       <button class="tab-btn" data-tab="verbs">Verbs</button>
@@ -123,6 +122,10 @@ h1 em{font-style:italic;color:var(--terra);}
     <button class="tense-btn" data-qasub="asl" onclick="switchQaTab(this)">ASL</button>
     <button class="tense-btn" data-qasub="medico" onclick="switchQaTab(this)">Medico</button>
     <button class="tense-btn" data-qasub="commercialista" onclick="switchQaTab(this)">Commercialista</button>
+    <button class="tense-btn" data-qasub="agente" onclick="switchQaTab(this)">Agente Immobiliare</button>
+    <button class="tense-btn" data-qasub="geometra" onclick="switchQaTab(this)">Geometra</button>
+    <button class="tense-btn" data-qasub="avvocato" onclick="switchQaTab(this)">Avvocato</button>
+    <button class="tense-btn" data-qasub="notaio" onclick="switchQaTab(this)">Notaio</button>
   </div>
   <div class="verb-selector" id="verbSelector">
     <div class="verb-selector-label">Choose a verb</div>
@@ -1305,6 +1308,122 @@ const qaData = {
     {q:"Deve pagare l'IVA trimestralmente.",qPhonetic:"[DE-ve pa-GA-re li-VA tri-mes-tral-MEN-te]",eng:"You must pay VAT quarterly.",
      answers:[{it:"Capisco. Quanto devo accantonare?",phonetic:"[ka-PIS-ko KWAN-to DE-vo ak-kan-to-NA-re]",keywords:["accantonare"]},
               {it:"Mi manda le scadenze per email?",phonetic:"[mi MAN-da le ska-DEN-tse per e-mail]",keywords:["scadenze","email"]}]}
+  ],
+  agente:[
+    {q:"Cerco un appartamento in affitto.",qPhonetic:"[CHER-ko un ap-par-ta-MEN-to in af-FIT-to]",eng:"I am looking for an apartment to rent.",
+     answers:[{it:"Cerco un bilocale, possibilmente con terrazzo.",phonetic:"[CHER-ko un bi-lo-KA-le pos-si-bil-MEN-te kon ter-RAT-tso]",keywords:["bilocale","terrazzo"]},
+              {it:"Ho bisogno di almeno due camere da letto.",phonetic:"[o bi-ZO-nyo di al-ME-no DU-e KA-me-re da LET-to]",keywords:["camere","letto"]}]},
+    {q:"Qual è il canone mensile richiesto?",qPhonetic:"[kwal EH il KA-no-ne men-SI-le ri-KYE-sto]",eng:"What is the monthly rent being asked?",
+     answers:[{it:"È nella mia fascia, possiamo trattare?",phonetic:"[EH NEL-la MI-a FA-sha pos-SYA-mo trat-TA-re]",keywords:["fascia","trattare"]},
+              {it:"È un po' alto per me. C'è margine?",phonetic:"[EH un po AL-to per me chEH MAR-ji-ne]",keywords:["alto","margine"]}]},
+    {q:"È disponibile da subito?",qPhonetic:"[EH dis-po-NI-bi-le da SU-bi-to]",eng:"Is it available immediately?",
+     answers:[{it:"Sì, quando posso visitarlo?",phonetic:"[si KWAN-do POS-so vi-zi-TAR-lo]",keywords:["visitarlo"]},
+              {it:"Ho bisogno di entrare entro il primo del mese.",phonetic:"[o bi-ZO-nyo di en-TRA-re EN-tro il PRI-mo del ME-ze]",keywords:["entrare","mese"]}]},
+    {q:"Quanti mesi di deposito cauzionale richiede?",qPhonetic:"[KWAN-ti ME-zi di de-PO-zi-to kau-tsyo-NA-le ri-KYE-de]",eng:"How many months deposit do you require?",
+     answers:[{it:"Due mesi vanno bene.",phonetic:"[DU-e ME-zi VAN-no BE-ne]",keywords:["due","mesi"]},
+              {it:"Tre mesi sono tanti, possiamo accordarci su due?",phonetic:"[TRE ME-zi SO-no TAN-ti pos-SYA-mo ak-kor-DAR-chi su DU-e]",keywords:["accordarci","due"]}]},
+    {q:"L'immobile è in buone condizioni?",qPhonetic:"[lim-MO-bi-le EH in BWO-ne kon-di-TSYO-ni]",eng:"Is the property in good condition?",
+     answers:[{it:"Ha bisogno di lavori o è pronto?",phonetic:"[a bi-ZO-nyo di la-VO-ri o EH PRON-to]",keywords:["lavori","pronto"]},
+              {it:"È stato ristrutturato di recente?",phonetic:"[EH STA-to ri-strut-tu-RA-to di re-CHEN-te]",keywords:["ristrutturato","recente"]}]},
+    {q:"Sono ammessi animali domestici?",qPhonetic:"[SO-no am-MES-si a-NI-ma-li do-MES-ti-chi]",eng:"Are pets allowed?",
+     answers:[{it:"Ho un cane di piccola taglia.",phonetic:"[o un KA-ne di PIK-ko-la TAL-ya]",keywords:["cane","taglia"]},
+              {it:"No, nessun animale.",phonetic:"[no nes-SUN a-ni-MA-le]",keywords:["nessun","animale"]}]},
+    {q:"Vorrei acquistare un immobile. Da dove inizio?",qPhonetic:"[vor-REI ak-kwis-TA-re un im-MO-bi-le da DO-ve i-NI-tsyo]",eng:"I would like to buy a property. Where do I start?",
+     answers:[{it:"Ho un budget di circa centomila euro.",phonetic:"[o un BUD-jet di CHIR-ka chen-to-MI-la EU-ro]",keywords:["budget","euro"]},
+              {it:"Sto cercando nella zona del centro storico.",phonetic:"[sto cher-KAN-do NEL-la DZO-na del CHEN-tro STO-ri-ko]",keywords:["centro","storico"]}]},
+    {q:"L'immobile ha la certificazione energetica?",qPhonetic:"[lim-MO-bi-le a la cher-ti-fi-ka-TSYO-ne e-ner-JE-ti-ka]",eng:"Does the property have an energy certificate?",
+     answers:[{it:"Sì, qual è la classe energetica?",phonetic:"[si kwal EH la KLAS-se e-ner-JE-ti-ka]",keywords:["classe","energetica"]},
+              {it:"No, è obbligatoria per la vendita?",phonetic:"[no EH ob-bli-ga-TO-rya per la VEN-di-ta]",keywords:["obbligatoria","vendita"]}]},
+    {q:"Ci sono spese condominiali?",qPhonetic:"[chi SO-no SPE-ze kon-do-mi-NYA-li]",eng:"Are there condominium fees?",
+     answers:[{it:"Quanto sono le spese mensili?",phonetic:"[KWAN-to SO-no le SPE-ze men-SI-li]",keywords:["spese","mensili"]},
+              {it:"Sono incluse nel canone o separate?",phonetic:"[SO-no in-KLU-ze nel KA-no-ne o se-pa-RA-te]",keywords:["incluse","separate"]}]}
+  ],
+  geometra:[
+    {q:"Ho bisogno di una perizia per l'immobile.",qPhonetic:"[o bi-ZO-nyo di U-na pe-RI-tsya per lim-MO-bi-le]",eng:"I need a survey of the property.",
+     answers:[{it:"Può fare una perizia completa prima dell'acquisto?",phonetic:"[PWO FA-re U-na pe-RI-tsya kom-PLE-ta PRI-ma del-LAK-kwis-to]",keywords:["perizia","acquisto"]},
+              {it:"Ho bisogno di verificare la conformità urbanistica.",phonetic:"[o bi-ZO-nyo di ve-ri-fi-KA-re la kon-for-mi-TA ur-ba-NIS-ti-ka]",keywords:["conformità","urbanistica"]}]},
+    {q:"La planimetria catastale è aggiornata?",qPhonetic:"[la pla-ni-me-TRI-a ka-TAS-ta-le EH ad-jor-NA-ta]",eng:"Is the cadastral floor plan up to date?",
+     answers:[{it:"Non lo so, può verificarlo?",phonetic:"[non lo so PWO ve-ri-fi-KAR-lo]",keywords:["verificarlo"]},
+              {it:"Il venditore dice di sì, ma voglio conferma.",phonetic:"[il ven-di-TO-re DI-che di si ma VOL-yo kon-FER-ma]",keywords:["venditore","conferma"]}]},
+    {q:"Ci sono abusi edilizi da sanare?",qPhonetic:"[chi SO-no a-BU-zi e-di-LI-tsi da sa-NA-re]",eng:"Are there any building violations that need to be remedied?",
+     answers:[{it:"Me lo può dire chiaramente?",phonetic:"[me lo PWO DI-re kya-ra-MEN-te]",keywords:["chiaramente"]},
+              {it:"Se ci sono abusi, chi paga la sanatoria?",phonetic:"[se chi SO-no a-BU-zi ki PA-ga la sa-na-TO-rya]",keywords:["abusi","sanatoria"]}]},
+    {q:"Ho intenzione di ristrutturare l'appartamento.",qPhonetic:"[o in-ten-TSYO-ne di ri-strut-tu-RA-re lap-par-ta-MEN-to]",eng:"I intend to renovate the apartment.",
+     answers:[{it:"Che tipo di permessi servono?",phonetic:"[ke TI-po di per-MES-si SER-vo-no]",keywords:["permessi","servono"]},
+              {it:"Bastano opere interne o serve il permesso di costruire?",phonetic:"[BAS-ta-no O-pe-re in-TER-ne o SER-ve il per-MES-so di kos-TRU-i-re]",keywords:["permesso","costruire"]}]},
+    {q:"Serve una CILA o una SCIA per questi lavori?",qPhonetic:"[SER-ve U-na CHI-la o U-na SHA per KWES-ti la-VO-ri]",eng:"Do these works require a CILA or SCIA notification?",
+     answers:[{it:"Dipende dalla portata dei lavori, giusto?",phonetic:"[di-PEN-de DAL-la por-TA-ta day la-VO-ri JUS-to]",keywords:["portata","lavori"]},
+              {it:"Può presentare la pratica per me?",phonetic:"[PWO pre-zen-TA-re la PRA-ti-ka per me]",keywords:["presentare","pratica"]}]},
+    {q:"Qual è la superficie commerciale dell'immobile?",qPhonetic:"[kwal EH la su-per-FI-che kom-mer-CHA-le del-lim-MO-bi-le]",eng:"What is the commercial floor area of the property?",
+     answers:[{it:"E la superficie calpestabile?",phonetic:"[e la su-per-FI-che kal-pes-TA-bi-le]",keywords:["calpestabile"]},
+              {it:"Ottantadue metri quadri commerciali.",phonetic:"[ot-tan-ta-DU-e ME-tri KWA-dri kom-mer-CHA-li]",keywords:["metri","quadri"]}]},
+    {q:"L'impianto elettrico è a norma?",qPhonetic:"[lim-PYAN-to e-LET-tri-ko EH a NOR-ma]",eng:"Is the electrical system up to code?",
+     answers:[{it:"Ha il certificato di conformità?",phonetic:"[a il cher-ti-fi-KA-to di kon-for-mi-TA]",keywords:["certificato","conformità"]},
+              {it:"Se non è a norma, quanto costerebbe adeguarlo?",phonetic:"[se non EH a NOR-ma KWAN-to kos-te-REB-be a-de-GWAR-lo]",keywords:["adeguarlo"]}]},
+    {q:"Posso vedere la visura catastale?",qPhonetic:"[POS-so ve-DE-re la vi-ZU-ra ka-TAS-ta-le]",eng:"Can I see the cadastral registration document?",
+     answers:[{it:"Sì, può recuperarla dall'Agenzia delle Entrate.",phonetic:"[si PWO re-ku-pe-RAR-la dal-la-JEN-tsya DEL-le en-TRA-te]",keywords:["recuperarla","entrate"]},
+              {it:"Ho bisogno dei dati catastali per il notaio.",phonetic:"[o bi-ZO-nyo day DA-ti ka-TAS-ta-li per il no-TA-yo]",keywords:["catastali","notaio"]}]},
+    {q:"Qual è il costo stimato dei lavori di ristrutturazione?",qPhonetic:"[kwal EH il KOS-to sti-MA-to day la-VO-ri di ri-strut-tu-ra-TSYO-ne]",eng:"What is the estimated cost of the renovation works?",
+     answers:[{it:"Può farmi un computo metrico estimativo?",phonetic:"[PWO far-mi un KOM-pu-to ME-tri-ko es-ti-ma-TI-vo]",keywords:["computo","estimativo"]},
+              {it:"Voglio capire se rientra nel mio budget.",phonetic:"[VOL-yo ka-PI-re se RYEN-tra nel MYO BUD-jet]",keywords:["rientra","budget"]}]}
+  ],
+  avvocato:[
+    {q:"Ho bisogno di un avvocato per l'acquisto di un immobile.",qPhonetic:"[o bi-ZO-nyo di un av-vo-KA-to per lak-KWIS-to di un im-MO-bi-le]",eng:"I need a lawyer for a property purchase.",
+     answers:[{it:"È la prima volta che compro in Italia.",phonetic:"[EH la PRI-ma VOL-ta ke KOM-pro in i-TA-lya]",keywords:["prima","italia"]},
+              {it:"Sono straniero, ho bisogno di assistenza legale.",phonetic:"[SO-no stra-NYE-ro o bi-ZO-nyo di as-sis-TEN-tsa le-GA-le]",keywords:["straniero","legale"]}]},
+    {q:"Ha esaminato il compromesso?",qPhonetic:"[a e-za-mi-NA-to il kom-pro-MES-so]",eng:"Have you examined the preliminary contract?",
+     answers:[{it:"No, può farlo lei prima che firmi?",phonetic:"[no PWO FAR-lo LEI PRI-ma ke FIR-mi]",keywords:["farlo","firmi"]},
+              {it:"Ci sono clausole rischiose da eliminare?",phonetic:"[chi SO-no KLAU-zo-le ris-KYO-ze da e-li-mi-NA-re]",keywords:["clausole","eliminare"]}]},
+    {q:"L'immobile ha ipoteche o gravami?",qPhonetic:"[lim-MO-bi-le a i-po-TE-ke o gra-VA-mi]",eng:"Does the property have mortgages or encumbrances?",
+     answers:[{it:"Come posso verificarlo prima del rogito?",phonetic:"[KO-me POS-so ve-ri-fi-KAR-lo PRI-ma del RO-ji-to]",keywords:["verificarlo","rogito"]},
+              {it:"Il venditore assicura che è libero da vincoli.",phonetic:"[il ven-di-TO-re as-si-KU-ra ke EH LI-be-ro da VIN-ko-li]",keywords:["libero","vincoli"]}]},
+    {q:"Qual è la differenza tra compromesso e rogito?",qPhonetic:"[kwal EH la dif-fe-REN-tsa tra kom-pro-MES-so e RO-ji-to]",eng:"What is the difference between the preliminary contract and the deed?",
+     answers:[{it:"Non ho capito bene, può spiegarmelo?",phonetic:"[non o ka-PI-to BE-ne PWO spye-GAR-me-lo]",keywords:["spiegarmelo"]},
+              {it:"Quanto tempo passa di solito tra i due?",phonetic:"[KWAN-to TEM-po PAS-sa di SO-li-to tra i DU-e]",keywords:["tempo","due"]}]},
+    {q:"Devo versare una caparra confirmatoria?",qPhonetic:"[DE-vo ver-SA-re U-na ka-PAR-ra kon-fir-ma-TO-rya]",eng:"Do I need to pay a confirmatory deposit?",
+     answers:[{it:"Di solito quanto è la percentuale?",phonetic:"[di SO-li-to KWAN-to EH la per-chen-TWA-le]",keywords:["percentuale"]},
+              {it:"Cosa succede se il venditore si ritira?",phonetic:"[KO-za sut-CHE-de se il ven-di-TO-re si ri-TI-ra]",keywords:["venditore","ritira"]}]},
+    {q:"L'immobile è intestato correttamente?",qPhonetic:"[lim-MO-bi-le EH in-tes-TA-to kor-ret-ta-MEN-te]",eng:"Is the property correctly registered in the seller's name?",
+     answers:[{it:"Può fare una verifica all'Agenzia delle Entrate?",phonetic:"[PWO FA-re U-na ve-RI-fi-ka al-la-JEN-tsya DEL-le en-TRA-te]",keywords:["verifica","entrate"]},
+              {it:"Voglio essere sicuro prima di firmare qualsiasi cosa.",phonetic:"[VOL-yo ES-se-re si-KU-ro PRI-ma di fir-MA-re kwal-SYA-zi KO-za]",keywords:["sicuro","firmare"]}]},
+    {q:"Ci sono vincoli urbanistici sull'immobile?",qPhonetic:"[chi SO-no VIN-ko-li ur-ba-NIS-ti-chi sul-lim-MO-bi-le]",eng:"Are there any planning restrictions on the property?",
+     answers:[{it:"Come posso saperlo con certezza?",phonetic:"[KO-me POS-so sa-PER-lo kon cher-TET-tsa]",keywords:["saperlo","certezza"]},
+              {it:"Ho intenzione di ristrutturare, è possibile?",phonetic:"[o in-ten-TSYO-ne di ri-strut-tu-RA-re EH pos-SI-bi-le]",keywords:["ristrutturare","possibile"]}]},
+    {q:"Qual è la sua parcella per assistere all'atto?",qPhonetic:"[kwal EH la SWA par-CHEL-la per as-SIS-te-re al-LAT-to]",eng:"What is your fee for assisting with the deed?",
+     answers:[{it:"Può farmi un preventivo scritto?",phonetic:"[PWO far-mi un pre-ven-TI-vo SKRIT-to]",keywords:["preventivo","scritto"]},
+              {it:"È inclusa la due diligence nell'immobile?",phonetic:"[EH in-KLU-za la DU-e DIL-i-jens nel-lim-MO-bi-le]",keywords:["inclusa","diligence"]}]},
+    {q:"Il contratto di affitto è regolare?",qPhonetic:"[il kon-TRAT-to di af-FIT-to EH re-go-LA-re]",eng:"Is the rental contract legally compliant?",
+     answers:[{it:"È registrato all'Agenzia delle Entrate?",phonetic:"[EH re-jis-TRA-to al-la-JEN-tsya DEL-le en-TRA-te]",keywords:["registrato","entrate"]},
+              {it:"Può verificare che tuteli i miei diritti?",phonetic:"[PWO ve-ri-fi-KA-re ke tu-TE-li i MYE-i di-RIT-ti]",keywords:["tuteli","diritti"]}]}
+  ],
+  notaio:[
+    {q:"Buongiorno, sono qui per il rogito.",qPhonetic:"[bwon-JOR-no SO-no kwi per il RO-ji-to]",eng:"Good morning, I am here for the deed of sale.",
+     answers:[{it:"Ho tutti i documenti che ha richiesto.",phonetic:"[o TUT-ti i do-KU-men-ti ke a ri-KYE-sto]",keywords:["documenti","richiesto"]},
+              {it:"È la prima volta che compro casa in Italia.",phonetic:"[EH la PRI-ma VOL-ta ke KOM-pro KA-za in i-TA-lya]",keywords:["prima","italia"]}]},
+    {q:"Ha portato il codice fiscale e un documento d'identità?",qPhonetic:"[a por-TA-to il KO-di-che fis-KA-le e un do-KU-men-to di-den-ti-TA]",eng:"Have you brought your tax code and an identity document?",
+     answers:[{it:"Sì, ho il passaporto e il codice fiscale.",phonetic:"[si o il pas-sa-POR-to e il KO-di-che fis-KA-le]",keywords:["passaporto","fiscale"]},
+              {it:"Ho anche il permesso di soggiorno.",phonetic:"[o AN-ke il per-MES-so di sod-JOR-no]",keywords:["permesso","soggiorno"]}]},
+    {q:"Le spiego le imposte dovute per l'acquisto.",qPhonetic:"[le SPYE-go le im-POS-te do-VU-te per lak-KWIS-to]",eng:"I will explain the taxes due for the purchase.",
+     answers:[{it:"È la mia prima casa, ho diritto alle agevolazioni?",phonetic:"[EH la MYA PRI-ma KA-za o di-RIT-to AL-le a-je-vo-la-TSYO-ni]",keywords:["prima","agevolazioni"]},
+              {it:"Può spiegarmi la differenza tra imposta di registro e IVA?",phonetic:"[PWO spye-GAR-mi la dif-fe-REN-tsa tra im-POS-ta di re-JIS-tro e i-VA]",keywords:["registro","iva"]}]},
+    {q:"Il prezzo dichiarato corrisponde al prezzo reale?",qPhonetic:"[il PRET-tso di-kya-RA-to kor-ris-PON-de al PRET-tso re-A-le]",eng:"Does the declared price correspond to the actual price?",
+     answers:[{it:"Sì, il prezzo dichiarato è quello reale.",phonetic:"[si il PRET-tso di-kya-RA-to EH KWEL-lo re-A-le]",keywords:["dichiarato","reale"]},
+              {it:"Voglio essere completamente in regola.",phonetic:"[VOL-yo ES-se-re kom-ple-ta-MEN-te in RE-go-la]",keywords:["completamente","regola"]}]},
+    {q:"Ha già provveduto al bonifico?",qPhonetic:"[a JA prov-ve-DU-to al bo-NI-fi-ko]",eng:"Have you already arranged the bank transfer?",
+     answers:[{it:"Sì, ho fatto il bonifico ieri.",phonetic:"[si o FAT-to il bo-NI-fi-ko YE-ri]",keywords:["bonifico","ieri"]},
+              {it:"Quanto tempo prima del rogito devo farlo?",phonetic:"[KWAN-to TEM-po PRI-ma del RO-ji-to DE-vo FAR-lo]",keywords:["prima","farlo"]}]},
+    {q:"Le leggo l'atto. Ha domande?",qPhonetic:"[le LEG-go LAT-to a do-MAN-de]",eng:"I will read the deed to you. Do you have any questions?",
+     answers:[{it:"Può leggere lentamente, per favore?",phonetic:"[PWO LEG-je-re len-ta-MEN-te per fa-VO-re]",keywords:["lentamente","favore"]},
+              {it:"Non ho capito questa clausola, può spiegarla?",phonetic:"[non o ka-PI-to KWES-ta KLAU-zo-la PWO spye-GAR-la]",keywords:["clausola","spiegarla"]}]},
+    {q:"Deve firmare qui e mettere le iniziali qui.",qPhonetic:"[DE-ve fir-MA-re kwi e MET-te-re le i-ni-TSYA-li kwi]",eng:"You need to sign here and initial here.",
+     answers:[{it:"Certo, dove esattamente?",phonetic:"[CHER-to DO-ve e-zat-ta-MEN-te]",keywords:["dove","esattamente"]},
+              {it:"Posso leggere ancora una volta prima di firmare?",phonetic:"[POS-so LEG-je-re an-KO-ra U-na VOL-ta PRI-ma di fir-MA-re]",keywords:["leggere","firmare"]}]},
+    {q:"Quando riceverà le chiavi?",qPhonetic:"[KWAN-do ri-che-ve-RA le KYA-vi]",eng:"When will you receive the keys?",
+     answers:[{it:"Oggi stesso, dopo la firma?",phonetic:"[OD-ji STES-so DO-po la FIR-ma]",keywords:["oggi","firma"]},
+              {it:"Il venditore ha detto entro la fine della settimana.",phonetic:"[il ven-di-TO-re a DET-to EN-tro la FI-ne DEL-la set-ti-MA-na]",keywords:["venditore","settimana"]}]},
+    {q:"Quali sono i prossimi passi dopo il rogito?",qPhonetic:"[KWA-li SO-no i PROS-si-mi PAS-si DO-po il RO-ji-to]",eng:"What are the next steps after the deed?",
+     answers:[{it:"Devo fare qualcosa per la residenza?",phonetic:"[DE-vo FA-re kwal-KO-za per la re-zi-DEN-tsa]",keywords:["residenza"]},
+              {it:"Quando viene trascritto nei registri immobiliari?",phonetic:"[KWAN-do VYE-ne tra-SKRIT-to nay re-JIS-tri im-mo-bi-LYA-ri]",keywords:["trascritto","immobiliari"]}]}
   ]
 };
 
