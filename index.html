@@ -1174,6 +1174,38 @@ function showFeedback(type,text,heard) {
 }
 function hideFeedback() { document.getElementById('feedback').className = 'feedback'; }
 
+// ─── PLAY BUTTON ─────────────────────────────────────────────────────────────
+document.getElementById('btnPlay').addEventListener('click', () => {
+  if (!hasTTS) return;
+  synth.cancel();
+  const p = currentPhrases[currentIndex];
+  const u = new SpeechSynthesisUtterance(p.it);
+  u.lang = 'it-IT'; u.rate = 0.85;
+  const itV = synth.getVoices().find(v => v.lang.startsWith('it'));
+  if (itV) u.voice = itV;
+  synth.speak(u);
+});
+
+// ─── LISTEN BUTTON ────────────────────────────────────────────────────────────
+document.getElementById('btnListen').addEventListener('click', () => {
+  if (!hasSTT) { alert('Speech recognition not supported. Please use Chrome on HTTPS.'); return; }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const rec = new SR();
+  rec.lang = 'it-IT'; rec.interimResults = false; rec.maxAlternatives = 3;
+  document.getElementById('listenIcon').textContent = '⏹';
+  document.getElementById('listenLabel').textContent = 'Listening...';
+  rec.onresult = e => {
+    evaluateSpeech(Array.from(e.results[0]).map(r => r.transcript));
+    document.getElementById('listenIcon').textContent = '🎙';
+    document.getElementById('listenLabel').textContent = 'Speak';
+  };
+  rec.onerror = () => {
+    document.getElementById('listenIcon').textContent = '🎙';
+    document.getElementById('listenLabel').textContent = 'Speak';
+  };
+  rec.start();
+});
+
 // ─── NAVIGATION ──────────────────────────────────────────────────────────────
 document.getElementById('btnNext').addEventListener('click', () => {
   if (currentIndex < currentPhrases.length-1) { currentIndex++; renderPhrase(); renderDots(); }
