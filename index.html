@@ -6,9 +6,9 @@
 <title>Parla Italiano</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-:root{--terra:#c1440e;--cream:#faf6f0;--warm-white:#fff9f3;--ink:#1a1208;--ink-soft:#4a3728;--stone:#b5a898;--stone-light:#e8e0d5;--gold:#c9a84c;--success:#3a7d44;}
+:root{--terra:#c1440e;--cream:#faf6f0;--warm-white:#fff9f3;--ink:#1a1208;--ink-soft:#2e1f12;--stone:#b5a898;--stone-light:#e8e0d5;--gold:#c9a84c;--success:#3a7d44;}
 *{box-sizing:border-box;margin:0;padding:0;}
-body{background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:300;min-height:100vh;background-image:radial-gradient(ellipse at 20% 10%,rgba(193,68,14,.06) 0%,transparent 50%),radial-gradient(ellipse at 80% 90%,rgba(201,168,76,.08) 0%,transparent 50%);}
+body{background:var(--cream);color:var(--ink);font-family:'DM Sans',sans-serif;font-weight:400;min-height:100vh;background-image:radial-gradient(ellipse at 20% 10%,rgba(193,68,14,.06) 0%,transparent 50%),radial-gradient(ellipse at 80% 90%,rgba(201,168,76,.08) 0%,transparent 50%);}
 header{text-align:center;padding:2rem 2rem 1rem;border-bottom:1px solid var(--stone-light);}
 header::before{content:'';display:block;width:40px;height:2px;background:var(--terra);margin:0 auto 1rem;}
 h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3rem);font-weight:300;}
@@ -48,7 +48,7 @@ h1 em{font-style:italic;color:var(--terra);}
 .conj-table td:nth-child(4){color:var(--ink-soft);font-size:.75rem;}
 .conj-table tr.hl td{background:rgba(193,68,14,.04);}
 .phrase-counter{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--stone);margin-bottom:1rem;}
-.italian-phrase{font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,3.5vw,2rem);font-weight:400;line-height:1.3;margin-bottom:.35rem;}
+.italian-phrase{font-family:'Cormorant Garamond',serif;font-size:clamp(1.3rem,3.5vw,2rem);font-weight:500;line-height:1.3;margin-bottom:.35rem;}
 .phonetic{font-size:.85rem;color:var(--terra);font-style:italic;letter-spacing:.03em;margin-bottom:.9rem;}
 .bridges{display:grid;gap:.35rem;margin-bottom:1.3rem;}
 .bridge{display:flex;align-items:baseline;gap:.5rem;font-size:.81rem;color:var(--ink-soft);padding:.4rem .65rem;background:rgba(181,168,152,.1);border-radius:3px;line-height:1.4;}
@@ -87,15 +87,7 @@ h1 em{font-style:italic;color:var(--terra);}
 .restart-btn{margin-top:1rem;padding:.6rem 1.8rem;background:var(--terra);color:white;border:none;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;}
 .tbl-controls{display:none;margin-bottom:.8rem;}
 .tbl-controls.show{display:block;}
-.test-bar{display:none;gap:.4rem;margin-bottom:1rem;align-items:center;flex-wrap:wrap;}
-.test-bar.show{display:flex;}
-.btn-test{background:transparent;color:var(--ink-soft);border:1px solid var(--stone-light);}
-.btn-test.active{background:var(--gold);border-color:var(--gold);color:white;}
-.test-question{font-family:'Cormorant Garamond',serif;font-size:clamp(1.1rem,3vw,1.6rem);color:var(--terra);margin-bottom:.5rem;display:none;}
-.test-question.show{display:block;}
-.hint-box{display:none;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.3);border-radius:3px;padding:.6rem .85rem;margin-bottom:.8rem;font-size:.82rem;color:var(--ink-soft);line-height:1.5;}
-.hint-box.show{display:block;}
-.hint-box strong{color:var(--ink);}
+
 .numbers-sub-bar{display:none;gap:.4rem;margin-bottom:1rem;flex-wrap:wrap;}
 </style>
 </head>
@@ -112,12 +104,21 @@ h1 em{font-style:italic;color:var(--terra);}
     <button class="tab-btn" data-tab="verbs">Verbs</button>
     <button class="tab-btn" data-tab="mix">Mixed</button>
     <button class="tab-btn" data-tab="numbers">Numbers</button>
+    <button class="tab-btn" data-tab="qa">Q &amp; A</button>
   </div>
   <div class="numbers-sub-bar" id="numbersSubBar">
     <button class="tense-btn active" data-nsub="prices" onclick="switchNumbersTab(this)">Prices</button>
     <button class="tense-btn" data-nsub="quantities" onclick="switchNumbersTab(this)">Quantities</button>
     <button class="tense-btn" data-nsub="calendar" onclick="switchNumbersTab(this)">Calendar</button>
     <button class="tense-btn" data-nsub="business_dates" onclick="switchNumbersTab(this)">Business Dates</button>
+  </div>
+  <div class="numbers-sub-bar" id="qaSubBar" style="display:none;">
+    <button class="tense-btn active" data-qasub="vita" onclick="switchQaTab(this)">Vita Quotidiana</button>
+    <button class="tense-btn" data-qasub="questura" onclick="switchQaTab(this)">Questura</button>
+    <button class="tense-btn" data-qasub="autoscuola" onclick="switchQaTab(this)">Autoscuola</button>
+    <button class="tense-btn" data-qasub="asl" onclick="switchQaTab(this)">ASL</button>
+    <button class="tense-btn" data-qasub="medico" onclick="switchQaTab(this)">Medico</button>
+    <button class="tense-btn" data-qasub="commercialista" onclick="switchQaTab(this)">Commercialista</button>
   </div>
   <div class="verb-selector" id="verbSelector">
     <div class="verb-selector-label">Choose a verb</div>
@@ -126,7 +127,6 @@ h1 em{font-style:italic;color:var(--terra);}
   <div class="tense-toggle" id="tenseToggle">
     <button class="tense-btn active" data-tense="present">Present</button>
     <button class="tense-btn" data-tense="past">Past</button>
-    <button class="btn btn-test" id="btnTestMode">Test Mode</button>
   </div>
   <div class="card" id="mainCard">
     <div class="verb-header" id="verbHeader">
@@ -140,15 +140,12 @@ h1 em{font-style:italic;color:var(--terra);}
       <table class="conj-table" id="conjTable"></table>
     </div>
     <div class="phrase-counter" id="counter">Phrase 1 of 6</div>
-    <div class="test-question" id="testQuestion"></div>
-    <div class="hint-box" id="hintBox"><strong>💡 Model answer:</strong> <span id="hintText"></span><br><span id="hintPhonetic" style="color:var(--terra);font-style:italic;font-size:.78rem;"></span></div>
     <div class="italian-phrase" id="italianPhrase"></div>
     <div class="phonetic" id="phonetic"></div>
     <div class="bridges" id="bridges"></div>
     <div class="controls">
       <button class="btn btn-play" id="btnPlay">&#9654; Hear it</button>
       <button class="btn btn-listen" id="btnListen"><span id="listenIcon">🎙</span> <span id="listenLabel">Speak</span></button>
-      <button class="btn btn-table" id="btnShowHint" style="display:none;">Show hint</button>
       <button class="btn btn-next" id="btnNext">Next →</button>
     </div>
     <div class="feedback" id="feedback">
@@ -157,6 +154,19 @@ h1 em{font-style:italic;color:var(--terra);}
     </div>
     <div class="tip" id="tip"></div>
   </div>
+  <div class="card" id="qaCard" style="display:none;">
+    <div class="phrase-counter" id="qaCounter">Question 1 of 9</div>
+    <div class="italian-phrase" id="qaQuestion" style="margin-bottom:.4rem;cursor:pointer;" title="Tap to hear"></div>
+    <div class="phonetic" id="qaPhonetic" style="margin-bottom:.6rem;"></div>
+    <button class="btn btn-table" id="btnRevealEng" style="margin-bottom:.8rem;">Show English</button>
+    <div id="qaEnglish" style="display:none;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.3);border-radius:3px;padding:.5rem .8rem;margin-bottom:.8rem;font-size:.9rem;color:var(--ink);font-weight:500;"></div>
+    <div id="qaAnswers" style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:.9rem;"></div>
+    <div style="margin-bottom:.5rem;"><button class="btn btn-listen" id="qaListenBtn" style="display:none;"><span id="qaListenIcon">&#127897;</span> <span id="qaListenLabel">Speak answer</span></button></div>
+    <div class="feedback" id="qaFeedback"><div id="qaFeedbackText"></div></div>
+    <div class="nav-dots" id="qaDots"></div>
+    <div class="nav-row"><button class="btn btn-next" id="qaBtnNext">Next &#8594;</button></div>
+  </div>
+
   <div class="progress" id="progressDots"></div>
   <div class="complete" id="completeScreen">
     <div class="score-display" id="scoreDisplay">5/6</div>
@@ -639,10 +649,254 @@ const verbData = [
     {pronoun:"loro",it:"Hanno chiamato per confermare la consegna.",phonetic:"[AN-no kya-MA-to per kon-fer-MA-re la kon-SEN-ya]",tts:"Hanno chiamato per confermare la consegna",bridges:[{flag:"🇧🇷",text:"Eles ligaram para confirmar a entrega. — 'consegna'='entrega'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They called to confirm the delivery."}],tip:"💡 'Consegna'=delivery. 'Data di consegna'=delivery date. 'Consegnare'=to deliver.",keywords:["hanno chiamato","confermare","consegna"]}]
     }
   },
+
+  ,
+  {
+    inf:"stare",meaning:"to stay / be (feeling/location)",aux:"essere",
+    present:{io:"sto",tu:"stai",lui:"sta",noi:"stiamo",voi:"state",loro:"stanno"},
+    past_participle:"stato/a",
+    phonetics:{present:{io:"[sto]",tu:"[STAY]",lui:"[sta]",noi:"[STYA-mo]",voi:"[STA-te]",loro:"[STAN-no]"}},
+    sentences:{
+      present:[
+        {pronoun:"io",it:"Sto bene, grazie.",phonetic:"[sto BE-ne GRA-tsye]",tts:"Sto bene grazie",bridges:[{flag:"🇧🇷",text:"<strong>Estou bem, obrigado.</strong> — 'sto'='estou', 'bene'='bem'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I'm fine, thank you."}],tip:"💡 'Sto bene'=I'm well. 'Sto male'=I'm unwell. 'Come stai?'/'Sto bene' — the most common exchange in Italian.",keywords:["sto","bene"]},
+        {pronoun:"tu",it:"Stai lavorando da casa oggi?",phonetic:"[STAY la-vo-RAN-do da KA-za OJ-ji]",tts:"Stai lavorando da casa oggi",bridges:[{flag:"🇧🇷",text:"<strong>Você está trabalhando de casa hoje?</strong> — 'stai lavorando'='está trabalhando'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Are you working from home today?"}],tip:"💡 'Stare + gerundio' (-ando/-endo) = Italian progressive tense. 'Sto mangiando'=I'm eating. Exactly like Portuguese 'estar + gerúndio'.",keywords:["stai","lavorando","casa"]},
+        {pronoun:"lui/lei",it:"Sta aspettando la conferma dalla dogana.",phonetic:"[sta as-pet-TAN-do la kon-FER-ma DAL-la do-GA-na]",tts:"Sta aspettando la conferma dalla dogana",bridges:[{flag:"🇧🇷",text:"<strong>Está aguardando a confirmação da alfândega.</strong> — progressive identical structure"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she is waiting for confirmation from customs."}],tip:"💡 'Stare + gerundio' for ongoing actions. Very natural in spoken Italian updates.",keywords:["sta","aspettando","dogana"]},
+        {pronoun:"noi",it:"Stiamo valutando le offerte dei fornitori.",phonetic:"[STYA-mo va-lu-TAN-do le of-FER-te day for-ni-TO-ri]",tts:"Stiamo valutando le offerte dei fornitori",bridges:[{flag:"🇧🇷",text:"<strong>Estamos avaliando as propostas dos fornecedores.</strong> — quase idêntico!"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We are evaluating the suppliers' offers."}],tip:"💡 'Valutare'=to evaluate. 'Offerta'=offer/bid. Core procurement language.",keywords:["stiamo","valutando","fornitori"]},
+        {pronoun:"voi",it:"State ancora aspettando la risposta?",phonetic:"[STA-te an-KO-ra as-pet-TAN-do la ris-POS-ta]",tts:"State ancora aspettando la risposta",bridges:[{flag:"🇧🇷",text:"<strong>Vocês ainda estão esperando a resposta?</strong> — 'ancora'='ainda'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Are you all still waiting for the response?"}],tip:"💡 'Ancora'=still/yet. 'Non ancora'=not yet. 'Ancora un momento'=just a moment more.",keywords:["state","ancora","aspettando"]},
+        {pronoun:"loro",it:"Stanno analizzando i documenti di importazione.",phonetic:"[STAN-no a-na-lid-ZAN-do i do-KU-men-ti di im-por-ta-TSYO-ne]",tts:"Stanno analizzando i documenti di importazione",bridges:[{flag:"🇧🇷",text:"<strong>Estão analisando os documentos de importação.</strong>"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They are analysing the import documents."}],tip:"💡 'Analizzare'=to analyse. 'Stanno' is the third-person plural progressive workhorse.",keywords:["stanno","analizzando","importazione"]}
+      ],
+      past:[
+        {pronoun:"io",it:"Sono stato in dogana tutta la mattina.",phonetic:"[SO-no STA-to in do-GA-na TUT-ta la mat-TI-na]",tts:"Sono stato in dogana tutta la mattina",bridges:[{flag:"🇧🇷",text:"<strong>Fiquei na alfândega a manhã toda.</strong> — 'sono stato'='fiquei/estive'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I was at customs all morning."}],tip:"💡 'Stare' past = 'sono stato/a'. Same form as essere — context tells you which. 'Sono stato IN dogana'=I was AT customs (location).",keywords:["sono stato","dogana","mattina"]},
+        {pronoun:"tu",it:"Sei stato a Genova la settimana scorsa?",phonetic:"[SAY STA-to a JE-no-va la set-ti-MA-na SKOR-sa]",tts:"Sei stato a Genova la settimana scorsa",bridges:[{flag:"🇧🇷",text:"<strong>Você esteve em Gênova na semana passada?</strong> — 'scorsa'='passada'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Were you in Genoa last week?"}],tip:"💡 'Settimana scorsa'=last week. 'Mese scorso'=last month. 'Anno scorso'=last year.",keywords:["sei stato","genova","scorsa"]},
+        {pronoun:"lui/lei",it:"È stata in riunione fino alle sette.",phonetic:"[EH STA-ta in ryu-NYO-ne FI-no AL-le SET-te]",tts:"È stata in riunione fino alle sette",bridges:[{flag:"🇧🇷",text:"<strong>Ela ficou em reunião até as sete.</strong> — 'fino alle'='até as'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"She was in a meeting until seven."}],tip:"💡 'Stato/a' agrees with subject gender. 'Fino a'=until/up to. Very common in scheduling.",keywords:["è stata","riunione","fino"]},
+        {pronoun:"noi",it:"Siamo stati fermi per due settimane.",phonetic:"[SYA-mo STA-ti FER-mi per DU-e set-ti-MA-ne]",tts:"Siamo stati fermi per due settimane",bridges:[{flag:"🇧🇷",text:"<strong>Ficamos parados por duas semanas.</strong> — 'fermi'='parados'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We were at a standstill for two weeks."}],tip:"💡 'Fermi'=stopped/stalled. 'Siamo stati fermi' = we were stuck. Useful in project/logistics delays.",keywords:["siamo stati","fermi","settimane"]},
+        {pronoun:"voi",it:"Siete stati presenti alla fiera?",phonetic:"[SYE-te STA-ti pre-ZEN-ti AL-la FYE-ra]",tts:"Siete stati presenti alla fiera",bridges:[{flag:"🇧🇷",text:"<strong>Vocês estiveram presentes na feira?</strong> — 'presenti'='presentes'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Were you all present at the fair?"}],tip:"💡 'Presenti'=present/in attendance. 'Assenti'=absent. Both useful for meeting follow-ups.",keywords:["siete stati","presenti","fiera"]},
+        {pronoun:"loro",it:"Sono stati in contatto con il fornitore.",phonetic:"[SO-no STA-ti in kon-TAT-to kon il for-ni-TO-re]",tts:"Sono stati in contatto con il fornitore",bridges:[{flag:"🇧🇷",text:"<strong>Eles estiveram em contato com o fornecedor.</strong> — 'in contatto'='em contato'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They were in contact with the supplier."}],tip:"💡 'Essere/stare in contatto con'=to be in contact with. 'Teniamoci in contatto'=let's stay in touch.",keywords:["sono stati","contatto","fornitore"]}
+      ]
+    }
+  },
+  {
+    inf:"dare",meaning:"to give",aux:"avere",
+    present:{io:"do",tu:"dai",lui:"dà",noi:"diamo",voi:"date",loro:"danno"},
+    past_participle:"dato",
+    phonetics:{present:{io:"[do]",tu:"[DAY]",lui:"[da]",noi:"[DYA-mo]",voi:"[DA-te]",loro:"[DAN-no]"}},
+    sentences:{
+      present:[
+        {pronoun:"io",it:"Do un'occhiata al contratto e ti richiamo.",phonetic:"[do u-nok-KYA-ta al kon-TRAT-to e ti ri-KYA-mo]",tts:"Do un'occhiata al contratto e ti richiamo",bridges:[{flag:"🇧🇷",text:"<strong>Dou uma olhada no contrato e te ligo de volta.</strong> — 'do un'occhiata'='dou uma olhada'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I'll take a look at the contract and call you back."}],tip:"💡 'Dare un'occhiata'=to take a look (lit: give a glance). One of the most natural Italian idioms.",keywords:["do","occhiata","contratto"]},
+        {pronoun:"tu",it:"Mi dai il numero del responsabile?",phonetic:"[mi DAY il NU-me-ro del res-pon-SA-bi-le]",tts:"Mi dai il numero del responsabile",bridges:[{flag:"🇧🇷",text:"<strong>Você me dá o número do responsável?</strong> — 'dai'='dá'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Can you give me the manager's number?"}],tip:"💡 'Mi dai...?' = Can you give me...? Very direct and natural. Add 'per favore' to soften.",keywords:["dai","numero","responsabile"]},
+        {pronoun:"lui/lei",it:"Dà sempre priorità alla qualità.",phonetic:"[da SEM-pre pri-o-ri-TA AL-la kwa-li-TA]",tts:"Dà sempre priorità alla qualità",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela sempre dá prioridade à qualidade.</strong> — 'priorità'='prioridade'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she always prioritises quality."}],tip:"💡 'Dare priorità a'=to prioritise. 'Qualità' — stress on final syllable. Both core business words.",keywords:["dà","priorità","qualità"]},
+        {pronoun:"noi",it:"Diamo il via al progetto lunedì.",phonetic:"[DYA-mo il VYA al pro-JET-to lu-ne-DI]",tts:"Diamo il via al progetto lunedì",bridges:[{flag:"🇧🇷",text:"<strong>Damos o início ao projeto na segunda-feira.</strong> — 'dare il via'='dar o início/sinal verde'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We're kicking off the project on Monday."}],tip:"💡 'Dare il via'=to launch/kick off. Extremely common in project and business contexts.",keywords:["diamo","via","progetto"]},
+        {pronoun:"voi",it:"Date conferma entro venerdì, per favore.",phonetic:"[DA-te kon-FER-ma EN-tro ve-ner-DI per fa-VO-re]",tts:"Date conferma entro venerdì per favore",bridges:[{flag:"🇧🇷",text:"<strong>Deem confirmação até sexta-feira, por favor.</strong> — 'date'='deem'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Please confirm by Friday."}],tip:"💡 'Dare conferma'=to confirm (lit: give confirmation). Standard in written and spoken business Italian.",keywords:["date","conferma","venerdì"]},
+        {pronoun:"loro",it:"Danno sempre tempi di consegna precisi.",phonetic:"[DAN-no SEM-pre TEM-pi di kon-SEN-ya pre-CHI-zi]",tts:"Danno sempre tempi di consegna precisi",bridges:[{flag:"🇧🇷",text:"<strong>Eles sempre dão prazos de entrega precisos.</strong> — 'tempi di consegna'='prazos de entrega'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They always give precise delivery timelines."}],tip:"💡 'Tempi di consegna'=delivery timelines. 'Precisi'=precise. Supplier evaluation vocabulary.",keywords:["danno","tempi","consegna"]}
+      ],
+      past:[
+        {pronoun:"io",it:"Ho dato istruzioni chiare al team.",phonetic:"[o DA-to is-tru-TSYO-ni KYA-re al team]",tts:"Ho dato istruzioni chiare al team",bridges:[{flag:"🇧🇷",text:"<strong>Dei instruções claras ao time.</strong> — 'ho dato'='dei', 'chiare'='claras'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I gave clear instructions to the team."}],tip:"💡 'Dato' is the irregular past participle. 'Istruzioni chiare'=clear instructions. Useful after any briefing.",keywords:["ho dato","istruzioni","chiare"]},
+        {pronoun:"tu",it:"Hai dato il via libera alla spedizione?",phonetic:"[AY DA-to il VYA li-BE-ra AL-la spe-di-TSYO-ne]",tts:"Hai dato il via libera alla spedizione",bridges:[{flag:"🇧🇷",text:"<strong>Você deu o sinal verde para o envio?</strong> — 'via libera'='sinal verde'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you give the green light to the shipment?"}],tip:"💡 'Dare il via libera'=to give the go-ahead. Essential logistics phrase.",keywords:["hai dato","via libera","spedizione"]},
+        {pronoun:"lui/lei",it:"Ha dato una risposta negativa.",phonetic:"[a DA-to U-na ris-POS-ta ne-ga-TI-va]",tts:"Ha dato una risposta negativa",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela deu uma resposta negativa.</strong> — 'risposta negativa'='resposta negativa'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she gave a negative response."}],tip:"💡 'Risposta negativa/positiva' — same in both languages. Clear and professional.",keywords:["ha dato","risposta","negativa"]},
+        {pronoun:"noi",it:"Abbiamo dato la nostra disponibilità.",phonetic:"[ab-BYA-mo DA-to la NOS-tra dis-po-ni-bi-li-TA]",tts:"Abbiamo dato la nostra disponibilità",bridges:[{flag:"🇧🇷",text:"<strong>Demos nossa disponibilidade.</strong> — 'disponibilità'='disponibilidade'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We confirmed our availability."}],tip:"💡 'Dare la disponibilità'=to confirm availability. Very natural in scheduling emails.",keywords:["abbiamo dato","disponibilità"]},
+        {pronoun:"voi",it:"Avete dato tutti i documenti richiesti?",phonetic:"[a-VE-te DA-to TUT-ti i do-KU-men-ti ri-KYE-sti]",tts:"Avete dato tutti i documenti richiesti",bridges:[{flag:"🇧🇷",text:"<strong>Vocês deram todos os documentos solicitados?</strong> — 'richiesti'='solicitados'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you provide all the required documents?"}],tip:"💡 'Dare i documenti'=to provide the documents. 'Richiesti'=required/requested. Compliance staple.",keywords:["avete dato","documenti","richiesti"]},
+        {pronoun:"loro",it:"Hanno dato il consenso scritto.",phonetic:"[AN-no DA-to il kon-SEN-so SKRIT-to]",tts:"Hanno dato il consenso scritto",bridges:[{flag:"🇧🇷",text:"<strong>Eles deram o consentimento por escrito.</strong> — 'consenso scritto'='consentimento por escrito'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They gave written consent."}],tip:"💡 'Consenso scritto'=written consent. Appears in contracts, GDPR, and regulatory authorisations.",keywords:["hanno dato","consenso","scritto"]}
+      ]
+    }
+  },
+  {
+    inf:"prendere",meaning:"to take / get / have",aux:"avere",
+    present:{io:"prendo",tu:"prendi",lui:"prende",noi:"prendiamo",voi:"prendete",loro:"prendono"},
+    past_participle:"preso",
+    phonetics:{present:{io:"[PREN-do]",tu:"[PREN-di]",lui:"[PREN-de]",noi:"[pren-DYA-mo]",voi:"[pren-DE-te]",loro:"[PREN-do-no]"}},
+    sentences:{
+      present:[
+        {pronoun:"io",it:"Prendo un caffè al bar prima della riunione.",phonetic:"[PREN-do un kaf-FEH al bar PRI-ma DEL-la ryu-NYO-ne]",tts:"Prendo un caffè al bar prima della riunione",bridges:[{flag:"🇧🇷",text:"<strong>Tomo um café no bar antes da reunião.</strong> — 'prendo'='tomo' (for food/drink)"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I'll have a coffee at the bar before the meeting."}],tip:"💡 'Prendere' = 'to have' for food and drink orders. 'Cosa prendi?' = What will you have? The standard way to order in Italy.",keywords:["prendo","caffè","bar"]},
+        {pronoun:"tu",it:"Prendi l'autostrada o la statale?",phonetic:"[PREN-di low-tos-TRA-da o la sta-TA-le]",tts:"Prendi l'autostrada o la statale",bridges:[{flag:"🇧🇷",text:"<strong>Você pega a autoestrada ou a estrada estadual?</strong> — 'prendi'='pega'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Are you taking the motorway or the state road?"}],tip:"💡 'Prendere' for transport = to take. 'Prendo il treno'=I'm taking the train. 'Prendo un taxi'=I'll get a taxi.",keywords:["prendi","autostrada","statale"]},
+        {pronoun:"lui/lei",it:"Prende sempre appunti durante le riunioni.",phonetic:"[PREN-de SEM-pre ap-PUN-ti du-RAN-te le ryu-NYO-ni]",tts:"Prende sempre appunti durante le riunioni",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela sempre toma notas durante as reuniões.</strong> — 'appunti'='notas'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she always takes notes during meetings."}],tip:"💡 'Prendere appunti'=to take notes. 'Appunti'=notes/jottings. Very useful in any professional setting.",keywords:["prende","appunti","riunioni"]},
+        {pronoun:"noi",it:"Prendiamo una decisione entro oggi.",phonetic:"[pren-DYA-mo U-na de-chi-TSYO-ne EN-tro OJ-ji]",tts:"Prendiamo una decisione entro oggi",bridges:[{flag:"🇧🇷",text:"<strong>Tomamos uma decisão até hoje.</strong> — 'decisione'='decisão'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We'll make a decision by today."}],tip:"💡 'Prendere una decisione'=to make a decision. One of the most used business expressions in Italian.",keywords:["prendiamo","decisione","oggi"]},
+        {pronoun:"voi",it:"Prendete in considerazione la nostra offerta?",phonetic:"[pren-DE-te in kon-si-de-ra-TSYO-ne la NOS-tra of-FER-ta]",tts:"Prendete in considerazione la nostra offerta",bridges:[{flag:"🇧🇷",text:"<strong>Vocês levam em consideração nossa proposta?</strong> — 'prendere in considerazione'='levar em consideração'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Are you taking our offer into consideration?"}],tip:"💡 'Prendere in considerazione'=to consider/take into account. Formal and professional.",keywords:["prendete","considerazione","offerta"]},
+        {pronoun:"loro",it:"Prendono ordini da tutta Europa.",phonetic:"[PREN-do-no OR-di-ni da TUT-ta eu-RO-pa]",tts:"Prendono ordini da tutta Europa",bridges:[{flag:"🇧🇷",text:"<strong>Eles recebem pedidos de toda a Europa.</strong> — 'prendono ordini'='recebem pedidos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They take orders from all over Europe."}],tip:"💡 'Prendere ordini'=to take orders. 'Tutta Europa'=all of Europe. Scale vocabulary for import/export.",keywords:["prendono","ordini","europa"]}
+      ],
+      past:[
+        {pronoun:"io",it:"Ho preso il treno delle sei per Milano.",phonetic:"[o PRE-zo il TRE-no DEL-le SEI per mi-LA-no]",tts:"Ho preso il treno delle sei per Milano",bridges:[{flag:"🇧🇷",text:"<strong>Peguei o trem das seis para Milão.</strong> — 'ho preso'='peguei'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I took the six o'clock train to Milan."}],tip:"💡 'Preso' is the irregular past participle. 'Il treno delle sei'=the six o'clock train — standard Italian time reference.",keywords:["ho preso","treno","milano"]},
+        {pronoun:"tu",it:"Hai preso nota di tutto?",phonetic:"[AY PRE-zo NO-ta di TUT-to]",tts:"Hai preso nota di tutto",bridges:[{flag:"🇧🇷",text:"<strong>Você anotou tudo?</strong> — 'prendere nota'='tomar nota'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you make a note of everything?"}],tip:"💡 'Prendere nota di'=to make a note of. 'Preso nota'=noted. You'll hear 'ho preso nota' as confirmation in business.",keywords:["hai preso","nota","tutto"]},
+        {pronoun:"lui/lei",it:"Ha preso una decisione senza consultarci.",phonetic:"[a PRE-zo U-na de-chi-TSYO-ne SEN-tsa kon-sul-TAR-chi]",tts:"Ha preso una decisione senza consultarci",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela tomou uma decisão sem nos consultar.</strong> — 'consultarci'='nos consultar'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she made a decision without consulting us."}],tip:"💡 '-ci' attached = us. 'Senza consultarci'=without consulting us. Natural in team dynamics.",keywords:["ha preso","decisione","senza"]},
+        {pronoun:"noi",it:"Abbiamo preso un campione per l'analisi.",phonetic:"[ab-BYA-mo PRE-zo un kam-PYO-ne per la-NA-li-zi]",tts:"Abbiamo preso un campione per l'analisi",bridges:[{flag:"🇧🇷",text:"<strong>Pegamos uma amostra para a análise.</strong> — 'campione'='amostra', 'analisi'='análise'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We took a sample for analysis."}],tip:"💡 'Campione'=sample. 'Analisi'=analysis (same stress: a-NA-li-zi). Food import quality control vocabulary.",keywords:["abbiamo preso","campione","analisi"]},
+        {pronoun:"voi",it:"Avete preso in carico la pratica?",phonetic:"[a-VE-te PRE-zo in KA-ri-ko la PRA-ti-ka]",tts:"Avete preso in carico la pratica",bridges:[{flag:"🇧🇷",text:"<strong>Vocês assumiram o processo?</strong> — 'prendere in carico'='assumir/tomar a cargo'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Have you taken charge of the case/file?"}],tip:"💡 'Prendere in carico'=to take charge of, handle. 'La pratica'=the file/case. Bureaucratic and business staple.",keywords:["avete preso","carico","pratica"]},
+        {pronoun:"loro",it:"Hanno preso contatti con l'agenzia doganale.",phonetic:"[AN-no PRE-zo kon-TAT-ti kon la-JEN-tsya do-ga-NA-le]",tts:"Hanno preso contatti con l'agenzia doganale",bridges:[{flag:"🇧🇷",text:"<strong>Eles entraram em contato com a agência aduaneira.</strong> — 'prendere contatti'='entrar em contato'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They made contact with the customs agency."}],tip:"💡 'Prendere contatti con'=to get in touch with. More formal than 'contattare'. Common in logistics.",keywords:["hanno preso","contatti","doganale"]}
+      ]
+    }
+  },
+  {
+    inf:"sentire",meaning:"to hear / feel / sense",aux:"avere",
+    present:{io:"sento",tu:"senti",lui:"sente",noi:"sentiamo",voi:"sentite",loro:"sentono"},
+    past_participle:"sentito",
+    phonetics:{present:{io:"[SEN-to]",tu:"[SEN-ti]",lui:"[SEN-te]",noi:"[sen-TYA-mo]",voi:"[sen-TI-te]",loro:"[SEN-to-no]"}},
+    sentences:{
+      present:[
+        {pronoun:"io",it:"Non sento bene — può ripetere più lentamente?",phonetic:"[non SEN-to BE-ne — PWO ri-PE-te-re pyU len-ta-MEN-te]",tts:"Non sento bene può ripetere più lentamente",bridges:[{flag:"🇧🇷",text:"<strong>Não estou ouvindo bem — pode repetir mais devagar?</strong> — 'lentamente'='devagar'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I can't hear well — can you repeat more slowly?"}],tip:"💡 'Sentire'=to hear in this context. 'Lentamente'=slowly. Two critical phrases for your early Italian conversations.",keywords:["sento","bene","lentamente"]},
+        {pronoun:"tu",it:"Senti, ho una proposta interessante.",phonetic:"[SEN-ti o U-na pro-POS-ta in-te-res-SAN-te]",tts:"Senti ho una proposta interessante",bridges:[{flag:"🇧🇷",text:"<strong>Olha, tenho uma proposta interessante.</strong> — 'senti'='olha/escuta' (attention-getter)"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Listen, I have an interesting proposal."}],tip:"💡 'Senti' as a conversation opener = 'Listen' or 'Hey'. Extremely common in Italian — it just grabs attention.",keywords:["senti","proposta","interessante"]},
+        {pronoun:"lui/lei",it:"Sente la pressione delle scadenze.",phonetic:"[SEN-te la pres-SYO-ne DEL-le ska-DEN-tse]",tts:"Sente la pressione delle scadenze",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela sente a pressão dos prazos.</strong> — 'pressione'='pressão', 'scadenze'='prazos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she feels the pressure of the deadlines."}],tip:"💡 'Sentire la pressione'=to feel the pressure. 'Scadenze'=deadlines (plural of scadenza).",keywords:["sente","pressione","scadenze"]},
+        {pronoun:"noi",it:"Ci sentiamo domani per un aggiornamento.",phonetic:"[chi sen-TYA-mo do-MA-ni per un aj-jor-na-MEN-to]",tts:"Ci sentiamo domani per un aggiornamento",bridges:[{flag:"🇧🇷",text:"<strong>Falamos amanhã para uma atualização.</strong> — 'ci sentiamo'='a gente fala/se fala'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We'll be in touch tomorrow for an update."}],tip:"💡 'Ci sentiamo'=we'll speak/be in touch — THE standard Italian business sign-off. Use this every day.",keywords:["ci sentiamo","domani","aggiornamento"]},
+        {pronoun:"voi",it:"Sentite, dobbiamo risolvere questo problema oggi.",phonetic:"[sen-TI-te dob-BYA-mo ri-ZOL-ve-re KWES-to pro-BLE-ma OJ-ji]",tts:"Sentite dobbiamo risolvere questo problema oggi",bridges:[{flag:"🇧🇷",text:"<strong>Olha, precisamos resolver este problema hoje.</strong> — 'sentite'='olha (para vocês)'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Listen, we need to resolve this problem today."}],tip:"💡 'Sentite' = plural attention-getter for groups. 'Risolvere'=to resolve. Urgent team communication.",keywords:["sentite","risolvere","problema"]},
+        {pronoun:"loro",it:"Sentono il bisogno di maggiore trasparenza.",phonetic:"[SEN-to-no il bi-ZO-nyo di mad-JO-re tras-pa-REN-tsa]",tts:"Sentono il bisogno di maggiore trasparenza",bridges:[{flag:"🇧🇷",text:"<strong>Eles sentem a necessidade de maior transparência.</strong> — 'trasparenza'='transparência'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They feel the need for greater transparency."}],tip:"💡 'Trasparenza'=transparency. Core to VeriPura's value proposition — and now you can say it in Italian!",keywords:["sentono","bisogno","trasparenza"]}
+      ],
+      past:[
+        {pronoun:"io",it:"Ho sentito dire che hanno cambiato i requisiti.",phonetic:"[o sen-TI-to DI-re ke AN-no kam-BYA-to i re-kwi-ZI-ti]",tts:"Ho sentito dire che hanno cambiato i requisiti",bridges:[{flag:"🇧🇷",text:"<strong>Ouvi dizer que mudaram os requisitos.</strong> — 'ho sentito dire'='ouvi dizer'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I heard that they changed the requirements."}],tip:"💡 'Sentito dire'=heard (through the grapevine). One of the most natural Italian structures for relaying information.",keywords:["ho sentito","dire","requisiti"]},
+        {pronoun:"tu",it:"Hai sentito la novità sul nuovo regolamento?",phonetic:"[AY sen-TI-to la no-vi-TA sul NWO-vo re-go-la-MEN-to]",tts:"Hai sentito la novità sul nuovo regolamento",bridges:[{flag:"🇧🇷",text:"<strong>Você ouviu a novidade sobre o novo regulamento?</strong> — 'novità'='novidade'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you hear the news about the new regulation?"}],tip:"💡 'Novità'=news/novelty. No plural change. 'Hai sentito?'=Did you hear? Very natural conversation starter.",keywords:["hai sentito","novità","regolamento"]},
+        {pronoun:"lui/lei",it:"Ha sentito la nostra presentazione con interesse.",phonetic:"[a sen-TI-to la NOS-tra pre-zen-ta-TSYO-ne kon in-te-RES-se]",tts:"Ha sentito la nostra presentazione con interesse",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela ouviu nossa apresentação com interesse.</strong>"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she listened to our presentation with interest."}],tip:"💡 'Con interesse'=with interest. Positive post-meeting feedback vocabulary.",keywords:["ha sentito","presentazione","interesse"]},
+        {pronoun:"noi",it:"Ci siamo sentiti ieri sera per telefono.",phonetic:"[chi SYA-mo sen-TI-ti YE-ri SE-ra per te-LE-fo-no]",tts:"Ci siamo sentiti ieri sera per telefono",bridges:[{flag:"🇧🇷",text:"<strong>A gente se falou ontem à noite por telefone.</strong> — 'ci siamo sentiti'='a gente se falou'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We spoke on the phone last night."}],tip:"💡 'Sentirsi' (reflexive) = to be in touch / to speak to each other. Uses 'essere' as auxiliary.",keywords:["ci siamo sentiti","ieri","telefono"]},
+        {pronoun:"voi",it:"Avete sentito parlare di VeriPura?",phonetic:"[a-VE-te sen-TI-to par-LA-re di VeriPura]",tts:"Avete sentito parlare di VeriPura",bridges:[{flag:"🇧🇷",text:"<strong>Vocês já ouviram falar da VeriPura?</strong> — 'sentito parlare di'='ouvido falar de'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Have you heard of VeriPura?"}],tip:"💡 'Sentito parlare di'=heard of/about. Your opening line for VeriPura introductions in Italian!",keywords:["avete sentito","parlare","VeriPura"]},
+        {pronoun:"loro",it:"Hanno sentito le nostre preoccupazioni.",phonetic:"[AN-no sen-TI-to le NOS-tre pre-ok-ku-pa-TSYO-ni]",tts:"Hanno sentito le nostre preoccupazioni",bridges:[{flag:"🇧🇷",text:"<strong>Eles ouviram nossas preocupações.</strong> — 'preoccupazioni'='preocupações'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They heard our concerns."}],tip:"💡 'Preoccupazioni'=concerns/worries. 'Preoccupato'=worried. Same root as Portuguese 'preocupações'.",keywords:["hanno sentito","preoccupazioni"]}
+      ]
+    }
+  },
+  {
+    inf:"mettere",meaning:"to put / place / set",aux:"avere",
+    present:{io:"metto",tu:"metti",lui:"mette",noi:"mettiamo",voi:"mettete",loro:"mettono"},
+    past_participle:"messo",
+    phonetics:{present:{io:"[MET-to]",tu:"[MET-ti]",lui:"[MET-te]",noi:"[met-TYA-mo]",voi:"[met-TE-te]",loro:"[MET-to-no]"}},
+    sentences:{
+      present:[
+        {pronoun:"io",it:"Metto tutto per iscritto per evitare problemi.",phonetic:"[MET-to TUT-to per is-KRIT-to per e-vi-TA-re pro-BLE-mi]",tts:"Metto tutto per iscritto per evitare problemi",bridges:[{flag:"🇧🇷",text:"<strong>Coloco tudo por escrito para evitar problemas.</strong> — 'per iscritto'='por escrito'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I put everything in writing to avoid problems."}],tip:"💡 'Mettere per iscritto'=to put in writing. Essential in compliance work. 'Per iscritto'=in writing.",keywords:["metto","iscritto","problemi"]},
+        {pronoun:"tu",it:"Metti la firma qui, per favore.",phonetic:"[MET-ti la FIR-ma kwi per fa-VO-re]",tts:"Metti la firma qui per favore",bridges:[{flag:"🇧🇷",text:"<strong>Coloca a assinatura aqui, por favor.</strong> — 'firma'='assinatura', 'qui'='aqui'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Put your signature here, please."}],tip:"💡 'Mettere la firma'=to sign (lit: put the signature). More colloquial than 'firmare'. You'll hear both.",keywords:["metti","firma","qui"]},
+        {pronoun:"lui/lei",it:"Mette sempre in dubbio le procedure esistenti.",phonetic:"[MET-te SEM-pre in DUB-byo le pro-CHE-du-re e-zis-TEN-ti]",tts:"Mette sempre in dubbio le procedure esistenti",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela sempre coloca em dúvida os procedimentos existentes.</strong> — 'mettere in dubbio'='colocar em dúvida'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she always questions the existing procedures."}],tip:"💡 'Mettere in dubbio'=to question/cast doubt on. Useful idiom across contexts.",keywords:["mette","dubbio","procedure"]},
+        {pronoun:"noi",it:"Mettiamo a disposizione tutta la documentazione.",phonetic:"[met-TYA-mo a dis-po-zi-TSYO-ne TUT-ta la do-ku-men-ta-TSYO-ne]",tts:"Mettiamo a disposizione tutta la documentazione",bridges:[{flag:"🇧🇷",text:"<strong>Colocamos à disposição toda a documentação.</strong> — 'mettere a disposizione'='colocar à disposição'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We make all documentation available."}],tip:"💡 'Mettere a disposizione'=to make available. Extremely common in formal Italian — you'll use this in emails weekly.",keywords:["mettiamo","disposizione","documentazione"]},
+        {pronoun:"voi",it:"Mettete d'accordo tra voi e poi mi dite.",phonetic:"[met-TE-te dak-KOR-do tra VOY e POY mi DI-te]",tts:"Mettete d'accordo tra voi e poi mi dite",bridges:[{flag:"🇧🇷",text:"<strong>Entrem em acordo entre vocês e depois me dizem.</strong> — 'mettersi d'accordo'='entrar em acordo'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Agree among yourselves and then let me know."}],tip:"💡 'Mettersi d'accordo'=to come to an agreement. 'Poi mi dite'=then let me know. Very natural management language.",keywords:["mettete","accordo","poi"]},
+        {pronoun:"loro",it:"Mettono sempre in chiaro le condizioni contrattuali.",phonetic:"[MET-to-no SEM-pre in KYA-ro le kon-di-TSYO-ni kon-trat-TWA-li]",tts:"Mettono sempre in chiaro le condizioni contrattuali",bridges:[{flag:"🇧🇷",text:"<strong>Eles sempre deixam claras as condições contratuais.</strong> — 'mettere in chiaro'='deixar claro'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They always make the contractual conditions clear."}],tip:"💡 'Mettere in chiaro'=to make clear/clarify. 'Condizioni contrattuali'=contractual conditions. Both essential.",keywords:["mettono","chiaro","contrattuali"]}
+      ],
+      past:[
+        {pronoun:"io",it:"Ho messo tutto in ordine prima della verifica.",phonetic:"[o MES-so TUT-to in OR-di-ne PRI-ma DEL-la VE-ri-fi-ka]",tts:"Ho messo tutto in ordine prima della verifica",bridges:[{flag:"🇧🇷",text:"<strong>Coloquei tudo em ordem antes da verificação.</strong> — 'in ordine'='em ordem'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I put everything in order before the inspection."}],tip:"💡 'Messo' is the irregular past participle. 'In ordine'=in order. 'Mettere in ordine'=to sort out, tidy up.",keywords:["ho messo","ordine","verifica"]},
+        {pronoun:"tu",it:"Hai messo in copia anche il direttore?",phonetic:"[AY MES-so in KO-pya AN-ke il di-ret-TO-re]",tts:"Hai messo in copia anche il direttore",bridges:[{flag:"🇧🇷",text:"<strong>Você copiou o diretor também?</strong> — 'mettere in copia'='colocar em cópia/CC'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you CC the director too?"}],tip:"💡 'Mettere in copia'=to CC someone on an email. Very common in Italian office language.",keywords:["hai messo","copia","direttore"]},
+        {pronoun:"lui/lei",it:"Ha messo in discussione l'intera procedura.",phonetic:"[a MES-so in dis-kus-SYO-ne lin-TE-ra pro-CHE-du-ra]",tts:"Ha messo in discussione l'intera procedura",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela colocou em discussão todo o procedimento.</strong> — 'mettere in discussione'='colocar em discussão'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she called the entire procedure into question."}],tip:"💡 'Mettere in discussione'=to call into question. 'Intera'=entire. Strong language for formal disputes.",keywords:["ha messo","discussione","procedura"]},
+        {pronoun:"noi",it:"Abbiamo messo a punto il processo di verifica.",phonetic:"[ab-BYA-mo MES-so a POON-to il pro-CHES-so di VE-ri-fi-ka]",tts:"Abbiamo messo a punto il processo di verifica",bridges:[{flag:"🇧🇷",text:"<strong>Desenvolvemos/refinamos o processo de verificação.</strong> — 'mettere a punto'='refinar/finalizar'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We have fine-tuned the verification process."}],tip:"💡 'Mettere a punto'=to fine-tune, finalise. Very common in product development and process improvement.",keywords:["abbiamo messo","punto","verifica"]},
+        {pronoun:"voi",it:"Avete messo in pratica le nuove procedure?",phonetic:"[a-VE-te MES-so in PRA-ti-ka le NWO-ve pro-CHE-du-re]",tts:"Avete messo in pratica le nuove procedure",bridges:[{flag:"🇧🇷",text:"<strong>Vocês colocaram em prática os novos procedimentos?</strong> — 'mettere in pratica'='colocar em prática'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Have you put the new procedures into practice?"}],tip:"💡 'Mettere in pratica'=to put into practice. Identical structure to Portuguese 'colocar em prática'.",keywords:["avete messo","pratica","procedure"]},
+        {pronoun:"loro",it:"Hanno messo a rischio l'intera operazione.",phonetic:"[AN-no MES-so a RIS-kyo lin-TE-ra o-pe-ra-TSYO-ne]",tts:"Hanno messo a rischio l'intera operazione",bridges:[{flag:"🇧🇷",text:"<strong>Eles colocaram em risco toda a operação.</strong> — 'mettere a rischio'='colocar em risco'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They put the entire operation at risk."}],tip:"💡 'Mettere a rischio'=to put at risk. 'Rischio'=risk. 'A rischio'=at risk. All three forms are useful.",keywords:["hanno messo","rischio","operazione"]}
+      ]
+    }
+  }
+
+  ,
+  {
+    inf:"trovare",meaning:"to find / think / feel (about)",aux:"avere",
+    present:{io:"trovo",tu:"trovi",lui:"trova",noi:"troviamo",voi:"trovate",loro:"trovano"},
+    past_participle:"trovato",
+    phonetics:{present:{io:"[TRO-vo]",tu:"[TRO-vi]",lui:"[TRO-va]",noi:"[tro-VYA-mo]",voi:"[tro-VA-te]",loro:"[TRO-va-no]"}},
+    sentences:{
+      present:[
+        {pronoun:"io",it:"Non trovo il documento che mi hai mandato.",phonetic:"[non TRO-vo il do-KU-men-to ke mi AY man-DA-to]",tts:"Non trovo il documento che mi hai mandato",bridges:[{flag:"🇧🇷",text:"<strong>Não encontro o documento que você me mandou.</strong> — 'trovo'='encontro'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I can't find the document you sent me."}],tip:"💡 'Trovare'=to find. 'Non trovo'=I can't find. One of the most useful daily expressions — for files, keys, addresses, anything.",keywords:["trovo","documento","mandato"]},
+        {pronoun:"tu",it:"Come ti trovi in Liguria?",phonetic:"[KO-me ti TRO-vi in li-GU-rya]",tts:"Come ti trovi in Liguria",bridges:[{flag:"🇧🇷",text:"<strong>Como você está se encontrando/adaptando na Ligúria?</strong> — 'trovarsi'='se encontrar/se adaptar'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"How are you settling in in Liguria?"}],tip:"💡 'Trovarsi'=to find oneself / to feel in a place. 'Come ti trovi?' is THE question locals will ask you. Answer: 'Mi trovo benissimo!'",keywords:["trovi","liguria","come"]},
+        {pronoun:"lui/lei",it:"Trova la piattaforma facile da usare?",phonetic:"[TRO-va la pyat-ta-FOR-ma FA-chi-le da u-ZA-re]",tts:"Trova la piattaforma facile da usare",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela acha a plataforma fácil de usar?</strong> — 'trova'='acha' (opinion)"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Does he/she find the platform easy to use?"}],tip:"💡 'Trovare + adjective' = to find something (in the sense of opinion). 'Lo trovo interessante'=I find it interesting. Very natural.",keywords:["trova","piattaforma","facile"]},
+        {pronoun:"noi",it:"Troviamo sempre una soluzione insieme.",phonetic:"[tro-VYA-mo SEM-pre U-na so-lu-TSYO-ne in-SYE-me]",tts:"Troviamo sempre una soluzione insieme",bridges:[{flag:"🇧🇷",text:"<strong>Sempre encontramos uma solução juntos.</strong> — 'troviamo'='encontramos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We always find a solution together."}],tip:"💡 A constructive phrase for any difficult negotiation or problem-solving meeting.",keywords:["troviamo","soluzione","insieme"]},
+        {pronoun:"voi",it:"Trovate dei problemi con il sistema attuale?",phonetic:"[tro-VA-te day pro-BLE-mi kon il sis-TE-ma at-TWA-le]",tts:"Trovate dei problemi con il sistema attuale",bridges:[{flag:"🇧🇷",text:"<strong>Vocês encontram problemas com o sistema atual?</strong> — 'attuale'='atual'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you find problems with the current system?"}],tip:"💡 'Attuale'=current/present-day. False friend: does NOT mean 'actual'. 'Attuale'='atual' in Portuguese — same meaning!",keywords:["trovate","problemi","attuale"]},
+        {pronoun:"loro",it:"Trovano difficile rispettare le scadenze EU.",phonetic:"[TRO-va-no dif-FI-chi-le ris-pet-TA-re le ska-DEN-tse EH-u]",tts:"Trovano difficile rispettare le scadenze EU",bridges:[{flag:"🇧🇷",text:"<strong>Eles acham difícil respeitar os prazos da UE.</strong> — 'difficile'='difícil'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They find it difficult to meet EU deadlines."}],tip:"💡 'Trovare difficile + infinitive'=to find it hard to do something. Direct parallel to English and Portuguese structure.",keywords:["trovano","difficile","scadenze"]}
+      ],
+      past:[
+        {pronoun:"io",it:"Ho trovato un errore nella fattura.",phonetic:"[o tro-VA-to un er-RO-re NEL-la fat-TU-ra]",tts:"Ho trovato un errore nella fattura",bridges:[{flag:"🇧🇷",text:"<strong>Encontrei um erro na fatura.</strong> — 'ho trovato'='encontrei'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I found an error in the invoice."}],tip:"💡 Regular -are verb: trovare→ho trovato. 'Errore nella fattura'=invoice error. A sentence you may genuinely need.",keywords:["ho trovato","errore","fattura"]},
+        {pronoun:"tu",it:"Hai trovato un fornitore alternativo?",phonetic:"[AY tro-VA-to un for-ni-TO-re al-ter-na-TI-vo]",tts:"Hai trovato un fornitore alternativo",bridges:[{flag:"🇧🇷",text:"<strong>Você encontrou um fornecedor alternativo?</strong> — 'alternativo'='alternativo'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you find an alternative supplier?"}],tip:"💡 'Fornitore alternativo'=backup supplier. Critical in supply chain risk management.",keywords:["hai trovato","fornitore","alternativo"]},
+        {pronoun:"lui/lei",it:"Ha trovato la situazione più complessa del previsto.",phonetic:"[a tro-VA-to la si-twa-TSYO-ne pyU kom-PLES-sa del pre-VIS-to]",tts:"Ha trovato la situazione più complessa del previsto",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela achou a situação mais complexa do que o previsto.</strong> — 'del previsto'='do que o previsto'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she found the situation more complex than expected."}],tip:"💡 'Del previsto'=than expected. 'Più del previsto'=more than expected. 'Meno del previsto'=less than expected. Very useful pair.",keywords:["ha trovato","complessa","previsto"]},
+        {pronoun:"noi",it:"Abbiamo trovato un accordo sui termini di pagamento.",phonetic:"[ab-BYA-mo tro-VA-to un ak-KOR-do sui TER-mi-ni di pa-ga-MEN-to]",tts:"Abbiamo trovato un accordo sui termini di pagamento",bridges:[{flag:"🇧🇷",text:"<strong>Chegamos a um acordo sobre os termos de pagamento.</strong> — 'trovare un accordo'='chegar a um acordo'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We reached an agreement on the payment terms."}],tip:"💡 'Trovare un accordo'=to reach an agreement. Very common positive outcome phrase in negotiations.",keywords:["abbiamo trovato","accordo","pagamento"]},
+        {pronoun:"voi",it:"Avete trovato il magazzino facilmente?",phonetic:"[a-VE-te tro-VA-to il ma-gad-ZI-no fa-chil-MEN-te]",tts:"Avete trovato il magazzino facilmente",bridges:[{flag:"🇧🇷",text:"<strong>Vocês encontraram o armazém facilmente?</strong> — 'facilmente'='facilmente'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you find the warehouse easily?"}],tip:"💡 'Facilmente'=easily. 'Magazzino'=warehouse. Useful when receiving visitors to a logistics site.",keywords:["avete trovato","magazzino","facilmente"]},
+        {pronoun:"loro",it:"Hanno trovato irregolarità nella documentazione.",phonetic:"[AN-no tro-VA-to ir-re-go-la-ri-TA NEL-la do-ku-men-ta-TSYO-ne]",tts:"Hanno trovato irregolarità nella documentazione",bridges:[{flag:"🇧🇷",text:"<strong>Eles encontraram irregularidades na documentação.</strong> — 'irregolarità'='irregularidades'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They found irregularities in the documentation."}],tip:"💡 'Irregolarità'=irregularities. No plural change. The exact word used by EU inspectors in official reports.",keywords:["hanno trovato","irregolarità","documentazione"]}
+      ]
+    }
+  },
+  {
+    inf:"lasciare",meaning:"to leave / let / allow",aux:"avere",
+    present:{io:"lascio",tu:"lasci",lui:"lascia",noi:"lasciamo",voi:"lasciate",loro:"lasciano"},
+    past_participle:"lasciato",
+    phonetics:{present:{io:"[LA-sho]",tu:"[LA-shi]",lui:"[LA-sha]",noi:"[la-SHA-mo]",voi:"[la-SHA-te]",loro:"[LA-sha-no]"}},
+    sentences:{
+      present:[
+        {pronoun:"io",it:"Lascio un messaggio se non risponde.",phonetic:"[LA-sho un mes-SAD-jo se non ris-PON-de]",tts:"Lascio un messaggio se non risponde",bridges:[{flag:"🇧🇷",text:"<strong>Deixo uma mensagem se não atender.</strong> — 'lascio'='deixo', 'messaggio'='mensagem'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I'll leave a message if he/she doesn't answer."}],tip:"💡 'Lasciare un messaggio'=to leave a message. 'Sci' sounds like 'sh'. La-SHO. Very common in business calls.",keywords:["lascio","messaggio","risponde"]},
+        {pronoun:"tu",it:"Lasci pure — ci penso io.",phonetic:"[LA-shi PU-re — chi PEN-so YO]",tts:"Lasci pure ci penso io",bridges:[{flag:"🇧🇷",text:"<strong>Pode deixar — eu cuido disso.</strong> — 'lasci pure'='pode deixar', 'ci penso io'='eu cuido disso'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Go ahead / leave it — I'll take care of it."}],tip:"💡 'Lasci pure'=please go ahead / don't worry about it (formal). 'Ci penso io'=I'll take care of it. Two extremely useful phrases together.",keywords:["lasci","pure","penso"]},
+        {pronoun:"lui/lei",it:"Lascia sempre tutto all'ultimo momento.",phonetic:"[LA-sha SEM-pre TUT-to al-UL-ti-mo mo-MEN-to]",tts:"Lascia sempre tutto all'ultimo momento",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela sempre deixa tudo para a última hora.</strong> — 'all'ultimo momento'='na última hora'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she always leaves everything to the last minute."}],tip:"💡 'All'ultimo momento'=at the last minute. Very Italian — and very relatable in compliance deadlines.",keywords:["lascia","sempre","ultimo"]},
+        {pronoun:"noi",it:"Lasciamo perdere e andiamo avanti.",phonetic:"[la-SHA-mo per-DE-re e an-DYA-mo a-VAN-ti]",tts:"Lasciamo perdere e andiamo avanti",bridges:[{flag:"🇧🇷",text:"<strong>Vamos deixar para lá e seguir em frente.</strong> — 'lasciare perdere'='deixar para lá'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Let's drop it and move on."}],tip:"💡 'Lasciare perdere'=to let it go / drop the matter. 'Andiamo avanti'=let's move forward. Both very Italian idioms.",keywords:["lasciamo","perdere","avanti"]},
+        {pronoun:"voi",it:"Lasciate i campioni alla reception.",phonetic:"[la-SHA-te i kam-PYO-ni AL-la re-CHEP-shon]",tts:"Lasciate i campioni alla reception",bridges:[{flag:"🇧🇷",text:"<strong>Deixem as amostras na recepção.</strong> — 'lasciate'='deixem'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Leave the samples at reception."}],tip:"💡 Imperative use of 'lasciate'. 'Reception' used as loanword in Italian offices. 'Campioni'=samples.",keywords:["lasciate","campioni","reception"]},
+        {pronoun:"loro",it:"Lasciano troppa carta da fare al cliente.",phonetic:"[LA-sha-no TROP-pa KAR-ta da FA-re al klyen-TE]",tts:"Lasciano troppa carta da fare al cliente",bridges:[{flag:"🇧🇷",text:"<strong>Eles deixam muita burocracia para o cliente.</strong> — 'carta da fare'='burocracia/papelada'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They leave too much paperwork for the client."}],tip:"💡 'Carta da fare'=paperwork/bureaucracy (lit: paper to do). The exact problem VeriPura solves!",keywords:["lasciano","carta","cliente"]}
+      ],
+      past:[
+        {pronoun:"io",it:"Ho lasciato i documenti in ufficio.",phonetic:"[o la-SHA-to i do-KU-men-ti in uf-FI-cho]",tts:"Ho lasciato i documenti in ufficio",bridges:[{flag:"🇧🇷",text:"<strong>Deixei os documentos no escritório.</strong> — 'ho lasciato'='deixei'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I left the documents at the office."}],tip:"💡 Regular -are verb: lasciare→ho lasciato. One of the most common past tense uses.",keywords:["ho lasciato","documenti","ufficio"]},
+        {pronoun:"tu",it:"Hai lasciato il numero di contatto?",phonetic:"[AY la-SHA-to il NU-me-ro di kon-TAT-to]",tts:"Hai lasciato il numero di contatto",bridges:[{flag:"🇧🇷",text:"<strong>Você deixou o número de contato?</strong> — 'numero di contatto'='número de contato'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you leave a contact number?"}],tip:"💡 'Numero di contatto'=contact number. Standard request at any Italian reception or office.",keywords:["hai lasciato","numero","contatto"]},
+        {pronoun:"lui/lei",it:"Ha lasciato la merce in attesa di sdoganamento.",phonetic:"[a la-SHA-to la MER-che in at-TE-za di zdo-ga-na-MEN-to]",tts:"Ha lasciato la merce in attesa di sdoganamento",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela deixou a mercadoria aguardando o desembaraço.</strong> — 'sdoganamento'='desembaraço aduaneiro'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she left the goods waiting for customs clearance."}],tip:"💡 'Sdoganamento'=customs clearance. 'In attesa di'=waiting for/pending. Core logistics vocabulary.",keywords:["ha lasciato","merce","sdoganamento"]},
+        {pronoun:"noi",it:"Abbiamo lasciato aperta la possibilità di rinegoziare.",phonetic:"[ab-BYA-mo la-SHA-to a-PER-ta la pos-si-bi-li-TA di ri-ne-go-TSYA-re]",tts:"Abbiamo lasciato aperta la possibilità di rinegoziare",bridges:[{flag:"🇧🇷",text:"<strong>Deixamos aberta a possibilidade de renegociar.</strong> — quase idêntico!"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We left open the possibility of renegotiating."}],tip:"💡 'Lasciare aperta la possibilità'=to leave open the possibility. Elegant negotiation language.",keywords:["abbiamo lasciato","aperta","rinegoziare"]},
+        {pronoun:"voi",it:"Avete lasciato scadere la certificazione?",phonetic:"[a-VE-te la-SHA-to ska-DE-re la cher-ti-fi-ka-TSYO-ne]",tts:"Avete lasciato scadere la certificazione",bridges:[{flag:"🇧🇷",text:"<strong>Vocês deixaram a certificação vencer?</strong> — 'lasciare scadere'='deixar vencer'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you let the certification expire?"}],tip:"💡 'Lasciare scadere'=to let expire. The compliance failure VeriPura prevents. 'Scadere'=to expire.",keywords:["avete lasciato","scadere","certificazione"]},
+        {pronoun:"loro",it:"Hanno lasciato tutto l'onere burocratico al fornitore.",phonetic:"[AN-no la-SHA-to TUT-to LO-ne-re bu-ro-KRA-ti-ko al for-ni-TO-re]",tts:"Hanno lasciato tutto l'onere burocratico al fornitore",bridges:[{flag:"🇧🇷",text:"<strong>Eles deixaram todo o ônus burocrático para o fornecedor.</strong> — 'onere'='ônus'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They left all the bureaucratic burden on the supplier."}],tip:"💡 'Onere burocratico'=bureaucratic burden. The exact pain point VeriPura addresses for EU importers.",keywords:["hanno lasciato","onere","fornitore"]}
+      ]
+    }
+  },
+  {
+    inf:"tenere",meaning:"to keep / hold / maintain",aux:"avere",
+    present:{io:"tengo",tu:"tieni",lui:"tiene",noi:"teniamo",voi:"tenete",loro:"tengono"},
+    past_participle:"tenuto",
+    phonetics:{present:{io:"[TEN-go]",tu:"[TYE-ni]",lui:"[TYE-ne]",noi:"[te-NYA-mo]",voi:"[te-NE-te]",loro:"[TEN-go-no]"}},
+    sentences:{
+      present:[
+        {pronoun:"io",it:"Tengo sempre una copia dei documenti.",phonetic:"[TEN-go SEM-pre U-na KO-pya day do-KU-men-ti]",tts:"Tengo sempre una copia dei documenti",bridges:[{flag:"🇧🇷",text:"<strong>Sempre guardo uma cópia dos documentos.</strong> — 'tengo'='guardo/mantenho'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I always keep a copy of the documents."}],tip:"💡 'Tenere'=to keep/hold onto. 'Tengo una copia'=I keep a copy. Essential in any compliance or document workflow.",keywords:["tengo","copia","documenti"]},
+        {pronoun:"tu",it:"Tieni presente che la scadenza è venerdì.",phonetic:"[TYE-ni pre-ZEN-te ke la ska-DEN-tsa EH ve-ner-DI]",tts:"Tieni presente che la scadenza è venerdì",bridges:[{flag:"🇧🇷",text:"<strong>Tenha em mente que o prazo é sexta-feira.</strong> — 'tieni presente'='tenha em mente'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧＿",text:"Bear in mind that the deadline is Friday."}],tip:"💡 'Tenere presente'=to bear in mind / keep in mind. One of the most useful Italian business expressions. Use it constantly.",keywords:["tieni","presente","scadenza"]},
+        {pronoun:"lui/lei",it:"Tiene i contatti con tutti i fornitori asiatici.",phonetic:"[TYE-ne i kon-TAT-ti kon TUT-ti i for-ni-TO-ri a-ZYA-ti-chi]",tts:"Tiene i contatti con tutti i fornitori asiatici",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela mantém contato com todos os fornecedores asiáticos.</strong> — 'tenere i contatti'='manter contato'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she maintains contact with all the Asian suppliers."}],tip:"💡 'Tenere i contatti'=to stay in touch / maintain contact. Your supply chain relationship management in Italian.",keywords:["tiene","contatti","fornitori"]},
+        {pronoun:"noi",it:"Teniamoci in contatto — ci scriviamo la settimana prossima.",phonetic:"[te-NYA-mo-chi in kon-TAT-to — chi skri-VYA-mo la set-ti-MA-na PROS-si-ma]",tts:"Teniamoci in contatto ci scriviamo la settimana prossima",bridges:[{flag:"🇧🇷",text:"<strong>Vamos nos manter em contato — a gente se escreve na próxima semana.</strong>"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Let's stay in touch — we'll write to each other next week."}],tip:"💡 'Teniamoci in contatto'=let's stay in touch. Perfect meeting/call sign-off alongside 'ci sentiamo'.",keywords:["teniamoci","contatto","prossima"]},
+        {pronoun:"voi",it:"Tenete aggiornato il registro delle spedizioni?",phonetic:"[te-NE-te aj-jor-NA-to il re-JIS-tro DEL-le spe-di-TSYO-ni]",tts:"Tenete aggiornato il registro delle spedizioni",bridges:[{flag:"🇧🇷",text:"<strong>Vocês mantêm atualizado o registro dos envios?</strong> — 'tenere aggiornato'='manter atualizado'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you keep the shipment register up to date?"}],tip:"💡 'Tenere aggiornato'=to keep updated. 'Registro'=register/log. Core logistics compliance language.",keywords:["tenete","aggiornato","registro"]},
+        {pronoun:"loro",it:"Tengono tutto sotto controllo.",phonetic:"[TEN-go-no TUT-to SOT-to kon-TROL-lo]",tts:"Tengono tutto sotto controllo",bridges:[{flag:"🇧🇷",text:"<strong>Eles mantêm tudo sob controle.</strong> — 'sotto controllo'='sob controle'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They keep everything under control."}],tip:"💡 'Sotto controllo'=under control. 'Tenere sotto controllo'=to keep under control. Reassuring phrase in crisis management.",keywords:["tengono","tutto","controllo"]}
+      ],
+      past:[
+        {pronoun:"io",it:"Ho tenuto tutte le email come prova.",phonetic:"[o te-NU-to TUT-te le EMAIL KO-me PRO-va]",tts:"Ho tenuto tutte le email come prova",bridges:[{flag:"🇧🇷",text:"<strong>Guardei todos os e-mails como prova.</strong> — 'ho tenuto'='guardei', 'prova'='prova'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I kept all the emails as evidence."}],tip:"💡 'Come prova'=as evidence/proof. 'Tenere come prova'=to keep as evidence. Important in disputes and compliance audits.",keywords:["ho tenuto","email","prova"]},
+        {pronoun:"tu",it:"Hai tenuto presente i nuovi requisiti doganali?",phonetic:"[AY te-NU-to pre-ZEN-te i NWO-vi re-kwi-ZI-ti do-ga-NA-li]",tts:"Hai tenuto presente i nuovi requisiti doganali",bridges:[{flag:"🇧🇷",text:"<strong>Você teve em mente os novos requisitos aduaneiros?</strong>"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you keep in mind the new customs requirements?"}],tip:"💡 'Tenuto presente'=kept in mind/taken into account. Used in follow-ups to check compliance awareness.",keywords:["hai tenuto","presente","doganali"]},
+        {pronoun:"lui/lei",it:"Ha tenuto la riunione in inglese per i partner stranieri.",phonetic:"[a te-NU-to la ryu-NYO-ne in in-GLE-ze per i PAR-tner stra-NYE-ri]",tts:"Ha tenuto la riunione in inglese per i partner stranieri",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela realizou a reunião em inglês para os parceiros estrangeiros.</strong> — 'tenere una riunione'='realizar uma reunião'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she held the meeting in English for the foreign partners."}],tip:"💡 'Tenere una riunione'=to hold a meeting. Note: in Italian you HOLD a meeting, not HAVE it.",keywords:["ha tenuto","riunione","stranieri"]},
+        {pronoun:"noi",it:"Abbiamo tenuto i prezzi stabili nonostante i costi.",phonetic:"[ab-BYA-mo te-NU-to i PRET-tsi STA-bi-li no-nos-TAN-te i KOS-ti]",tts:"Abbiamo tenuto i prezzi stabili nonostante i costi",bridges:[{flag:"🇧🇷",text:"<strong>Mantivemos os preços estáveis apesar dos custos.</strong> — 'nonostante'='apesar de'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We kept prices stable despite the costs."}],tip:"💡 'Nonostante'=despite/notwithstanding. 'Stabili'=stable. Useful in pricing negotiations and investor updates.",keywords:["abbiamo tenuto","prezzi","nonostante"]},
+        {pronoun:"voi",it:"Avete tenuto traccia di tutte le spedizioni?",phonetic:"[a-VE-te te-NU-to TRA-cha di TUT-te le spe-di-TSYO-ni]",tts:"Avete tenuto traccia di tutte le spedizioni",bridges:[{flag:"🇧🇷",text:"<strong>Vocês mantiveram o rastreio de todos os envios?</strong> — 'tenere traccia'='manter o rastreio'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you keep track of all the shipments?"}],tip:"💡 'Tenere traccia di'=to keep track of. 'Traccia'=trace/track. Directly relevant to VeriPura's traceability mission.",keywords:["avete tenuto","traccia","spedizioni"]},
+        {pronoun:"loro",it:"Hanno tenuto nascosti i problemi per settimane.",phonetic:"[AN-no te-NU-to na-SKOS-ti i pro-BLE-mi per set-ti-MA-ne]",tts:"Hanno tenuto nascosti i problemi per settimane",bridges:[{flag:"🇧🇷",text:"<strong>Eles mantiveram os problemas escondidos por semanas.</strong> — 'nascosti'='escondidos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They kept the problems hidden for weeks."}],tip:"💡 'Tenere nascosto'=to keep hidden. 'Nascosto'=hidden. Strong language for supplier or partner disputes.",keywords:["hanno tenuto","nascosti","problemi"]}
+      ]
+    }
+  },
+  {
+    inf:"portare",meaning:"to bring / carry / take",aux:"avere",
+    present:{io:"porto",tu:"porti",lui:"porta",noi:"portiamo",voi:"portate",loro:"portano"},
+    past_participle:"portato",
+    phonetics:{present:{io:"[POR-to]",tu:"[POR-ti]",lui:"[POR-ta]",noi:"[por-TYA-mo]",voi:"[por-TA-te]",loro:"[POR-ta-no]"}},
+    sentences:{
+      present:[
+        {pronoun:"io",it:"Porto i documenti originali domani mattina.",phonetic:"[POR-to i do-KU-men-ti o-ri-ji-NA-li do-MA-ni mat-TI-na]",tts:"Porto i documenti originali domani mattina",bridges:[{flag:"🇧🇷",text:"<strong>Trago os documentos originais amanhã de manhã.</strong> — 'porto'='trago'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I'll bring the original documents tomorrow morning."}],tip:"💡 'Portare'=to bring (toward) OR to carry. Context tells you which. 'Porto i documenti'=I'll bring the documents.",keywords:["porto","documenti","originali"]},
+        {pronoun:"tu",it:"Porti sempre i campioni alle riunioni?",phonetic:"[POR-ti SEM-pre i kam-PYO-ni AL-le ryu-NYO-ni]",tts:"Porti sempre i campioni alle riunioni",bridges:[{flag:"🇧🇷",text:"<strong>Você sempre traz as amostras para as reuniões?</strong> — 'porti'='traz'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you always bring samples to meetings?"}],tip:"💡 Common question in food trade — physical samples are expected. 'Campioni'=samples.",keywords:["porti","campioni","riunioni"]},
+        {pronoun:"lui/lei",it:"Porta avanti tre progetti in parallelo.",phonetic:"[POR-ta a-VAN-ti TRE pro-JET-ti in pa-ral-LE-lo]",tts:"Porta avanti tre progetti in parallelo",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela leva adiante três projetos em paralelo.</strong> — 'portare avanti'='levar adiante'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she is driving three projects in parallel."}],tip:"💡 'Portare avanti'=to drive forward / advance. Very common in project management Italian.",keywords:["porta","avanti","progetti"]},
+        {pronoun:"noi",it:"Portiamo valore aggiunto ai nostri clienti.",phonetic:"[por-TYA-mo va-LO-re aj-JUN-to ay NOS-tri klyen-TI]",tts:"Portiamo valore aggiunto ai nostri clienti",bridges:[{flag:"🇧🇷",text:"<strong>Trazemos valor agregado aos nossos clientes.</strong> — 'valore aggiunto'='valor agregado'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We bring added value to our clients."}],tip:"💡 'Valore aggiunto'=added value. Your VeriPura pitch in Italian. 'Portiamo valore' — say this with confidence.",keywords:["portiamo","valore","clienti"]},
+        {pronoun:"voi",it:"Portate la vostra proposta alla prossima riunione.",phonetic:"[por-TA-te la VOS-tra pro-POS-ta AL-la PROS-si-ma ryu-NYO-ne]",tts:"Portate la vostra proposta alla prossima riunione",bridges:[{flag:"🇧🇷",text:"<strong>Tragam a proposta de vocês para a próxima reunião.</strong> — 'portate'='tragam'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Bring your proposal to the next meeting."}],tip:"💡 Imperative: 'portate' for groups. 'Porta' for individuals. 'La vostra proposta'=your (plural) proposal.",keywords:["portate","proposta","riunione"]},
+        {pronoun:"loro",it:"Portano sempre ritardi nelle consegne.",phonetic:"[POR-ta-no SEM-pre ri-TAR-di NEL-le kon-SEN-ye]",tts:"Portano sempre ritardi nelle consegne",bridges:[{flag:"🇧🇷",text:"<strong>Eles sempre causam atrasos nas entregas.</strong> — 'portano ritardi'='causam atrasos'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They always bring delays in deliveries."}],tip:"💡 'Portare ritardi'=to cause delays (lit: bring delays). A supplier complaint you may need to make.",keywords:["portano","ritardi","consegne"]}
+      ],
+      past:[
+        {pronoun:"io",it:"Ho portato il problema all'attenzione del direttore.",phonetic:"[o por-TA-to il pro-BLE-ma al-lat-ten-TSYO-ne del di-ret-TO-re]",tts:"Ho portato il problema all'attenzione del direttore",bridges:[{flag:"🇧🇷",text:"<strong>Trouxe o problema à atenção do diretor.</strong> — 'ho portato all'attenzione'='trouxe à atenção'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I brought the problem to the director's attention."}],tip:"💡 'Portare all'attenzione di'=to bring to the attention of. Formal and professional escalation language.",keywords:["ho portato","attenzione","direttore"]},
+        {pronoun:"tu",it:"Hai portato i certificati originali?",phonetic:"[AY por-TA-to i cher-ti-fi-KA-ti o-ri-ji-NA-li]",tts:"Hai portato i certificati originali",bridges:[{flag:"🇧🇷",text:"<strong>Você trouxe os certificados originais?</strong> — 'hai portato'='você trouxe'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you bring the original certificates?"}],tip:"💡 A question you will hear and ask regularly in compliance inspections and handovers.",keywords:["hai portato","certificati","originali"]},
+        {pronoun:"lui/lei",it:"Ha portato avanti la trattativa con successo.",phonetic:"[a por-TA-to a-VAN-ti la trat-ta-TI-va kon sut-CHES-so]",tts:"Ha portato avanti la trattativa con successo",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela levou adiante a negociação com sucesso.</strong> — 'trattativa'='negociação'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she successfully drove the negotiation forward."}],tip:"💡 'Trattativa'=negotiation/deal process. 'Con successo'=successfully. Strong positive outcome vocabulary.",keywords:["ha portato","trattativa","successo"]},
+        {pronoun:"noi",it:"Abbiamo portato nuovi clienti con il passaparola.",phonetic:"[ab-BYA-mo por-TA-to NWO-vi klyen-TI kon il pas-sa-pa-RO-la]",tts:"Abbiamo portato nuovi clienti con il passaparola",bridges:[{flag:"🇧🇷",text:"<strong>Trouxemos novos clientes pelo boca a boca.</strong> — 'passaparola'='boca a boca'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We brought in new clients through word of mouth."}],tip:"💡 'Passaparola'=word of mouth (lit: pass the word). A single beautiful Italian compound word.",keywords:["abbiamo portato","clienti","passaparola"]},
+        {pronoun:"voi",it:"Avete portato tutti i campioni richiesti?",phonetic:"[a-VE-te por-TA-to TUT-ti i kam-PYO-ni ri-KYE-sti]",tts:"Avete portato tutti i campioni richiesti",bridges:[{flag:"🇧🇷",text:"<strong>Vocês trouxeram todas as amostras solicitadas?</strong>"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you bring all the required samples?"}],tip:"💡 Standard pre-inspection or trade fair question. 'Richiesti'=required/requested.",keywords:["avete portato","campioni","richiesti"]},
+        {pronoun:"loro",it:"Hanno portato il prodotto sul mercato europeo.",phonetic:"[AN-no por-TA-to il pro-DOT-to sul mer-KA-to eu-RO-pe-o]",tts:"Hanno portato il prodotto sul mercato europeo",bridges:[{flag:"🇧🇷",text:"<strong>Eles lançaram o produto no mercado europeu.</strong> — 'portare sul mercato'='lançar no mercado'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They brought the product to the European market."}],tip:"💡 'Portare sul mercato'=to bring to market / launch. Core go-to-market vocabulary.",keywords:["hanno portato","prodotto","mercato"]}
+      ]
+    }
+  },
+  {
+    inf:"rispondere",meaning:"to reply / respond / answer",aux:"avere",
+    present:{io:"rispondo",tu:"rispondi",lui:"risponde",noi:"rispondiamo",voi:"rispondete",loro:"rispondono"},
+    past_participle:"risposto",
+    phonetics:{present:{io:"[ris-PON-do]",tu:"[ris-PON-di]",lui:"[ris-PON-de]",noi:"[ris-pon-DYA-mo]",voi:"[ris-pon-DE-te]",loro:"[ris-PON-do-no]"}},
+    sentences:{
+      present:[
+        {pronoun:"io",it:"Rispondo subito alla tua mail.",phonetic:"[ris-PON-do SU-bi-to AL-la TU-a mail]",tts:"Rispondo subito alla tua mail",bridges:[{flag:"🇧🇷",text:"<strong>Respondo imediatamente ao seu e-mail.</strong> — 'rispondo'='respondo', 'subito'='imediatamente'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I'll reply to your email right away."}],tip:"💡 'Rispondo subito'=I'll reply right away. One of the most used phrases in Italian business email culture.",keywords:["rispondo","subito","mail"]},
+        {pronoun:"tu",it:"Rispondi sempre alle domande dei clienti?",phonetic:"[ris-PON-di SEM-pre AL-le do-MAN-de day klyen-TI]",tts:"Rispondi sempre alle domande dei clienti",bridges:[{flag:"🇧🇷",text:"<strong>Você sempre responde às perguntas dos clientes?</strong> — 'domande'='perguntas'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you always reply to client enquiries?"}],tip:"💡 'Domande dei clienti'=client enquiries/questions. 'Rispondere a'=to reply to/answer. Note the preposition 'a'.",keywords:["rispondi","domande","clienti"]},
+        {pronoun:"lui/lei",it:"Non risponde mai entro le 24 ore.",phonetic:"[non ris-PON-de MAY EN-tro le VEN-ti-KWAT-tro O-re]",tts:"Non risponde mai entro le 24 ore",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela nunca responde dentro de 24 horas.</strong> — 'mai'='nunca', 'entro'='dentro de'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she never replies within 24 hours."}],tip:"💡 'Mai'=never. 'Sempre'=always. 'A volte'=sometimes. 'Di solito'=usually. Four adverbs you'll use constantly.",keywords:["risponde","mai","ore"]},
+        {pronoun:"noi",it:"Rispondiamo a tutte le richieste entro un giorno lavorativo.",phonetic:"[ris-pon-DYA-mo a TUT-te le ri-KYE-ste EN-tro un JOR-no la-vo-ra-TI-vo]",tts:"Rispondiamo a tutte le richieste entro un giorno lavorativo",bridges:[{flag:"🇧🇷",text:"<strong>Respondemos a todas as solicitações dentro de um dia útil.</strong> — 'richieste'='solicitações'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We respond to all requests within one working day."}],tip:"💡 Your SLA commitment in Italian. 'Entro un giorno lavorativo'=within one working day. Put this on your website.",keywords:["rispondiamo","richieste","lavorativo"]},
+        {pronoun:"voi",it:"Rispondete alle notifiche RASFF in tempo?",phonetic:"[ris-pon-DE-te AL-le no-TI-fi-ke RASFF in TEM-po]",tts:"Rispondete alle notifiche RASFF in tempo",bridges:[{flag:"🇧🇷",text:"<strong>Vocês respondem às notificações RASFF no prazo?</strong> — 'in tempo'='no prazo/a tempo'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Do you respond to RASFF notifications on time?"}],tip:"💡 'In tempo'=on time / in time. 'In ritardo'=late. RASFF responses have strict deadlines under EU food law.",keywords:["rispondete","RASFF","tempo"]},
+        {pronoun:"loro",it:"Rispondono sempre in modo professionale.",phonetic:"[ris-PON-do-no SEM-pre in MO-do pro-fes-syo-NA-le]",tts:"Rispondono sempre in modo professionale",bridges:[{flag:"🇧🇷",text:"<strong>Eles sempre respondem de forma profissional.</strong> — 'in modo professionale'='de forma profissional'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They always respond in a professional manner."}],tip:"💡 'In modo + adjective'=in a ... manner. 'In modo chiaro'=clearly. 'In modo tempestivo'=promptly. Versatile structure.",keywords:["rispondono","modo","professionale"]}
+      ],
+      past:[
+        {pronoun:"io",it:"Ho risposto alla mail della dogana stamattina.",phonetic:"[o ris-POS-to AL-la mail DEL-la do-GA-na sta-mat-TI-na]",tts:"Ho risposto alla mail della dogana stamattina",bridges:[{flag:"🇧🇷",text:"<strong>Respondi ao e-mail da alfândega esta manhã.</strong> — 'ho risposto'='respondi'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"I replied to the customs email this morning."}],tip:"💡 'Risposto' is the irregular past participle. 'Ho risposto a'=I replied to. Common daily update.",keywords:["ho risposto","dogana","stamattina"]},
+        {pronoun:"tu",it:"Hai risposto alla richiesta di chiarimento?",phonetic:"[AY ris-POS-to AL-la ri-KYE-sta di kya-ri-MEN-to]",tts:"Hai risposto alla richiesta di chiarimento",bridges:[{flag:"🇧🇷",text:"<strong>Você respondeu à solicitação de esclarecimento?</strong> — 'chiarimento'='esclarecimento'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you reply to the clarification request?"}],tip:"💡 'Richiesta di chiarimento'=request for clarification. Standard in compliance correspondence.",keywords:["hai risposto","richiesta","chiarimento"]},
+        {pronoun:"lui/lei",it:"Ha risposto in modo evasivo alle domande.",phonetic:"[a ris-POS-to in MO-do e-VA-zi-vo AL-le do-MAN-de]",tts:"Ha risposto in modo evasivo alle domande",bridges:[{flag:"🇧🇷",text:"<strong>Ele/ela respondeu de forma evasiva às perguntas.</strong> — 'evasivo'='evasivo'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"He/she responded evasively to the questions."}],tip:"💡 'Evasivo'=evasive. 'In modo evasivo'=evasively. Useful in due diligence and negotiation debriefs.",keywords:["ha risposto","evasivo","domande"]},
+        {pronoun:"noi",it:"Abbiamo risposto prontamente a tutte le obiezioni.",phonetic:"[ab-BYA-mo ris-POS-to pron-ta-MEN-te a TUT-te le o-bye-TSYO-ni]",tts:"Abbiamo risposto prontamente a tutte le obiezioni",bridges:[{flag:"🇧🇷",text:"<strong>Respondemos prontamente a todas as objeções.</strong> — 'prontamente'='prontamente', 'obiezioni'='objeções'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"We responded promptly to all the objections."}],tip:"💡 'Prontamente'=promptly. 'Obiezioni'=objections. Sales and pitch follow-up vocabulary.",keywords:["abbiamo risposto","prontamente","obiezioni"]},
+        {pronoun:"voi",it:"Avete risposto alla notifica di non conformità?",phonetic:"[a-VE-te ris-POS-to AL-la no-TI-fi-ka di non kon-for-mi-TA]",tts:"Avete risposto alla notifica di non conformità",bridges:[{flag:"🇧🇷",text:"<strong>Vocês responderam à notificação de não conformidade?</strong> — 'non conformità'='não conformidade'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"Did you respond to the non-conformity notification?"}],tip:"💡 'Non conformità'=non-conformity. A critical term in EU food import compliance — the formal notice of a violation.",keywords:["avete risposto","notifica","conformità"]},
+        {pronoun:"loro",it:"Non hanno ancora risposto alla nostra offerta.",phonetic:"[non AN-no an-KO-ra ris-POS-to AL-la NOS-tra of-FER-ta]",tts:"Non hanno ancora risposto alla nostra offerta",bridges:[{flag:"🇧🇷",text:"<strong>Eles ainda não responderam à nossa proposta.</strong> — 'non...ancora'='ainda não'"},{flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",text:"They haven't replied to our offer yet."}],tip:"💡 'Non...ancora'=not yet. 'Non hanno ancora risposto'=they haven't replied yet. Essential for sales follow-ups.",keywords:["non hanno","ancora","risposto"]}
+      ]
+    }
+  }
 ];
 
 // ─── STATE ─────────────────────────────────────────────────────────────────────
-let currentTab = 'daily', currentPhrases = [], currentIndex = 0, score = 0, numbersSubtab = 'prices', testMode = false, hintShown = false;
+let currentTab = 'daily', currentPhrases = [], currentIndex = 0, score = 0, numbersSubtab = 'prices', qaSubtab = 'vita', qaIndex = 0, qaSelectedAnswer = null;
 let isListening = false, recognition = null;
 let currentVerb = 0, currentTense = 'present', verbMode = false, tableVisible = false;
 const synth = window.speechSynthesis;
@@ -670,7 +924,17 @@ const PT = {
   tornare:{p:{io:"volto",tu:"volta",lui:"volta",noi:"voltamos",voi:"voltam",loro:"voltam"},r:{io:"voltei",tu:"voltou",lui:"voltou",noi:"voltamos",voi:"voltaram",loro:"voltaram"}},
   aspettare:{p:{io:"espero",tu:"espera",lui:"espera",noi:"esperamos",voi:"esperam",loro:"esperam"},r:{io:"esperei",tu:"esperou",lui:"esperou",noi:"esperamos",voi:"esperaram",loro:"esperaram"}},
   bere:{p:{io:"bebo",tu:"bebe",lui:"bebe",noi:"bebemos",voi:"bebem",loro:"bebem"},r:{io:"bebi",tu:"bebeu",lui:"bebeu",noi:"bebemos",voi:"beberam",loro:"beberam"}},
-  chiamare:{p:{io:"me chamo",tu:"chama",lui:"chama",noi:"chamamos",voi:"chamam",loro:"chamam"},r:{io:"liguei",tu:"ligou",lui:"ligou",noi:"ligamos",voi:"ligaram",loro:"ligaram"}}
+  chiamare:{p:{io:"me chamo",tu:"chama",lui:"chama",noi:"chamamos",voi:"chamam",loro:"chamam"},r:{io:"liguei",tu:"ligou",lui:"ligou",noi:"ligamos",voi:"ligaram",loro:"ligaram"}},
+  stare:{p:{io:"estou",tu:"está",lui:"está",noi:"estamos",voi:"estão",loro:"estão"},r:{io:"estive",tu:"esteve",lui:"esteve",noi:"estivemos",voi:"estiveram",loro:"estiveram"}},
+  dare:{p:{io:"dou",tu:"dá",lui:"dá",noi:"damos",voi:"dão",loro:"dão"},r:{io:"dei",tu:"deu",lui:"deu",noi:"demos",voi:"deram",loro:"deram"}},
+  prendere:{p:{io:"pego",tu:"pega",lui:"pega",noi:"pegamos",voi:"pegam",loro:"pegam"},r:{io:"peguei",tu:"pegou",lui:"pegou",noi:"pegamos",voi:"pegaram",loro:"pegaram"}},
+  sentire:{p:{io:"sinto",tu:"sente",lui:"sente",noi:"sentimos",voi:"sentem",loro:"sentem"},r:{io:"senti",tu:"sentiu",lui:"sentiu",noi:"sentimos",voi:"sentiram",loro:"sentiram"}},
+  mettere:{p:{io:"coloco",tu:"coloca",lui:"coloca",noi:"colocamos",voi:"colocam",loro:"colocam"},r:{io:"coloquei",tu:"colocou",lui:"colocou",noi:"colocamos",voi:"colocaram",loro:"colocaram"}},
+  trovare:{p:{io:"encontro",tu:"encontra",lui:"encontra",noi:"encontramos",voi:"encontram",loro:"encontram"},r:{io:"encontrei",tu:"encontrou",lui:"encontrou",noi:"encontramos",voi:"encontraram",loro:"encontraram"}},
+  lasciare:{p:{io:"deixo",tu:"deixa",lui:"deixa",noi:"deixamos",voi:"deixam",loro:"deixam"},r:{io:"deixei",tu:"deixou",lui:"deixou",noi:"deixamos",voi:"deixaram",loro:"deixaram"}},
+  tenere:{p:{io:"mantenho",tu:"mantém",lui:"mantém",noi:"mantemos",voi:"mantêm",loro:"mantêm"},r:{io:"mantive",tu:"manteve",lui:"manteve",noi:"mantivemos",voi:"mantiveram",loro:"mantiveram"}},
+  portare:{p:{io:"trago",tu:"traz",lui:"traz",noi:"trazemos",voi:"trazem",loro:"trazem"},r:{io:"trouxe",tu:"trouxe",lui:"trouxe",noi:"trouxemos",voi:"trouxeram",loro:"trouxeram"}},
+  rispondere:{p:{io:"respondo",tu:"responde",lui:"responde",noi:"respondemos",voi:"respondem",loro:"respondem"},r:{io:"respondi",tu:"respondeu",lui:"respondeu",noi:"respondemos",voi:"responderam",loro:"responderam"}}
 };
 
 function getPT(inf, pronoun, tense) {
@@ -729,17 +993,20 @@ function switchNumbersTab(btn) {
 
 // ─── SESSION LOADING ─────────────────────────────────────────────────────────
 function loadSession(tab) {
-  currentTab = tab; verbMode = tab === 'verbs';
+  currentTab = tab; verbMode = tab === 'verbs'; const qaMode = tab === 'qa';
   currentIndex = 0; score = 0; tableVisible = false;
   document.getElementById('verbSelector').classList.toggle('show', verbMode);
   document.getElementById('tenseToggle').classList.toggle('show', verbMode);
   document.getElementById('verbHeader').classList.toggle('show', verbMode);
   document.getElementById('tblControls').classList.toggle('show', verbMode);
   document.getElementById('numbersSubBar').style.display = (tab === 'numbers') ? 'flex' : 'none';
+  document.getElementById('qaSubBar').style.display = qaMode ? 'flex' : 'none';
   document.getElementById('tableSection').classList.remove('show');
   document.getElementById('completeScreen').classList.remove('show');
-  document.getElementById('mainCard').style.display = 'block';
-  document.getElementById('progressDots').style.display = 'flex';
+  document.getElementById('mainCard').style.display = qaMode ? 'none' : 'block';
+  document.getElementById('qaCard').style.display = qaMode ? 'block' : 'none';
+  document.getElementById('progressDots').style.display = qaMode ? 'none' : 'flex';
+  if (qaMode) { loadQaSession(); return; }
   if (verbMode) { currentVerb = 0; loadVerbSession(); }
   else {
     currentPhrases = tab === 'mix'
@@ -754,7 +1021,7 @@ function loadSession(tab) {
 function loadVerbSession() {
   const verb = verbData[currentVerb];
   currentPhrases = verb.sentences[currentTense];
-  currentIndex = 0; score = 0; tableVisible = false; hintShown = false;
+  currentIndex = 0; score = 0; tableVisible = false;
   document.getElementById('tableSection').classList.remove('show');
   document.getElementById('btnToggleTable').textContent = 'Show conjugation table';
   document.getElementById('btnToggleTable').classList.remove('active');
@@ -765,120 +1032,21 @@ function loadVerbSession() {
 }
 
 // ─── RENDER ──────────────────────────────────────────────────────────────────
-function buildQuestion(sentence) {
-  // Convert a sentence into a natural question to prompt a response
-  const pronoun = sentence.pronoun;
-  const it = sentence.it;
-  // Build contextual question prompts based on pronoun
-  const qmap = {
-    'io':     'Come risponde? / Dica qualcosa su di te:',
-    'tu':     `Chiedi a qualcuno: "${it.replace(/\.$/, '?')}"`,
-    'lui/lei':`Descrivi: cosa fa lui/lei?`,
-    'noi':    'Dite insieme: cosa fate?',
-    'voi':    `Chiedi al gruppo: "${it.replace(/\.$/, '?')}"`,
-    'loro':   'Descrivi: cosa fanno loro?'
-  };
-  return qmap[pronoun] || `Rispondi in italiano:`;
-}
-
 function renderPhrase() {
   const p = currentPhrases[currentIndex];
   const total = currentPhrases.length;
-  hintShown = false;
-
-  // Counter
-  let counterText = verbMode
+  document.getElementById('counter').textContent = verbMode
     ? `${verbData[currentVerb].inf} · ${currentTense==='present'?'Present':'Passato Prossimo'} · ${currentIndex+1}/${total}`
     : `Phrase ${currentIndex+1} of ${total}`;
-  if (testMode && verbMode) counterText += ' · TEST';
-  document.getElementById('counter').textContent = counterText;
-
-  if (testMode && verbMode) {
-    // TEST MODE — show question prompt, hide the answer
-    document.getElementById('testQuestion').textContent = buildQuestion(p);
-    document.getElementById('testQuestion').classList.add('show');
-    document.getElementById('italianPhrase').textContent = '';
-    document.getElementById('phonetic').textContent = '';
-    document.getElementById('bridges').innerHTML = '';
-    document.getElementById('tip').textContent = '';
-    // Hint box — hide until requested
-    document.getElementById('hintText').textContent = p.it;
-    document.getElementById('hintPhonetic').textContent = p.phonetic;
-    document.getElementById('hintBox').classList.remove('show');
-    document.getElementById('btnShowHint').style.display = 'inline-flex';
-    document.getElementById('btnShowHint').textContent = 'Show hint';
-  } else {
-    // NORMAL MODE
-    document.getElementById('testQuestion').classList.remove('show');
-    document.getElementById('italianPhrase').textContent = p.it;
-    document.getElementById('phonetic').textContent = p.phonetic;
-    document.getElementById('tip').textContent = p.tip;
-    document.getElementById('bridges').innerHTML = p.bridges.map(b =>
-      `<div class="bridge"><span class="bridge-flag">${b.flag}</span><span class="bridge-text">${b.text}</span></div>`
-    ).join('');
-    document.getElementById('hintBox').classList.remove('show');
-    document.getElementById('btnShowHint').style.display = 'none';
-  }
-
+  document.getElementById('italianPhrase').textContent = p.it;
+  document.getElementById('phonetic').textContent = p.phonetic;
+  document.getElementById('tip').textContent = p.tip;
+  document.getElementById('bridges').innerHTML = p.bridges.map(b =>
+    `<div class="bridge"><span class="bridge-flag">${b.flag}</span><span class="bridge-text">${b.text}</span></div>`
+  ).join('');
   if (verbMode) buildConjTable(verbData[currentVerb]);
   hideFeedback();
   document.getElementById('btnNext').textContent = currentIndex < total-1 ? 'Next →' : 'Finish';
-}
-
-function renderDots() {
-  document.getElementById('progressDots').innerHTML = currentPhrases.map((_,i) => {
-    let c='dot'; if(i<currentIndex)c+=' done'; if(i===currentIndex)c+=' current';
-    return `<div class="${c}"></div>`;
-  }).join('');
-}
-
-// ─── TTS ─────────────────────────────────────────────────────────────────────
-document.getElementById('btnPlay').addEventListener('click', () => {
-  if (!hasTTS) return;
-  synth.cancel();
-  const u = new SpeechSynthesisUtterance(currentPhrases[currentIndex].tts);
-  u.lang = 'it-IT'; u.rate = 0.82; u.pitch = 1;
-  const v = synth.getVoices().find(v => v.lang.startsWith('it'));
-  if (v) u.voice = v;
-  synth.speak(u);
-});
-if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = () => {};
-
-// ─── STT ─────────────────────────────────────────────────────────────────────
-document.getElementById('btnListen').addEventListener('click', () => {
-  if (!hasSTT || isListening) return;
-  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-  recognition = new SR();
-  recognition.lang = 'it-IT'; recognition.continuous = false;
-  recognition.interimResults = false; recognition.maxAlternatives = 3;
-  isListening = true;
-  document.getElementById('btnListen').classList.add('listening');
-  document.getElementById('listenLabel').textContent = 'Listening…';
-  document.getElementById('listenIcon').textContent = '🔴';
-  recognition.start();
-  recognition.onresult = e => {
-    const heard = Array.from(e.results[0]).map(r=>r.transcript.toLowerCase().trim());
-    evaluateSpeech(heard);
-  };
-  recognition.onerror = e => {
-    stopListening();
-    if (e.error==='no-speech') showFeedback('retry',"Didn't catch that — try again.",'');
-    else if (e.error==='not-allowed') showFeedback('retry','Microphone access denied. Allow mic in browser settings.','');
-  };
-  recognition.onend = () => stopListening();
-});
-
-function stopListening() {
-  isListening = false;
-  document.getElementById('btnListen').classList.remove('listening');
-  document.getElementById('listenLabel').textContent = 'Speak';
-  document.getElementById('listenIcon').textContent = '🎙';
-}
-
-function norm(s) {
-  return s.toLowerCase()
-    .replace(/[àá]/g,'a').replace(/[èéê]/g,'e').replace(/[ìí]/g,'i')
-    .replace(/[òó]/g,'o').replace(/[ùú]/g,'u').replace(/[.,?!\']/g,'').trim();
 }
 
 function evaluateSpeech(transcripts) {
@@ -891,23 +1059,10 @@ function evaluateSpeech(transcripts) {
   const combined = kScore*0.6 + (wHit.length/tw.length)*0.4;
   if (combined >= 0.75 || heardN === targetN) {
     score++;
-    if (testMode && verbMode) {
-      document.getElementById('italianPhrase').textContent = p.it;
-      document.getElementById('phonetic').textContent = p.phonetic;
-      document.getElementById('hintBox').classList.remove('show');
-    }
     showFeedback('success','✓ Ottimo! That sounded great.',`Heard: "${heard}"`);
   } else if (combined >= 0.4) {
-    if (testMode && verbMode) {
-      document.getElementById('italianPhrase').textContent = p.it;
-      document.getElementById('phonetic').textContent = p.phonetic;
-    }
     showFeedback('partial','Almost — you got part of it. Try once more.',`Heard: "${heard}" · Target: "${p.it}"`);
   } else {
-    if (testMode && verbMode) {
-      document.getElementById('italianPhrase').textContent = p.it;
-      document.getElementById('phonetic').textContent = p.phonetic;
-    }
     showFeedback('retry','Not quite. Listen again, then speak slowly.',`Heard: "${heard}" · Target: "${p.it}"`);
   }
 }
@@ -951,9 +1106,9 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 });
 
 // ─── TENSE TOGGLE ────────────────────────────────────────────────────────────
-document.querySelectorAll('.tense-btn:not([data-nsub])').forEach(btn => {
+document.querySelectorAll('.tense-btn:not([data-nsub]):not([data-qasub])').forEach(btn => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.tense-btn:not([data-nsub])').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.tense-btn:not([data-nsub]):not([data-qasub])').forEach(b=>b.classList.remove('active'));
     btn.classList.add('active');
     currentTense = btn.dataset.tense;
     if (verbMode) loadVerbSession();
@@ -969,24 +1124,326 @@ document.getElementById('btnToggleTable').addEventListener('click', () => {
   btn.classList.toggle('active', tableVisible);
 });
 
-// ─── HINT BUTTON ─────────────────────────────────────────────────────────────
-document.getElementById('btnShowHint').addEventListener('click', () => {
-  hintShown = !hintShown;
-  document.getElementById('hintBox').classList.toggle('show', hintShown);
-  document.getElementById('btnShowHint').textContent = hintShown ? 'Hide hint' : 'Show hint';
-});
-
-// ─── TEST MODE TOGGLE ─────────────────────────────────────────────────────────
-document.getElementById('btnTestMode').addEventListener('click', () => {
-  testMode = !testMode;
-  const btn = document.getElementById('btnTestMode');
-  btn.classList.toggle('active', testMode);
-  btn.textContent = testMode ? 'Test Mode ON' : 'Test Mode';
-  if (verbMode) loadVerbSession();
-});
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
 buildVerbGrid();
+// ── Q&A DATA ──────────────────────────────────────────────────────────────────
+const qaData = {
+  vita:[
+    {q:"Come si chiama?",qPhonetic:"[KO-me si KYA-ma]",eng:"What is your name?",
+     answers:[{it:"Mi chiamo Thomas.",phonetic:"[mi KYA-mo Thomas]",keywords:["chiamo","thomas"]},
+              {it:"Sono Thomas.",phonetic:"[SO-no Thomas]",keywords:["sono","thomas"]}]},
+    {q:"Di dove \u00e8?",qPhonetic:"[di DO-ve EH]",eng:"Where are you from?",
+     answers:[{it:"Sono degli Stati Uniti.",phonetic:"[SO-no DE-lyi STA-ti u-NI-ti]",keywords:["stati","uniti"]},
+              {it:"Degli Stati Uniti.",phonetic:"[DE-lyi STA-ti u-NI-ti]",keywords:["stati","uniti"]}]},
+    {q:"Da quanto tempo \u00e8 in Italia?",qPhonetic:"[da KWAN-to TEM-po EH in i-TA-lya]",eng:"How long have you been in Italy?",
+     answers:[{it:"Da circa un anno.",phonetic:"[da CHIR-ka un AN-no]",keywords:["circa","anno"]},
+              {it:"Sono qui da circa un anno.",phonetic:"[SO-no kwi da CHIR-ka un AN-no]",keywords:["sono","anno"]}]},
+    {q:"Parla italiano?",qPhonetic:"[PAR-la i-ta-LYA-no]",eng:"Do you speak Italian?",
+     answers:[{it:"Un poco, sto imparando.",phonetic:"[un PO-ko sto im-pa-RAN-do]",keywords:["poco","imparando"]},
+              {it:"Non ancora molto bene.",phonetic:"[non an-KO-ra MOL-to BE-ne]",keywords:["ancora","bene"]}]},
+    {q:"Qual \u00e8 il suo indirizzo?",qPhonetic:"[kwal EH il SWO in-di-RIT-tso]",eng:"What is your address?",
+     answers:[{it:"Il mio indirizzo \u00e8 via Roma dieci.",phonetic:"[il MYO in-di-RIT-tso EH VYA RO-ma DYE-chi]",keywords:["indirizzo","via"]}]},
+    {q:"Ha un documento d'identit\u00e0?",qPhonetic:"[a un do-KU-men-to di-den-ti-TA]",eng:"Do you have an identity document?",
+     answers:[{it:"S\u00ec, ho il passaporto.",phonetic:"[si o il pas-sa-POR-to]",keywords:["passaporto"]},
+              {it:"Ho il passaporto e il permesso di soggiorno.",phonetic:"[o il pas-sa-POR-to e il per-MES-so di sod-JOR-no]",keywords:["passaporto","permesso"]}]},
+    {q:"Qual \u00e8 il suo numero di telefono?",qPhonetic:"[kwal EH il SWO NU-me-ro di te-LE-fo-no]",eng:"What is your phone number?",
+     answers:[{it:"Il mio numero \u00e8...",phonetic:"[il MYO NU-me-ro EH]",keywords:["numero"]},
+              {it:"Posso scriverlo?",phonetic:"[POS-so SKRIV-er-lo]",keywords:["scriverlo"]}]},
+    {q:"Pu\u00f2 ripetere pi\u00f9 lentamente?",qPhonetic:"[PWO ri-PE-te-re pyU len-ta-MEN-te]",eng:"Can you repeat more slowly?",
+     answers:[{it:"S\u00ec, certo. Grazie.",phonetic:"[si CHER-to GRA-tsye]",keywords:["certo","grazie"]},
+              {it:"Grazie, ho capito.",phonetic:"[GRA-tsye o ka-PI-to]",keywords:["capito"]}]},
+    {q:"Non capisco. Pu\u00f2 parlare pi\u00f9 lentamente?",qPhonetic:"[non ka-PIS-ko PWO par-LA-re pyU len-ta-MEN-te]",eng:"I don't understand. Can you speak more slowly?",
+     answers:[{it:"S\u00ec, grazie mille.",phonetic:"[si GRA-tsye MIL-le]",keywords:["grazie","mille"]},
+              {it:"Grazie, cos\u00ec capisco meglio.",phonetic:"[GRA-tsye ko-ZI ka-PIS-ko MEL-yo]",keywords:["capisco","meglio"]}]}
+  ],
+  questura:[
+    {q:"Qual \u00e8 il motivo della sua presenza in Italia?",qPhonetic:"[kwal EH il mo-TI-vo DEL-la SWA pre-ZEN-tsa in i-TA-lya]",eng:"What is the reason for your stay in Italy?",
+     answers:[{it:"Sono qui per lavoro.",phonetic:"[SO-no kwi per la-VO-ro]",keywords:["lavoro"]},
+              {it:"Lavoro come imprenditore.",phonetic:"[la-VO-ro KO-me im-pren-di-TO-re]",keywords:["imprenditore"]}]},
+    {q:"Ha gi\u00e0 presentato domanda per il permesso di soggiorno?",qPhonetic:"[a JA pre-zen-TA-to do-MAN-da per il per-MES-so di sod-JOR-no]",eng:"Have you already applied for a residence permit?",
+     answers:[{it:"No, \u00e8 la prima volta.",phonetic:"[no EH la PRI-ma VOL-ta]",keywords:["prima","volta"]},
+              {it:"S\u00ec, sto rinnovando il permesso.",phonetic:"[si sto rin-no-VAN-do il per-MES-so]",keywords:["rinnovando","permesso"]}]},
+    {q:"Ha tutti i documenti richiesti?",qPhonetic:"[a TUT-ti i do-KU-men-ti ri-KYE-sti]",eng:"Do you have all the required documents?",
+     answers:[{it:"S\u00ec, ho tutto qui.",phonetic:"[si o TUT-to kwi]",keywords:["tutto","qui"]},
+              {it:"Penso di s\u00ec, ma verifichi pure.",phonetic:"[PEN-so di si ma ve-RI-fi-ki PU-re]",keywords:["verifichi","pure"]}]},
+    {q:"Da quanto tempo risiede a questo indirizzo?",qPhonetic:"[da KWAN-to TEM-po ri-ZYE-de a KWES-to in-di-RIT-tso]",eng:"How long have you been living at this address?",
+     answers:[{it:"Da sei mesi circa.",phonetic:"[da SEI ME-zi CHIR-ka]",keywords:["sei","mesi"]},
+              {it:"Da quando sono arrivato in Italia.",phonetic:"[da KWAN-do SO-no ar-ri-VA-to in i-TA-lya]",keywords:["arrivato","italia"]}]},
+    {q:"Ha un contratto di affitto regolare?",qPhonetic:"[a un kon-TRAT-to di af-FIT-to re-go-LA-re]",eng:"Do you have a regular rental contract?",
+     answers:[{it:"S\u00ec, ho il contratto registrato.",phonetic:"[si o il kon-TRAT-to re-jis-TRA-to]",keywords:["contratto","registrato"]},
+              {it:"S\u00ec, posso portare una copia.",phonetic:"[si POS-so por-TA-re U-na KO-pya]",keywords:["copia"]}]},
+    {q:"Qual \u00e8 la sua occupazione?",qPhonetic:"[kwal EH la SWA ok-ku-pa-TSYO-ne]",eng:"What is your occupation?",
+     answers:[{it:"Sono imprenditore.",phonetic:"[SO-no im-pren-di-TO-re]",keywords:["imprenditore"]},
+              {it:"Gestisco un'azienda.",phonetic:"[jes-TIS-ko u-na-TSYEN-da]",keywords:["gestisco","azienda"]}]},
+    {q:"Quando \u00e8 arrivato in Italia?",qPhonetic:"[KWAN-do EH ar-ri-VA-to in i-TA-lya]",eng:"When did you arrive in Italy?",
+     answers:[{it:"Sono arrivato l'anno scorso.",phonetic:"[SO-no ar-ri-VA-to LAN-no SKOR-so]",keywords:["arrivato","scorso"]},
+              {it:"Circa un anno fa.",phonetic:"[CHIR-ka un AN-no fa]",keywords:["anno","fa"]}]},
+    {q:"Ha un codice fiscale?",qPhonetic:"[a un KO-di-che fis-KA-le]",eng:"Do you have a tax identification number?",
+     answers:[{it:"S\u00ec, eccolo.",phonetic:"[si EK-ko-lo]",keywords:["eccolo"]},
+              {it:"S\u00ec, me lo ha assegnato l'Agenzia delle Entrate.",phonetic:"[si me lo a as-se-NYA-to la-JEN-tsya DEL-le en-TRA-te]",keywords:["assegnato","entrate"]}]},
+    {q:"Vuole fissare un appuntamento?",qPhonetic:"[VWO-le fis-SA-re un ap-pun-ta-MEN-to]",eng:"Would you like to make an appointment?",
+     answers:[{it:"S\u00ec, quando \u00e8 disponibile?",phonetic:"[si KWAN-do EH dis-po-NI-bi-le]",keywords:["disponibile"]},
+              {it:"Preferisco venire di persona.",phonetic:"[pre-fe-RIS-ko ve-NI-re di per-SO-na]",keywords:["persona"]}]}
+  ],
+  autoscuola:[
+    {q:"Vorrei iscrivermi alla scuola guida.",qPhonetic:"[vor-REI is-KRIV-er-mi AL-la SKWO-la GWI-da]",eng:"I would like to enrol in the driving school.",
+     answers:[{it:"Buongiorno, vorrei iscrivermi per la patente.",phonetic:"[bwon-JOR-no vor-REI is-KRIV-er-mi per la pa-TEN-te]",keywords:["iscrivermi","patente"]},
+              {it:"Cerco informazioni per la patente B.",phonetic:"[CHER-ko in-for-ma-TSYO-ni per la pa-TEN-te bi]",keywords:["informazioni","patente"]}]},
+    {q:"Ha già la patente straniera?",qPhonetic:"[a JA la pa-TEN-te stra-NYE-ra]",eng:"Do you already have a foreign driving licence?",
+     answers:[{it:"Sì, ho la patente americana.",phonetic:"[si o la pa-TEN-te a-me-ri-KA-na]",keywords:["patente","americana"]},
+              {it:"Sì, ma devo convertirla.",phonetic:"[si ma DE-vo kon-ver-TIR-la]",keywords:["convertirla"]}]},
+    {q:"Quante ore di guida sono necessarie?",qPhonetic:"[KWAN-te O-re di GWI-da SO-no ne-ches-SA-rye]",eng:"How many driving hours are required?",
+     answers:[{it:"Non lo so, me lo può spiegare?",phonetic:"[non lo so me lo PWO spye-GA-re]",keywords:["spiegare"]},
+              {it:"Dipende dal mio livello.",phonetic:"[di-PEN-de dal MYO li-VEL-lo]",keywords:["dipende","livello"]}]},
+    {q:"Deve sostenere l'esame teorico prima.",qPhonetic:"[DE-ve sos-te-NE-re le-ZA-me te-O-ri-ko PRI-ma]",eng:"You must take the theory exam first.",
+     answers:[{it:"Va bene, quando posso iniziare?",phonetic:"[va BE-ne KWAN-do POS-so i-ni-TSYA-re]",keywords:["iniziare"]},
+              {it:"Capisco. Di cosa tratta l'esame?",phonetic:"[ka-PIS-ko di KO-za TRAT-ta le-ZA-me]",keywords:["capisco","esame"]}]},
+    {q:"L'esame teorico è disponibile in inglese?",qPhonetic:"[le-ZA-me te-O-ri-ko EH dis-po-NI-bi-le in in-GLE-ze]",eng:"Is the theory exam available in English?",
+     answers:[{it:"Sì, ho sentito che è disponibile.",phonetic:"[si o sen-TI-to ke EH dis-po-NI-bi-le]",keywords:["disponibile"]},
+              {it:"Spero di sì, altrimenti ho bisogno di un traduttore.",phonetic:"[SPE-ro di si al-tri-MEN-ti o bi-ZO-nyo di un tra-dut-TO-re]",keywords:["traduttore"]}]},
+    {q:"Ha superato l'esame teorico?",qPhonetic:"[a su-pe-RA-to le-ZA-me te-O-ri-ko]",eng:"Have you passed the theory exam?",
+     answers:[{it:"Sì, l'ho superato la settimana scorsa.",phonetic:"[si lo su-pe-RA-to la set-ti-MA-na SKOR-sa]",keywords:["superato","scorsa"]},
+              {it:"Non ancora, devo rifare il test.",phonetic:"[non an-KO-ra DE-vo ri-FA-re il test]",keywords:["ancora","rifare"]}]},
+    {q:"Quando posso fare l'esame di guida pratico?",qPhonetic:"[KWAN-do POS-so FA-re le-ZA-me di GWI-da PRA-ti-ko]",eng:"When can I take the practical driving test?",
+     answers:[{it:"Quando l'istruttore dice che sono pronto.",phonetic:"[KWAN-do lis-trut-TO-re DI-che ke SO-no PRON-to]",keywords:["istruttore","pronto"]},
+              {it:"Dopo almeno venti ore di guida.",phonetic:"[DO-po al-ME-no VEN-ti O-re di GWI-da]",keywords:["almeno","guida"]}]},
+    {q:"Può spiegare questo segnale stradale?",qPhonetic:"[PWO spye-GA-re KWES-to se-NYA-le stra-DA-le]",eng:"Can you explain this road sign?",
+     answers:[{it:"Indica che è vietato sorpassare.",phonetic:"[IN-di-ka ke EH vye-TA-to sor-pas-SA-re]",keywords:["vietato","sorpassare"]},
+              {it:"Significa che devo dare la precedenza.",phonetic:"[si-NYI-fi-ka ke DE-vo DA-re la pre-che-DEN-tsa]",keywords:["precedenza"]}]},
+    {q:"Quanto costa il corso completo?",qPhonetic:"[KWAN-to KOS-ta il KOR-so kom-PLE-to]",eng:"How much does the full course cost?",
+     answers:[{it:"Può farmi un preventivo?",phonetic:"[PWO far-mi un pre-ven-TI-vo]",keywords:["preventivo"]},
+              {it:"Include tutto, esame compreso?",phonetic:"[in-KLU-de TUT-to e-ZA-me kom-PRE-zo]",keywords:["include","esame"]}]}
+  ],
+  asl:[
+    {q:"Buongiorno, cosa posso fare per lei?",qPhonetic:"[bwon-JOR-no KO-za POS-so FA-re per LEI]",eng:"Good morning, what can I do for you?",
+     answers:[{it:"Devo iscrivermi al medico di base.",phonetic:"[DE-vo is-KRIV-er-mi al ME-di-ko di BA-ze]",keywords:["iscrivermi","medico"]},
+              {it:"Vorrei registrarmi come nuovo assistito.",phonetic:"[vor-REI re-jis-TRAR-mi KO-me NWO-vo as-sis-TI-to]",keywords:["registrarmi","assistito"]}]},
+    {q:"Ha la tessera sanitaria?",qPhonetic:"[a la tes-SE-ra sa-ni-TA-rya]",eng:"Do you have your health card?",
+     answers:[{it:"Non ancora, devo richiederla.",phonetic:"[non an-KO-ra DE-vo ri-KYE-der-la]",keywords:["ancora","richiederla"]},
+              {it:"Sì, eccola.",phonetic:"[si EK-ko-la]",keywords:["eccola"]}]},
+    {q:"Ha il permesso di soggiorno?",qPhonetic:"[a il per-MES-so di sod-JOR-no]",eng:"Do you have a residence permit?",
+     answers:[{it:"Sì, ho il permesso di soggiorno.",phonetic:"[si o il per-MES-so di sod-JOR-no]",keywords:["permesso","soggiorno"]},
+              {it:"Ho fatto domanda, è in elaborazione.",phonetic:"[o FAT-to do-MAN-da EH in e-la-bo-ra-TSYO-ne]",keywords:["domanda","elaborazione"]}]},
+    {q:"Quale medico di base vuole scegliere?",qPhonetic:"[KWA-le ME-di-ko di BA-ze VWO-le she-LYE-re]",eng:"Which general practitioner would you like to choose?",
+     answers:[{it:"Può consigliarmi qualcuno vicino a casa mia?",phonetic:"[PWO kon-sil-YAR-mi kwal-KU-no vi-CHI-no a KA-za MI-a]",keywords:["consigliarmi","vicino"]},
+              {it:"Non lo conosco, chi è disponibile?",phonetic:"[non lo ko-NOS-ko ki EH dis-po-NI-bi-le]",keywords:["disponibile"]}]},
+    {q:"Ha bisogno di un esenzione ticket?",qPhonetic:"[a bi-ZO-nyo di u-ne-zen-TSYO-ne TIK-ket]",eng:"Do you need a co-payment exemption?",
+     answers:[{it:"Non so se ne ho diritto.",phonetic:"[non so se ne o di-RIT-to]",keywords:["diritto"]},
+              {it:"Può spiegarmi come funziona?",phonetic:"[PWO spye-GAR-mi KO-me fun-TSYO-na]",keywords:["spiegarmi","funziona"]}]},
+    {q:"Deve portare il codice fiscale.",qPhonetic:"[DE-ve por-TA-re il KO-di-che fis-KA-le]",eng:"You need to bring your tax code.",
+     answers:[{it:"Ce l'ho qui.",phonetic:"[che lo kwi]",keywords:["qui"]},
+              {it:"L'ho lasciato a casa, posso tornare domani?",phonetic:"[lo la-SHA-to a KA-za POS-so tor-NA-re do-MA-ni]",keywords:["lasciato","domani"]}]},
+    {q:"Vuole prenotare una visita?",qPhonetic:"[VWO-le pre-no-TA-re U-na VI-zi-ta]",eng:"Would you like to book an appointment?",
+     answers:[{it:"Sì, con il medico di base.",phonetic:"[si kon il ME-di-ko di BA-ze]",keywords:["medico","base"]},
+              {it:"Sì, quando c'è il primo posto disponibile?",phonetic:"[si KWAN-do chEH il PRI-mo POS-to dis-po-NI-bi-le]",keywords:["primo","disponibile"]}]},
+    {q:"C'è un numero da chiamare per le urgenze?",qPhonetic:"[chEH un NU-me-ro da KYA-ma-re per le ur-JEN-tse]",eng:"Is there a number to call for emergencies?",
+     answers:[{it:"Sì, qual è?",phonetic:"[si kwal EH]",keywords:["qual"]},
+              {it:"E per le urgenze non gravi?",phonetic:"[e per le ur-JEN-tse non GRA-vi]",keywords:["urgenze","gravi"]}]},
+    {q:"La tessera sanitaria arriverà per posta.",qPhonetic:"[la tes-SE-ra sa-ni-TA-rya ar-ri-ve-RA per POS-ta]",eng:"The health card will arrive by post.",
+     answers:[{it:"Quanti giorni ci vogliono?",phonetic:"[KWAN-ti JOR-ni chi VOL-yo-no]",keywords:["giorni","vogliono"]},
+              {it:"Va bene, grazie.",phonetic:"[va BE-ne GRA-tsye]",keywords:["bene","grazie"]}]}
+  ],
+  medico:[
+    {q:"Buongiorno, ha un appuntamento?",qPhonetic:"[bwon-JOR-no a un ap-pun-ta-MEN-to]",eng:"Good morning, do you have an appointment?",
+     answers:[{it:"Sì, ho un appuntamento alle undici.",phonetic:"[si o un ap-pun-ta-MEN-to AL-le UN-di-chi]",keywords:["appuntamento","undici"]},
+              {it:"No, è urgente.",phonetic:"[no EH ur-JEN-te]",keywords:["urgente"]}]},
+    {q:"Dove fa male?",qPhonetic:"[DO-ve fa MA-le]",eng:"Where does it hurt?",
+     answers:[{it:"Ho mal di stomaco da due giorni.",phonetic:"[o mal di STO-ma-ko da DU-e JOR-ni]",keywords:["stomaco","giorni"]},
+              {it:"Mi fa male qui, in questa zona.",phonetic:"[mi fa MA-le kwi in KWES-ta DZO-na]",keywords:["male","zona"]}]},
+    {q:"Da quanto tempo ha questi sintomi?",qPhonetic:"[da KWAN-to TEM-po a KWES-ti SIN-to-mi]",eng:"How long have you had these symptoms?",
+     answers:[{it:"Da tre giorni circa.",phonetic:"[da TRE JOR-ni CHIR-ka]",keywords:["tre","giorni"]},
+              {it:"Da una settimana, sta peggiorando.",phonetic:"[da U-na set-ti-MA-na sta ped-jyo-RAN-do]",keywords:["settimana","peggiorando"]}]},
+    {q:"Ha allergie a farmaci?",qPhonetic:"[a al-LER-jye a far-MA-chi]",eng:"Are you allergic to any medications?",
+     answers:[{it:"No, nessuna allergia.",phonetic:"[no nes-SU-na al-ler-JI-a]",keywords:["nessuna","allergia"]},
+              {it:"Sì, sono allergico alla penicillina.",phonetic:"[si SO-no al-LER-ji-ko AL-la pe-ni-chil-LI-na]",keywords:["allergico","penicillina"]}]},
+    {q:"Prende farmaci regolarmente?",qPhonetic:"[PREN-de far-MA-chi re-go-lar-MEN-te]",eng:"Do you take any medication regularly?",
+     answers:[{it:"No, nessun farmaco.",phonetic:"[no nes-SUN far-MA-ko]",keywords:["nessun","farmaco"]},
+              {it:"Sì, prendo un antipertensivo.",phonetic:"[si PREN-do un an-ti-per-ten-SI-vo]",keywords:["antipertensivo"]}]},
+    {q:"Le prescrivo una ricetta.",qPhonetic:"[le pre-SKRIV-o U-na ri-CHET-ta]",eng:"I will prescribe you a prescription.",
+     answers:[{it:"Grazie. Dove la porto?",phonetic:"[GRA-tsye DO-ve la POR-to]",keywords:["porto"]},
+              {it:"Devo portarla in farmacia?",phonetic:"[DE-vo por-TAR-la in far-MA-cha]",keywords:["farmacia"]}]},
+    {q:"Deve fare delle analisi del sangue.",qPhonetic:"[DE-ve FA-re DEL-le a-NA-li-zi del SAN-gwe]",eng:"You need to have a blood test.",
+     answers:[{it:"Dove devo andare per le analisi?",phonetic:"[DO-ve DE-vo an-DA-re per le a-NA-li-zi]",keywords:["andare","analisi"]},
+              {it:"Devo essere a digiuno?",phonetic:"[DE-vo ES-se-re a di-JU-no]",keywords:["digiuno"]}]},
+    {q:"Come si sente adesso?",qPhonetic:"[KO-me si SEN-te a-DES-so]",eng:"How are you feeling now?",
+     answers:[{it:"Un po' meglio, grazie.",phonetic:"[un po MEL-yo GRA-tsye]",keywords:["meglio","grazie"]},
+              {it:"Ancora non bene, continua a farmi male.",phonetic:"[an-KO-ra non BE-ne kon-TI-nua a far-mi MA-le]",keywords:["ancora","male"]}]},
+    {q:"Torni tra una settimana se non migliora.",qPhonetic:"[TOR-ni tra U-na set-ti-MA-na se non mil-YO-ra]",eng:"Come back in a week if it doesn't improve.",
+     answers:[{it:"Va bene, grazie dottore.",phonetic:"[va BE-ne GRA-tsye dot-TO-re]",keywords:["grazie","dottore"]},
+              {it:"E se peggiora prima?",phonetic:"[e se ped-JO-ra PRI-ma]",keywords:["peggiora","prima"]}]}
+  ],
+  commercialista:[
+    {q:"Buongiorno, di cosa ha bisogno?",qPhonetic:"[bwon-JOR-no di KO-za a bi-ZO-nyo]",eng:"Good morning, what do you need?",
+     answers:[{it:"Devo aprire la partita IVA.",phonetic:"[DE-vo a-PRI-re la par-TI-ta i-VA]",keywords:["aprire","partita","iva"]},
+              {it:"Ho bisogno di aiuto per la dichiarazione dei redditi.",phonetic:"[o bi-ZO-nyo di a-YU-to per la di-kya-ra-TSYO-ne day RED-di-ti]",keywords:["dichiarazione","redditi"]}]},
+    {q:"Che tipo di attività svolge?",qPhonetic:"[ke TI-po di at-ti-vi-TA ZVOL-je]",eng:"What type of business activity do you carry out?",
+     answers:[{it:"Sono consulente, lavoro nel settore tecnologico.",phonetic:"[SO-no kon-su-LEN-te la-VO-ro nel set-TO-re tek-no-LO-ji-ko]",keywords:["consulente","tecnologico"]},
+              {it:"Gestisco una SaaS company internazionale.",phonetic:"[jes-TIS-ko U-na SaaS KOM-pa-ni in-ter-na-tsyo-NA-le]",keywords:["gestisco","internazionale"]}]},
+    {q:"Ha già il codice fiscale?",qPhonetic:"[a JA il KO-di-che fis-KA-le]",eng:"Do you already have a tax code?",
+     answers:[{it:"Sì, me lo ha assegnato l'Agenzia delle Entrate.",phonetic:"[si me lo a as-se-NYA-to la-JEN-tsya DEL-le en-TRA-te]",keywords:["assegnato","entrate"]},
+              {it:"Sì, eccolo.",phonetic:"[si EK-ko-lo]",keywords:["eccolo"]}]},
+    {q:"Ha redditi da dichiarare all'estero?",qPhonetic:"[a RED-di-ti da di-kya-RA-re al-LES-te-ro]",eng:"Do you have income to declare abroad?",
+     answers:[{it:"Sì, ho redditi dagli Stati Uniti.",phonetic:"[si o RED-di-ti DAL-yi STA-ti u-NI-ti]",keywords:["redditi","stati","uniti"]},
+              {it:"Sì, ho clienti internazionali.",phonetic:"[si o klyen-TI in-ter-na-tsyo-NA-li]",keywords:["clienti","internazionali"]}]},
+    {q:"Deve aprire una posizione INPS?",qPhonetic:"[DE-ve a-PRI-re U-na po-zi-TSYO-ne INPS]",eng:"Do you need to open an INPS position?",
+     answers:[{it:"Non lo so, dipende dalla mia situazione?",phonetic:"[non lo so di-PEN-de DAL-la MI-a si-twa-TSYO-ne]",keywords:["dipende","situazione"]},
+              {it:"Può spiegarmi di cosa si tratta?",phonetic:"[PWO spye-GAR-mi di KO-za si TRAT-ta]",keywords:["spiegarmi"]}]},
+    {q:"Quando scade la dichiarazione dei redditi?",qPhonetic:"[KWAN-do SKA-de la di-kya-ra-TSYO-ne day RED-di-ti]",eng:"When is the tax return deadline?",
+     answers:[{it:"Non lo so esattamente, quando?",phonetic:"[non lo so e-zat-ta-MEN-te KWAN-do]",keywords:["esattamente"]},
+              {it:"Di solito in ottobre, è corretto?",phonetic:"[di SO-li-to in ot-TO-bre EH kor-RET-to]",keywords:["ottobre","corretto"]}]},
+    {q:"Ha le ricevute di tutte le spese?",qPhonetic:"[a le ri-che-VU-te di TUT-te le SPE-ze]",eng:"Do you have receipts for all your expenses?",
+     answers:[{it:"Sì, ho tenuto tutto in ordine.",phonetic:"[si o te-NU-to TUT-to in OR-di-ne]",keywords:["tenuto","ordine"]},
+              {it:"La maggior parte sì, alcune le ho perse.",phonetic:"[la mad-JOR PAR-te si al-KU-ne le o PER-se]",keywords:["maggior","perse"]}]},
+    {q:"Conviene il regime forfettario per la sua situazione?",qPhonetic:"[kon-VYE-ne il re-JI-me for-fet-TA-ryo per la SWA si-twa-TSYO-ne]",eng:"Is the flat-rate tax regime beneficial for your situation?",
+     answers:[{it:"Non lo so, mi può fare un confronto?",phonetic:"[non lo so mi PWO FA-re un kon-FRON-to]",keywords:["confronto"]},
+              {it:"Dipende dal fatturato, giusto?",phonetic:"[di-PEN-de dal fat-tu-RA-to JUS-to]",keywords:["fatturato"]}]},
+    {q:"Deve pagare l'IVA trimestralmente.",qPhonetic:"[DE-ve pa-GA-re li-VA tri-mes-tral-MEN-te]",eng:"You must pay VAT quarterly.",
+     answers:[{it:"Capisco. Quanto devo accantonare?",phonetic:"[ka-PIS-ko KWAN-to DE-vo ak-kan-to-NA-re]",keywords:["accantonare"]},
+              {it:"Mi manda le scadenze per email?",phonetic:"[mi MAN-da le ska-DEN-tse per e-mail]",keywords:["scadenze","email"]}]}
+  ]
+};
+
+// ── Q&A ENGINE ────────────────────────────────────────────────────────────────
+function switchQaTab(btn) {
+  document.querySelectorAll('#qaSubBar .tense-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  qaSubtab = btn.dataset.qasub;
+  qaIndex = 0; qaSelectedAnswer = null;
+  renderQa();
+}
+function loadQaSession() { qaIndex = 0; qaSelectedAnswer = null; renderQa(); }
+function renderQa() {
+  const qs = qaData[qaSubtab];
+  if (!qs || qs.length === 0) {
+    document.getElementById('qaQuestion').textContent = 'Prossimamente \u2014 in arrivo nel prossimo aggiornamento.';
+    document.getElementById('qaPhonetic').textContent = '';
+    document.getElementById('qaAnswers').innerHTML = '';
+    document.getElementById('qaDots').innerHTML = '';
+    document.getElementById('qaListenBtn').style.display = 'none';
+    document.getElementById('qaFeedbackText').textContent = '';
+    return;
+  }
+  const q = qs[qaIndex], total = qs.length;
+  document.getElementById('qaCounter').textContent = 'Question ' + (qaIndex+1) + ' of ' + total;
+  document.getElementById('qaQuestion').textContent = q.q;
+  document.getElementById('qaPhonetic').textContent = q.qPhonetic;
+  document.getElementById('qaEnglish').textContent = q.eng;
+  document.getElementById('qaEnglish').style.display = 'none';
+  document.getElementById('btnRevealEng').textContent = 'Show English';
+  document.getElementById('qaListenBtn').style.display = 'none';
+  document.getElementById('qaFeedbackText').textContent = '';
+  document.getElementById('qaFeedback').className = 'feedback';
+  qaSelectedAnswer = null;
+  const ad = document.getElementById('qaAnswers');
+  ad.innerHTML = '';
+  q.answers.forEach(function(ans, i) {
+    const row = document.createElement('div');
+    row.style.cssText = 'display:flex;align-items:flex-start;gap:.5rem;';
+    const sp = document.createElement('button');
+    sp.className = 'btn btn-play';
+    sp.style.cssText = 'min-width:2.4rem;padding:.4rem .6rem;font-size:.85rem;flex-shrink:0;margin-top:.05rem;';
+    sp.innerHTML = '&#9654;';
+    sp.title = 'Hear this answer';
+    sp.onclick = function() { qaSpeak(ans.it); };
+    const ab = document.createElement('button');
+    ab.className = 'btn btn-table';
+    ab.style.cssText = 'flex:1;text-align:left;padding:.5rem .8rem;font-size:.95rem;line-height:1.45;font-weight:500;';
+    ab.textContent = ans.it;
+    ab.dataset.ansIdx = i;
+    ab.onclick = function() { qaSelect(ab, i); };
+    row.appendChild(sp); row.appendChild(ab); ad.appendChild(row);
+  });
+  const dots = document.getElementById('qaDots');
+  dots.innerHTML = '';
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === qaIndex ? ' active' : '');
+    dots.appendChild(d);
+  }
+  document.getElementById('qaBtnNext').textContent = qaIndex < total-1 ? 'Next \u2192' : 'Restart';
+}
+function qaSpeak(text) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(text);
+  u.lang = 'it-IT'; u.rate = 0.85;
+  const itV = window.speechSynthesis.getVoices().find(v => v.lang.startsWith('it'));
+  if (itV) u.voice = itV;
+  window.speechSynthesis.speak(u);
+}
+function qaSelect(btn, idx) {
+  document.querySelectorAll('#qaAnswers .btn-table').forEach(b => {
+    b.style.background = ''; b.style.borderColor = ''; b.style.color = '';
+  });
+  btn.style.background = 'var(--gold)'; btn.style.borderColor = 'var(--gold)'; btn.style.color = 'white';
+  qaSelectedAnswer = idx;
+  document.getElementById('qaListenBtn').style.display = 'inline-flex';
+  document.getElementById('qaListenLabel').textContent = 'Speak answer';
+  document.getElementById('qaListenIcon').textContent = '&#127897;';
+  document.getElementById('qaFeedbackText').textContent = '';
+  document.getElementById('qaFeedback').className = 'feedback';
+}
+function qaEval(transcripts) {
+  if (qaSelectedAnswer === null) return;
+  const ans = qaData[qaSubtab][qaIndex].answers[qaSelectedAnswer];
+  const heard = transcripts[0];
+  function n(s){ return s.toLowerCase().replace(/[\u00e0\u00e1]/g,'a').replace(/[\u00e8\u00e9]/g,'e').replace(/[\u00ec\u00ed]/g,'i').replace(/[\u00f2\u00f3]/g,'o').replace(/[\u00f9\u00fa]/g,'u').replace(/[.,?!']/g,'').trim(); }
+  const hN = n(heard), tN = n(ans.it);
+  const kHit = ans.keywords.filter(k => hN.includes(k.toLowerCase()));
+  const kScore = ans.keywords.length ? kHit.length / ans.keywords.length : 0;
+  const tw = tN.split(' '), hw = hN.split(' ');
+  const wHit = tw.filter(w => hw.some(h => h.includes(w)||w.includes(h)));
+  const c = kScore*0.6 + (wHit.length/tw.length)*0.4;
+  const fb = document.getElementById('qaFeedback'), ft = document.getElementById('qaFeedbackText');
+  if (c >= 0.75 || hN === tN) {
+    fb.className = 'feedback show success';
+    ft.innerHTML = '\u2713 Eccellente! Perfetto.';
+  } else if (c >= 0.4) {
+    fb.className = 'feedback show partial';
+    ft.innerHTML = 'Capito, ma migliorabile.<br><small>Sentito: \u201c' + heard + '\u201d</small>';
+  } else {
+    fb.className = 'feedback show retry';
+    ft.innerHTML = 'Riprova \u2014 ascolta e parla lentamente.<br><small>Sentito: \u201c' + heard + '\u201d</small>';
+  }
+  document.getElementById('qaListenIcon').textContent = '&#127897;';
+  document.getElementById('qaListenLabel').textContent = 'Speak answer';
+}
+document.getElementById('qaListenBtn').addEventListener('click', function() {
+  if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
+    alert('Speech recognition not supported. Please use Chrome on HTTPS.'); return;
+  }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const rec = new SR();
+  rec.lang = 'it-IT'; rec.interimResults = false; rec.maxAlternatives = 3;
+  document.getElementById('qaListenIcon').textContent = '\u23f9';
+  document.getElementById('qaListenLabel').textContent = 'Listening...';
+  rec.onresult = function(e) {
+    qaEval(Array.from(e.results[0]).map(r => r.transcript));
+  };
+  rec.onerror = function() {
+    document.getElementById('qaListenIcon').textContent = '&#127897;';
+    document.getElementById('qaListenLabel').textContent = 'Speak answer';
+  };
+  rec.start();
+});
+document.getElementById('qaBtnNext').addEventListener('click', function() {
+  const qs = qaData[qaSubtab];
+  if (!qs || qs.length === 0) return;
+  qaIndex = qaIndex < qs.length - 1 ? qaIndex + 1 : 0;
+  qaSelectedAnswer = null; renderQa();
+});
+document.getElementById('btnRevealEng').addEventListener('click', function() {
+  const el = document.getElementById('qaEnglish'), btn = document.getElementById('btnRevealEng');
+  const showing = el.style.display !== 'none';
+  el.style.display = showing ? 'none' : 'block';
+  btn.textContent = showing ? 'Show English' : 'Hide English';
+});
+document.getElementById('qaQuestion').addEventListener('click', function() {
+  const t = this.textContent; if (t) qaSpeak(t);
+});
+
+
 loadSession('daily');
 </script>
 </body>
