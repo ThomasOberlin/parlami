@@ -15,8 +15,8 @@ h1{font-family:'Cormorant Garamond',serif;font-size:clamp(2rem,5vw,3rem);font-we
 h1 em{font-style:italic;color:var(--terra);}
 .subtitle{font-size:.75rem;letter-spacing:.15em;text-transform:uppercase;color:var(--stone);margin-top:.3rem;}
 .container{max-width:720px;margin:0 auto;padding:1.5rem 1.5rem 4rem;}
-.tab-bar{display:flex;gap:0;margin-bottom:1.2rem;border-bottom:1px solid var(--stone-light);overflow-x:auto;scrollbar-width:none;}
-.tab-bar::-webkit-scrollbar{display:none;}
+.tab-bar{display:flex;flex-direction:column;gap:0;margin-bottom:1.2rem;border-bottom:1px solid var(--stone-light);}
+.tab-row{display:flex;gap:0;}
 .tab-btn{padding:.5rem 1rem;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:.75rem;letter-spacing:.08em;text-transform:uppercase;color:var(--stone);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap;transition:all .2s;}
 .tab-btn:hover{color:var(--ink-soft);}
 .tab-btn.active{color:var(--terra);border-bottom-color:var(--terra);}
@@ -98,13 +98,17 @@ h1 em{font-style:italic;color:var(--terra);}
 </header>
 <div class="container">
   <div class="tab-bar" id="tabBar">
-    <button class="tab-btn active" data-tab="daily">Daily Life</button>
-    <button class="tab-btn" data-tab="social">Social</button>
-    <button class="tab-btn" data-tab="business">Business</button>
-    <button class="tab-btn" data-tab="verbs">Verbs</button>
-    <button class="tab-btn" data-tab="mix">Mixed</button>
-    <button class="tab-btn" data-tab="numbers">Numbers</button>
-    <button class="tab-btn" data-tab="qa">Q &amp; A</button>
+    <div class="tab-row">
+      <button class="tab-btn active" data-tab="daily">Daily Life</button>
+      <button class="tab-btn" data-tab="social">Social</button>
+      <button class="tab-btn" data-tab="business">Business</button>
+      <button class="tab-btn" data-tab="mix">Mixed</button>
+    </div>
+    <div class="tab-row">
+      <button class="tab-btn" data-tab="verbs">Verbs</button>
+      <button class="tab-btn" data-tab="numbers">Numbers</button>
+      <button class="tab-btn" data-tab="qa">Q &amp; A</button>
+    </div>
   </div>
   <div class="numbers-sub-bar" id="numbersSubBar">
     <button class="tense-btn active" data-nsub="prices" onclick="switchNumbersTab(this)">Prices</button>
