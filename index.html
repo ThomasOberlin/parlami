@@ -87,6 +87,15 @@ h1 em{font-style:italic;color:var(--terra);}
 .restart-btn{margin-top:1rem;padding:.6rem 1.8rem;background:var(--terra);color:white;border:none;border-radius:3px;font-family:'DM Sans',sans-serif;font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;}
 .tbl-controls{display:none;margin-bottom:.8rem;}
 .tbl-controls.show{display:block;}
+.test-bar{display:none;gap:.4rem;margin-bottom:1rem;align-items:center;flex-wrap:wrap;}
+.test-bar.show{display:flex;}
+.btn-test{background:transparent;color:var(--ink-soft);border:1px solid var(--stone-light);}
+.btn-test.active{background:var(--gold);border-color:var(--gold);color:white;}
+.test-question{font-family:'Cormorant Garamond',serif;font-size:clamp(1.1rem,3vw,1.6rem);color:var(--terra);margin-bottom:.5rem;display:none;}
+.test-question.show{display:block;}
+.hint-box{display:none;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.3);border-radius:3px;padding:.6rem .85rem;margin-bottom:.8rem;font-size:.82rem;color:var(--ink-soft);line-height:1.5;}
+.hint-box.show{display:block;}
+.hint-box strong{color:var(--ink);}
 .numbers-sub-bar{display:none;gap:.4rem;margin-bottom:1rem;flex-wrap:wrap;}
 </style>
 </head>
@@ -117,6 +126,7 @@ h1 em{font-style:italic;color:var(--terra);}
   <div class="tense-toggle" id="tenseToggle">
     <button class="tense-btn active" data-tense="present">Present</button>
     <button class="tense-btn" data-tense="past">Past</button>
+    <button class="btn btn-test" id="btnTestMode">Test Mode</button>
   </div>
   <div class="card" id="mainCard">
     <div class="verb-header" id="verbHeader">
@@ -130,12 +140,15 @@ h1 em{font-style:italic;color:var(--terra);}
       <table class="conj-table" id="conjTable"></table>
     </div>
     <div class="phrase-counter" id="counter">Phrase 1 of 6</div>
+    <div class="test-question" id="testQuestion"></div>
+    <div class="hint-box" id="hintBox"><strong>💡 Model answer:</strong> <span id="hintText"></span><br><span id="hintPhonetic" style="color:var(--terra);font-style:italic;font-size:.78rem;"></span></div>
     <div class="italian-phrase" id="italianPhrase"></div>
     <div class="phonetic" id="phonetic"></div>
     <div class="bridges" id="bridges"></div>
     <div class="controls">
       <button class="btn btn-play" id="btnPlay">&#9654; Hear it</button>
       <button class="btn btn-listen" id="btnListen"><span id="listenIcon">🎙</span> <span id="listenLabel">Speak</span></button>
+      <button class="btn btn-table" id="btnShowHint" style="display:none;">Show hint</button>
       <button class="btn btn-next" id="btnNext">Next →</button>
     </div>
     <div class="feedback" id="feedback">
@@ -629,7 +642,7 @@ const verbData = [
 ];
 
 // ─── STATE ─────────────────────────────────────────────────────────────────────
-let currentTab = 'daily', currentPhrases = [], currentIndex = 0, score = 0, numbersSubtab = 'prices';
+let currentTab = 'daily', currentPhrases = [], currentIndex = 0, score = 0, numbersSubtab = 'prices', testMode = false, hintShown = false;
 let isListening = false, recognition = null;
 let currentVerb = 0, currentTense = 'present', verbMode = false, tableVisible = false;
 const synth = window.speechSynthesis;
@@ -741,7 +754,7 @@ function loadSession(tab) {
 function loadVerbSession() {
   const verb = verbData[currentVerb];
   currentPhrases = verb.sentences[currentTense];
-  currentIndex = 0; score = 0; tableVisible = false;
+  currentIndex = 0; score = 0; tableVisible = false; hintShown = false;
   document.getElementById('tableSection').classList.remove('show');
   document.getElementById('btnToggleTable').textContent = 'Show conjugation table';
   document.getElementById('btnToggleTable').classList.remove('active');
@@ -752,18 +765,61 @@ function loadVerbSession() {
 }
 
 // ─── RENDER ──────────────────────────────────────────────────────────────────
+function buildQuestion(sentence) {
+  // Convert a sentence into a natural question to prompt a response
+  const pronoun = sentence.pronoun;
+  const it = sentence.it;
+  // Build contextual question prompts based on pronoun
+  const qmap = {
+    'io':     'Come risponde? / Dica qualcosa su di te:',
+    'tu':     `Chiedi a qualcuno: "${it.replace(/\.$/, '?')}"`,
+    'lui/lei':`Descrivi: cosa fa lui/lei?`,
+    'noi':    'Dite insieme: cosa fate?',
+    'voi':    `Chiedi al gruppo: "${it.replace(/\.$/, '?')}"`,
+    'loro':   'Descrivi: cosa fanno loro?'
+  };
+  return qmap[pronoun] || `Rispondi in italiano:`;
+}
+
 function renderPhrase() {
   const p = currentPhrases[currentIndex];
   const total = currentPhrases.length;
-  document.getElementById('counter').textContent = verbMode
+  hintShown = false;
+
+  // Counter
+  let counterText = verbMode
     ? `${verbData[currentVerb].inf} · ${currentTense==='present'?'Present':'Passato Prossimo'} · ${currentIndex+1}/${total}`
     : `Phrase ${currentIndex+1} of ${total}`;
-  document.getElementById('italianPhrase').textContent = p.it;
-  document.getElementById('phonetic').textContent = p.phonetic;
-  document.getElementById('tip').textContent = p.tip;
-  document.getElementById('bridges').innerHTML = p.bridges.map(b =>
-    `<div class="bridge"><span class="bridge-flag">${b.flag}</span><span class="bridge-text">${b.text}</span></div>`
-  ).join('');
+  if (testMode && verbMode) counterText += ' · TEST';
+  document.getElementById('counter').textContent = counterText;
+
+  if (testMode && verbMode) {
+    // TEST MODE — show question prompt, hide the answer
+    document.getElementById('testQuestion').textContent = buildQuestion(p);
+    document.getElementById('testQuestion').classList.add('show');
+    document.getElementById('italianPhrase').textContent = '';
+    document.getElementById('phonetic').textContent = '';
+    document.getElementById('bridges').innerHTML = '';
+    document.getElementById('tip').textContent = '';
+    // Hint box — hide until requested
+    document.getElementById('hintText').textContent = p.it;
+    document.getElementById('hintPhonetic').textContent = p.phonetic;
+    document.getElementById('hintBox').classList.remove('show');
+    document.getElementById('btnShowHint').style.display = 'inline-flex';
+    document.getElementById('btnShowHint').textContent = 'Show hint';
+  } else {
+    // NORMAL MODE
+    document.getElementById('testQuestion').classList.remove('show');
+    document.getElementById('italianPhrase').textContent = p.it;
+    document.getElementById('phonetic').textContent = p.phonetic;
+    document.getElementById('tip').textContent = p.tip;
+    document.getElementById('bridges').innerHTML = p.bridges.map(b =>
+      `<div class="bridge"><span class="bridge-flag">${b.flag}</span><span class="bridge-text">${b.text}</span></div>`
+    ).join('');
+    document.getElementById('hintBox').classList.remove('show');
+    document.getElementById('btnShowHint').style.display = 'none';
+  }
+
   if (verbMode) buildConjTable(verbData[currentVerb]);
   hideFeedback();
   document.getElementById('btnNext').textContent = currentIndex < total-1 ? 'Next →' : 'Finish';
@@ -835,10 +891,23 @@ function evaluateSpeech(transcripts) {
   const combined = kScore*0.6 + (wHit.length/tw.length)*0.4;
   if (combined >= 0.75 || heardN === targetN) {
     score++;
+    if (testMode && verbMode) {
+      document.getElementById('italianPhrase').textContent = p.it;
+      document.getElementById('phonetic').textContent = p.phonetic;
+      document.getElementById('hintBox').classList.remove('show');
+    }
     showFeedback('success','✓ Ottimo! That sounded great.',`Heard: "${heard}"`);
   } else if (combined >= 0.4) {
+    if (testMode && verbMode) {
+      document.getElementById('italianPhrase').textContent = p.it;
+      document.getElementById('phonetic').textContent = p.phonetic;
+    }
     showFeedback('partial','Almost — you got part of it. Try once more.',`Heard: "${heard}" · Target: "${p.it}"`);
   } else {
+    if (testMode && verbMode) {
+      document.getElementById('italianPhrase').textContent = p.it;
+      document.getElementById('phonetic').textContent = p.phonetic;
+    }
     showFeedback('retry','Not quite. Listen again, then speak slowly.',`Heard: "${heard}" · Target: "${p.it}"`);
   }
 }
@@ -898,6 +967,22 @@ document.getElementById('btnToggleTable').addEventListener('click', () => {
   const btn = document.getElementById('btnToggleTable');
   btn.textContent = tableVisible ? 'Hide table' : 'Show conjugation table';
   btn.classList.toggle('active', tableVisible);
+});
+
+// ─── HINT BUTTON ─────────────────────────────────────────────────────────────
+document.getElementById('btnShowHint').addEventListener('click', () => {
+  hintShown = !hintShown;
+  document.getElementById('hintBox').classList.toggle('show', hintShown);
+  document.getElementById('btnShowHint').textContent = hintShown ? 'Hide hint' : 'Show hint';
+});
+
+// ─── TEST MODE TOGGLE ─────────────────────────────────────────────────────────
+document.getElementById('btnTestMode').addEventListener('click', () => {
+  testMode = !testMode;
+  const btn = document.getElementById('btnTestMode');
+  btn.classList.toggle('active', testMode);
+  btn.textContent = testMode ? 'Test Mode ON' : 'Test Mode';
+  if (verbMode) loadVerbSession();
 });
 
 // ─── INIT ────────────────────────────────────────────────────────────────────
