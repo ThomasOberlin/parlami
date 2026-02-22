@@ -89,6 +89,43 @@ h1 em{font-style:italic;color:var(--terra);}
 .tbl-controls.show{display:block;}
 
 .numbers-sub-bar{display:none;gap:.4rem;margin-bottom:1rem;flex-wrap:wrap;}
+
+@media (max-width:480px) {
+  /* Card padding tighter on small screens */
+  .card{padding:1.2rem 1rem;}
+
+  /* Italian phrase slightly smaller to reduce wrapping */
+  .italian-phrase{font-size:clamp(1.15rem,5vw,1.6rem);}
+
+  /* Bigger touch targets on all buttons */
+  .btn{padding:.65rem 1rem;font-size:.8rem;}
+  .btn-listen{padding:.65rem 1rem;font-size:.8rem;min-height:44px;}
+  .btn-play{min-width:44px;min-height:44px;padding:.6rem .75rem;}
+  .btn-next{min-height:44px;padding:.65rem 1rem;}
+
+  /* Q&A per-answer speak buttons */
+  .btn-listen{min-height:44px;}
+
+  /* Tab bar labels slightly smaller to prevent cramping */
+  .tab-btn{font-size:.65rem;padding:.45rem .7rem;}
+
+  /* Guide card full height on mobile */
+  #guideCard{max-height:78vh;padding:1.1rem 1rem;}
+
+  /* Numbers sub-bar and Q&A sub-bar wrap more gracefully */
+  .numbers-sub-bar{gap:.35rem;padding:.4rem .5rem;}
+  .tense-btn{font-size:.7rem;padding:.35rem .6rem;}
+
+  /* Phonetic text comfortable reading size */
+  .phonetic{font-size:.85rem;}
+
+  /* Bridge cards full width */
+  .bridge{font-size:.82rem;}
+
+  /* Conjugation table: smaller text, allow horizontal scroll */
+  .conj-table{font-size:.75rem;}
+  .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+}
 </style>
 </head>
 <body>
@@ -100,6 +137,7 @@ h1 em{font-style:italic;color:var(--terra);}
   <div class="tab-bar" id="tabBar">
     <div class="tab-row">
       <button class="tab-btn active" data-tab="daily">Daily Life</button>
+      <button class="tab-btn" data-tab="guide">Guide</button>
       <button class="tab-btn" data-tab="social">Social</button>
       <button class="tab-btn" data-tab="business">Business</button>
     </div>
@@ -164,14 +202,65 @@ h1 em{font-style:italic;color:var(--terra);}
   <div class="card" id="qaCard" style="display:none;">
     <div class="phrase-counter" id="qaCounter">Question 1 of 9</div>
     <div class="italian-phrase" id="qaQuestion" style="margin-bottom:.4rem;cursor:pointer;" title="Tap to hear"></div>
-    <div class="phonetic" id="qaPhonetic" style="margin-bottom:.6rem;"></div>
+    <div class="phonetic" id="qaPhonetic" style="margin-bottom:.2rem;"></div>
+    <div style="font-size:.72rem;color:var(--stone);letter-spacing:.05em;margin-bottom:.65rem;text-transform:uppercase;">&#9654; Tap question to hear</div>
     <button class="btn btn-table" id="btnRevealEng" style="margin-bottom:.8rem;">Show English</button>
     <div id="qaEnglish" style="display:none;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.3);border-radius:3px;padding:.5rem .8rem;margin-bottom:.8rem;font-size:.9rem;color:var(--ink);font-weight:500;"></div>
     <div id="qaAnswers" style="display:flex;flex-direction:column;gap:.5rem;margin-bottom:.9rem;"></div>
-    <div style="margin-bottom:.5rem;"><button class="btn btn-listen" id="qaListenBtn" style="display:none;"><span id="qaListenIcon">&#127897;</span> <span id="qaListenLabel">Speak answer</span></button></div>
+
     <div class="feedback" id="qaFeedback"><div id="qaFeedbackText"></div></div>
     <div class="nav-dots" id="qaDots"></div>
     <div class="nav-row"><button class="btn btn-next" id="qaBtnNext">Next &#8594;</button></div>
+  </div>
+
+  <!-- GUIDE CARD -->
+  <div class="card" id="guideCard" style="display:none;overflow-y:auto;max-height:72vh;">
+    <h2 style="font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--ink);margin:0 0 .2rem;">Parla Italiano <span style="font-style:italic;color:var(--terra);">— Pronunciation Trainer</span></h2>
+    <p style="font-size:.82rem;color:var(--ink-soft);margin:0 0 1.1rem;line-height:1.55;">A free, self-contained web app for English and Portuguese speakers learning to speak Italian from scratch. No login, no account, no installation — just open the file in Chrome.</p>
+
+    <h3 style="font-family:'DM Sans',sans-serif;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--terra);margin:0 0 .4rem;">What it does</h3>
+    <p style="font-size:.88rem;color:var(--ink);line-height:1.6;margin:0 0 1rem;">The app trains you to hear, recognize, and speak real Italian across six practice modes. Every phrase includes the Italian text, a phonetic pronunciation guide in plain English syllables, a Portuguese translation with notes on similarities and differences, and a tip explaining the grammar or cultural context.</p>
+    <p style="font-size:.88rem;color:var(--ink);line-height:1.6;margin:0 0 1.2rem;">You speak into your microphone and the app scores your pronunciation — <strong>Eccellente</strong>, <strong>Capito ma migliorabile</strong> (understood but needs work), or <strong>Riprova</strong> (try again).</p>
+
+    <h3 style="font-family:'DM Sans',sans-serif;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--terra);margin:0 0 .5rem;">What's inside</h3>
+    <div style="display:flex;flex-direction:column;gap:.55rem;margin-bottom:1.2rem;">
+      <div style="border-left:2px solid var(--gold);padding-left:.75rem;">
+        <div style="font-size:.82rem;font-weight:600;color:var(--ink);margin-bottom:.15rem;">Daily Life, Social, Business</div>
+        <div style="font-size:.82rem;color:var(--ink-soft);line-height:1.5;">Curated phrase sets for everyday situations, conversation, and professional contexts.</div>
+      </div>
+      <div style="border-left:2px solid var(--gold);padding-left:.75rem;">
+        <div style="font-size:.82rem;font-weight:600;color:var(--ink);margin-bottom:.15rem;">Verbs</div>
+        <div style="font-size:.82rem;color:var(--ink-soft);line-height:1.5;">30 of the most-used Italian verbs, each with all six pronouns in present tense and passato prossimo. Tap any conjugation to hear it. Portuguese bridge table included.</div>
+      </div>
+      <div style="border-left:2px solid var(--gold);padding-left:.75rem;">
+        <div style="font-size:.82rem;font-weight:600;color:var(--ink);margin-bottom:.15rem;">Numbers</div>
+        <div style="font-size:.82rem;color:var(--ink-soft);line-height:1.5;">Prices, quantities, calendar expressions, and business dates.</div>
+      </div>
+      <div style="border-left:2px solid var(--gold);padding-left:.75rem;">
+        <div style="font-size:.82rem;font-weight:600;color:var(--ink);margin-bottom:.15rem;">Q &amp; A</div>
+        <div style="font-size:.82rem;color:var(--ink-soft);line-height:1.5;">90 question-and-answer cards across ten real-life scenarios: daily life, Questura, driving school, ASL, doctor, accountant, estate agent, Geometra, Avvocato, and Notaio. Hear each answer, read the English, then speak it to be scored.</div>
+      </div>
+    </div>
+
+    <h3 style="font-family:'DM Sans',sans-serif;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--terra);margin:0 0 .5rem;">How to use it</h3>
+    <div style="display:flex;flex-direction:column;gap:.4rem;margin-bottom:1.2rem;">
+      <div style="display:flex;gap:.7rem;align-items:flex-start;font-size:.85rem;color:var(--ink);line-height:1.5;"><span style="min-width:1.3rem;font-weight:700;color:var(--terra);">1.</span><span>Open the file in <strong>Chrome</strong> on any device — speech recognition requires Chrome on HTTPS or locally.</span></div>
+      <div style="display:flex;gap:.7rem;align-items:flex-start;font-size:.85rem;color:var(--ink);line-height:1.5;"><span style="min-width:1.3rem;font-weight:700;color:var(--terra);">2.</span><span>Pick a tab and a phrase.</span></div>
+      <div style="display:flex;gap:.7rem;align-items:flex-start;font-size:.85rem;color:var(--ink);line-height:1.5;"><span style="min-width:1.3rem;font-weight:700;color:var(--terra);">3.</span><span>Tap <strong>Play</strong> to hear the Italian.</span></div>
+      <div style="display:flex;gap:.7rem;align-items:flex-start;font-size:.85rem;color:var(--ink);line-height:1.5;"><span style="min-width:1.3rem;font-weight:700;color:var(--terra);">4.</span><span>Tap <strong>Speak</strong> and say it yourself.</span></div>
+      <div style="display:flex;gap:.7rem;align-items:flex-start;font-size:.85rem;color:var(--ink);line-height:1.5;"><span style="min-width:1.3rem;font-weight:700;color:var(--terra);">5.</span><span>Read the Portuguese bridge and the tip.</span></div>
+      <div style="display:flex;gap:.7rem;align-items:flex-start;font-size:.85rem;color:var(--ink);line-height:1.5;"><span style="min-width:1.3rem;font-weight:700;color:var(--terra);">6.</span><span>Move to the next phrase.</span></div>
+    </div>
+
+    <h3 style="font-family:'DM Sans',sans-serif;font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--terra);margin:0 0 .5rem;">Technical notes</h3>
+    <div style="display:flex;flex-direction:column;gap:.3rem;margin-bottom:1.1rem;">
+      <div style="font-size:.82rem;color:var(--ink-soft);line-height:1.5;">&#9642; Single HTML file, ~280KB, no dependencies, no internet required after download.</div>
+      <div style="font-size:.82rem;color:var(--ink-soft);line-height:1.5;">&#9642; Speech recognition uses the Web Speech API (Chrome only).</div>
+      <div style="font-size:.82rem;color:var(--ink-soft);line-height:1.5;">&#9642; Text-to-speech uses the browser's built-in Italian voice.</div>
+      <div style="font-size:.82rem;color:var(--ink-soft);line-height:1.5;">&#9642; Works on desktop and mobile.</div>
+    </div>
+
+    <p style="font-size:.78rem;color:var(--stone);font-style:italic;margin:0;border-top:1px solid var(--stone-light);padding-top:.75rem;">Built as a personal learning tool. Standard Italian pronunciation, beginner level.</p>
   </div>
 
   <div class="progress" id="progressDots"></div>
@@ -903,7 +992,7 @@ const verbData = [
 ];
 
 // ─── STATE ─────────────────────────────────────────────────────────────────────
-let currentTab = 'daily', currentPhrases = [], currentIndex = 0, score = 0, numbersSubtab = 'prices', qaSubtab = 'vita', qaIndex = 0, qaSelectedAnswer = null;
+let currentTab = 'daily', currentPhrases = [], currentIndex = 0, score = 0, numbersSubtab = 'prices', qaSubtab = 'vita', qaIndex = 0;
 let isListening = false, recognition = null;
 let currentVerb = 0, currentTense = 'present', verbMode = false, tableVisible = false;
 const synth = window.speechSynthesis;
@@ -1000,7 +1089,7 @@ function switchNumbersTab(btn) {
 
 // ─── SESSION LOADING ─────────────────────────────────────────────────────────
 function loadSession(tab) {
-  currentTab = tab; verbMode = tab === 'verbs'; const qaMode = tab === 'qa';
+  currentTab = tab; verbMode = tab === 'verbs'; const qaMode = tab === 'qa'; const guideMode = tab === 'guide';
   currentIndex = 0; score = 0; tableVisible = false;
   document.getElementById('verbSelector').classList.toggle('show', verbMode);
   document.getElementById('tenseToggle').classList.toggle('show', verbMode);
@@ -1010,9 +1099,11 @@ function loadSession(tab) {
   document.getElementById('qaSubBar').style.display = qaMode ? 'flex' : 'none';
   document.getElementById('tableSection').classList.remove('show');
   document.getElementById('completeScreen').classList.remove('show');
-  document.getElementById('mainCard').style.display = qaMode ? 'none' : 'block';
+  document.getElementById('mainCard').style.display = (qaMode || guideMode) ? 'none' : 'block';
+  document.getElementById('guideCard').style.display = guideMode ? 'block' : 'none';
   document.getElementById('qaCard').style.display = qaMode ? 'block' : 'none';
-  document.getElementById('progressDots').style.display = qaMode ? 'none' : 'flex';
+  document.getElementById('progressDots').style.display = (qaMode || guideMode) ? 'none' : 'flex';
+  if (guideMode) return;
   if (qaMode) { loadQaSession(); return; }
   if (verbMode) { currentVerb = 0; loadVerbSession(); }
   else {
@@ -1138,292 +1229,292 @@ buildVerbGrid();
 const qaData = {
   vita:[
     {q:"Come si chiama?",qPhonetic:"[KO-me si KYA-ma]",eng:"What is your name?",
-     answers:[{it:"Mi chiamo Thomas.",phonetic:"[mi KYA-mo Thomas]",keywords:["chiamo","thomas"]},
-              {it:"Sono Thomas.",phonetic:"[SO-no Thomas]",keywords:["sono","thomas"]}]},
+     answers:[{it:"Mi chiamo Thomas.",eng:"My name is Thomas.",phonetic:"[mi KYA-mo Thomas]",keywords:["chiamo","thomas"]},
+              {it:"Sono Thomas.",eng:"I am Thomas.",phonetic:"[SO-no Thomas]",keywords:["sono","thomas"]}]},
     {q:"Di dove \u00e8?",qPhonetic:"[di DO-ve EH]",eng:"Where are you from?",
-     answers:[{it:"Sono degli Stati Uniti.",phonetic:"[SO-no DE-lyi STA-ti u-NI-ti]",keywords:["stati","uniti"]},
-              {it:"Degli Stati Uniti.",phonetic:"[DE-lyi STA-ti u-NI-ti]",keywords:["stati","uniti"]}]},
+     answers:[{it:"Sono degli Stati Uniti.",eng:"I am from the United States.",phonetic:"[SO-no DE-lyi STA-ti u-NI-ti]",keywords:["stati","uniti"]},
+              {it:"Degli Stati Uniti.",eng:"From the United States.",phonetic:"[DE-lyi STA-ti u-NI-ti]",keywords:["stati","uniti"]}]},
     {q:"Da quanto tempo \u00e8 in Italia?",qPhonetic:"[da KWAN-to TEM-po EH in i-TA-lya]",eng:"How long have you been in Italy?",
-     answers:[{it:"Da circa un anno.",phonetic:"[da CHIR-ka un AN-no]",keywords:["circa","anno"]},
-              {it:"Sono qui da circa un anno.",phonetic:"[SO-no kwi da CHIR-ka un AN-no]",keywords:["sono","anno"]}]},
+     answers:[{it:"Da circa un anno.",eng:"For about a year.",phonetic:"[da CHIR-ka un AN-no]",keywords:["circa","anno"]},
+              {it:"Sono qui da circa un anno.",eng:"I have been here for about a year.",phonetic:"[SO-no kwi da CHIR-ka un AN-no]",keywords:["sono","anno"]}]},
     {q:"Parla italiano?",qPhonetic:"[PAR-la i-ta-LYA-no]",eng:"Do you speak Italian?",
-     answers:[{it:"Un poco, sto imparando.",phonetic:"[un PO-ko sto im-pa-RAN-do]",keywords:["poco","imparando"]},
-              {it:"Non ancora molto bene.",phonetic:"[non an-KO-ra MOL-to BE-ne]",keywords:["ancora","bene"]}]},
+     answers:[{it:"Un poco, sto imparando.",eng:"A little, I am still learning.",phonetic:"[un PO-ko sto im-pa-RAN-do]",keywords:["poco","imparando"]},
+              {it:"Non ancora molto bene.",eng:"Not yet very well.",phonetic:"[non an-KO-ra MOL-to BE-ne]",keywords:["ancora","bene"]}]},
     {q:"Qual \u00e8 il suo indirizzo?",qPhonetic:"[kwal EH il SWO in-di-RIT-tso]",eng:"What is your address?",
-     answers:[{it:"Il mio indirizzo \u00e8 via Roma dieci.",phonetic:"[il MYO in-di-RIT-tso EH VYA RO-ma DYE-chi]",keywords:["indirizzo","via"]}]},
+     answers:[{it:"Il mio indirizzo \u00e8 via Roma dieci.",eng:"My address is via Roma ten.",phonetic:"[il MYO in-di-RIT-tso EH VYA RO-ma DYE-chi]",keywords:["indirizzo","via"]}]},
     {q:"Ha un documento d'identit\u00e0?",qPhonetic:"[a un do-KU-men-to di-den-ti-TA]",eng:"Do you have an identity document?",
-     answers:[{it:"S\u00ec, ho il passaporto.",phonetic:"[si o il pas-sa-POR-to]",keywords:["passaporto"]},
-              {it:"Ho il passaporto e il permesso di soggiorno.",phonetic:"[o il pas-sa-POR-to e il per-MES-so di sod-JOR-no]",keywords:["passaporto","permesso"]}]},
+     answers:[{it:"S\u00ec, ho il passaporto.",eng:"Yes, I have my passport.",phonetic:"[si o il pas-sa-POR-to]",keywords:["passaporto"]},
+              {it:"Ho il passaporto e il permesso di soggiorno.",eng:"I have my passport and my residence permit.",phonetic:"[o il pas-sa-POR-to e il per-MES-so di sod-JOR-no]",keywords:["passaporto","permesso"]}]},
     {q:"Qual \u00e8 il suo numero di telefono?",qPhonetic:"[kwal EH il SWO NU-me-ro di te-LE-fo-no]",eng:"What is your phone number?",
-     answers:[{it:"Il mio numero \u00e8...",phonetic:"[il MYO NU-me-ro EH]",keywords:["numero"]},
-              {it:"Posso scriverlo?",phonetic:"[POS-so SKRIV-er-lo]",keywords:["scriverlo"]}]},
+     answers:[{it:"Il mio numero \u00e8...",eng:"My number is...",phonetic:"[il MYO NU-me-ro EH]",keywords:["numero"]},
+              {it:"Posso scriverlo?",eng:"May I write it down?",phonetic:"[POS-so SKRIV-er-lo]",keywords:["scriverlo"]}]},
     {q:"Pu\u00f2 ripetere pi\u00f9 lentamente?",qPhonetic:"[PWO ri-PE-te-re pyU len-ta-MEN-te]",eng:"Can you repeat more slowly?",
-     answers:[{it:"S\u00ec, certo. Grazie.",phonetic:"[si CHER-to GRA-tsye]",keywords:["certo","grazie"]},
-              {it:"Grazie, ho capito.",phonetic:"[GRA-tsye o ka-PI-to]",keywords:["capito"]}]},
+     answers:[{it:"S\u00ec, certo. Grazie.",eng:"Yes, of course. Thank you.",phonetic:"[si CHER-to GRA-tsye]",keywords:["certo","grazie"]},
+              {it:"Grazie, ho capito.",eng:"Thank you, I understood.",phonetic:"[GRA-tsye o ka-PI-to]",keywords:["capito"]}]},
     {q:"Non capisco. Pu\u00f2 parlare pi\u00f9 lentamente?",qPhonetic:"[non ka-PIS-ko PWO par-LA-re pyU len-ta-MEN-te]",eng:"I don't understand. Can you speak more slowly?",
-     answers:[{it:"S\u00ec, grazie mille.",phonetic:"[si GRA-tsye MIL-le]",keywords:["grazie","mille"]},
-              {it:"Grazie, cos\u00ec capisco meglio.",phonetic:"[GRA-tsye ko-ZI ka-PIS-ko MEL-yo]",keywords:["capisco","meglio"]}]}
+     answers:[{it:"S\u00ec, grazie mille.",eng:"Yes, thank you very much.",phonetic:"[si GRA-tsye MIL-le]",keywords:["grazie","mille"]},
+              {it:"Grazie, cos\u00ec capisco meglio.",eng:"Thank you, that way I understand better.",phonetic:"[GRA-tsye ko-ZI ka-PIS-ko MEL-yo]",keywords:["capisco","meglio"]}]}
   ],
   questura:[
     {q:"Qual \u00e8 il motivo della sua presenza in Italia?",qPhonetic:"[kwal EH il mo-TI-vo DEL-la SWA pre-ZEN-tsa in i-TA-lya]",eng:"What is the reason for your stay in Italy?",
-     answers:[{it:"Sono qui per lavoro.",phonetic:"[SO-no kwi per la-VO-ro]",keywords:["lavoro"]},
-              {it:"Lavoro come imprenditore.",phonetic:"[la-VO-ro KO-me im-pren-di-TO-re]",keywords:["imprenditore"]}]},
+     answers:[{it:"Sono qui per lavoro.",eng:"I am here for work.",phonetic:"[SO-no kwi per la-VO-ro]",keywords:["lavoro"]},
+              {it:"Lavoro come imprenditore.",eng:"I work as an entrepreneur.",phonetic:"[la-VO-ro KO-me im-pren-di-TO-re]",keywords:["imprenditore"]}]},
     {q:"Ha gi\u00e0 presentato domanda per il permesso di soggiorno?",qPhonetic:"[a JA pre-zen-TA-to do-MAN-da per il per-MES-so di sod-JOR-no]",eng:"Have you already applied for a residence permit?",
-     answers:[{it:"No, \u00e8 la prima volta.",phonetic:"[no EH la PRI-ma VOL-ta]",keywords:["prima","volta"]},
-              {it:"S\u00ec, sto rinnovando il permesso.",phonetic:"[si sto rin-no-VAN-do il per-MES-so]",keywords:["rinnovando","permesso"]}]},
+     answers:[{it:"No, \u00e8 la prima volta.",eng:"No, it is the first time.",phonetic:"[no EH la PRI-ma VOL-ta]",keywords:["prima","volta"]},
+              {it:"S\u00ec, sto rinnovando il permesso.",eng:"Yes, I am renewing my permit.",phonetic:"[si sto rin-no-VAN-do il per-MES-so]",keywords:["rinnovando","permesso"]}]},
     {q:"Ha tutti i documenti richiesti?",qPhonetic:"[a TUT-ti i do-KU-men-ti ri-KYE-sti]",eng:"Do you have all the required documents?",
-     answers:[{it:"S\u00ec, ho tutto qui.",phonetic:"[si o TUT-to kwi]",keywords:["tutto","qui"]},
-              {it:"Penso di s\u00ec, ma verifichi pure.",phonetic:"[PEN-so di si ma ve-RI-fi-ki PU-re]",keywords:["verifichi","pure"]}]},
+     answers:[{it:"S\u00ec, ho tutto qui.",eng:"Yes, I have everything here.",phonetic:"[si o TUT-to kwi]",keywords:["tutto","qui"]},
+              {it:"Penso di s\u00ec, ma verifichi pure.",eng:"I think so, please check.",phonetic:"[PEN-so di si ma ve-RI-fi-ki PU-re]",keywords:["verifichi","pure"]}]},
     {q:"Da quanto tempo risiede a questo indirizzo?",qPhonetic:"[da KWAN-to TEM-po ri-ZYE-de a KWES-to in-di-RIT-tso]",eng:"How long have you been living at this address?",
-     answers:[{it:"Da sei mesi circa.",phonetic:"[da SEI ME-zi CHIR-ka]",keywords:["sei","mesi"]},
-              {it:"Da quando sono arrivato in Italia.",phonetic:"[da KWAN-do SO-no ar-ri-VA-to in i-TA-lya]",keywords:["arrivato","italia"]}]},
+     answers:[{it:"Da sei mesi circa.",eng:"For about six months.",phonetic:"[da SEI ME-zi CHIR-ka]",keywords:["sei","mesi"]},
+              {it:"Da quando sono arrivato in Italia.",eng:"Since I arrived in Italy.",phonetic:"[da KWAN-do SO-no ar-ri-VA-to in i-TA-lya]",keywords:["arrivato","italia"]}]},
     {q:"Ha un contratto di affitto regolare?",qPhonetic:"[a un kon-TRAT-to di af-FIT-to re-go-LA-re]",eng:"Do you have a regular rental contract?",
-     answers:[{it:"S\u00ec, ho il contratto registrato.",phonetic:"[si o il kon-TRAT-to re-jis-TRA-to]",keywords:["contratto","registrato"]},
-              {it:"S\u00ec, posso portare una copia.",phonetic:"[si POS-so por-TA-re U-na KO-pya]",keywords:["copia"]}]},
+     answers:[{it:"S\u00ec, ho il contratto registrato.",eng:"Yes, I have the registered contract.",phonetic:"[si o il kon-TRAT-to re-jis-TRA-to]",keywords:["contratto","registrato"]},
+              {it:"S\u00ec, posso portare una copia.",eng:"Yes, I can bring a copy.",phonetic:"[si POS-so por-TA-re U-na KO-pya]",keywords:["copia"]}]},
     {q:"Qual \u00e8 la sua occupazione?",qPhonetic:"[kwal EH la SWA ok-ku-pa-TSYO-ne]",eng:"What is your occupation?",
-     answers:[{it:"Sono imprenditore.",phonetic:"[SO-no im-pren-di-TO-re]",keywords:["imprenditore"]},
-              {it:"Gestisco un'azienda.",phonetic:"[jes-TIS-ko u-na-TSYEN-da]",keywords:["gestisco","azienda"]}]},
+     answers:[{it:"Sono imprenditore.",eng:"I am an entrepreneur.",phonetic:"[SO-no im-pren-di-TO-re]",keywords:["imprenditore"]},
+              {it:"Gestisco un'azienda.",eng:"I run a company.",phonetic:"[jes-TIS-ko u-na-TSYEN-da]",keywords:["gestisco","azienda"]}]},
     {q:"Quando \u00e8 arrivato in Italia?",qPhonetic:"[KWAN-do EH ar-ri-VA-to in i-TA-lya]",eng:"When did you arrive in Italy?",
-     answers:[{it:"Sono arrivato l'anno scorso.",phonetic:"[SO-no ar-ri-VA-to LAN-no SKOR-so]",keywords:["arrivato","scorso"]},
-              {it:"Circa un anno fa.",phonetic:"[CHIR-ka un AN-no fa]",keywords:["anno","fa"]}]},
+     answers:[{it:"Sono arrivato l'anno scorso.",eng:"I arrived last year.",phonetic:"[SO-no ar-ri-VA-to LAN-no SKOR-so]",keywords:["arrivato","scorso"]},
+              {it:"Circa un anno fa.",eng:"About a year ago.",phonetic:"[CHIR-ka un AN-no fa]",keywords:["anno","fa"]}]},
     {q:"Ha un codice fiscale?",qPhonetic:"[a un KO-di-che fis-KA-le]",eng:"Do you have a tax identification number?",
-     answers:[{it:"S\u00ec, eccolo.",phonetic:"[si EK-ko-lo]",keywords:["eccolo"]},
-              {it:"S\u00ec, me lo ha assegnato l'Agenzia delle Entrate.",phonetic:"[si me lo a as-se-NYA-to la-JEN-tsya DEL-le en-TRA-te]",keywords:["assegnato","entrate"]}]},
+     answers:[{it:"S\u00ec, eccolo.",eng:"Yes, here it is.",phonetic:"[si EK-ko-lo]",keywords:["eccolo"]},
+              {it:"S\u00ec, me lo ha assegnato l'Agenzia delle Entrate.",eng:"Yes, it was assigned to me by the Revenue Agency.",phonetic:"[si me lo a as-se-NYA-to la-JEN-tsya DEL-le en-TRA-te]",keywords:["assegnato","entrate"]}]},
     {q:"Vuole fissare un appuntamento?",qPhonetic:"[VWO-le fis-SA-re un ap-pun-ta-MEN-to]",eng:"Would you like to make an appointment?",
-     answers:[{it:"S\u00ec, quando \u00e8 disponibile?",phonetic:"[si KWAN-do EH dis-po-NI-bi-le]",keywords:["disponibile"]},
-              {it:"Preferisco venire di persona.",phonetic:"[pre-fe-RIS-ko ve-NI-re di per-SO-na]",keywords:["persona"]}]}
+     answers:[{it:"S\u00ec, quando \u00e8 disponibile?",eng:"Yes, when are you available?",phonetic:"[si KWAN-do EH dis-po-NI-bi-le]",keywords:["disponibile"]},
+              {it:"Preferisco venire di persona.",eng:"I prefer to come in person.",phonetic:"[pre-fe-RIS-ko ve-NI-re di per-SO-na]",keywords:["persona"]}]}
   ],
   autoscuola:[
     {q:"Vorrei iscrivermi alla scuola guida.",qPhonetic:"[vor-REI is-KRIV-er-mi AL-la SKWO-la GWI-da]",eng:"I would like to enrol in the driving school.",
-     answers:[{it:"Buongiorno, vorrei iscrivermi per la patente.",phonetic:"[bwon-JOR-no vor-REI is-KRIV-er-mi per la pa-TEN-te]",keywords:["iscrivermi","patente"]},
-              {it:"Cerco informazioni per la patente B.",phonetic:"[CHER-ko in-for-ma-TSYO-ni per la pa-TEN-te bi]",keywords:["informazioni","patente"]}]},
+     answers:[{it:"Buongiorno, vorrei iscrivermi per la patente.",eng:"Good morning, I would like to enrol for a driving licence.",phonetic:"[bwon-JOR-no vor-REI is-KRIV-er-mi per la pa-TEN-te]",keywords:["iscrivermi","patente"]},
+              {it:"Cerco informazioni per la patente B.",eng:"I am looking for information about the category B licence.",phonetic:"[CHER-ko in-for-ma-TSYO-ni per la pa-TEN-te bi]",keywords:["informazioni","patente"]}]},
     {q:"Ha già la patente straniera?",qPhonetic:"[a JA la pa-TEN-te stra-NYE-ra]",eng:"Do you already have a foreign driving licence?",
-     answers:[{it:"Sì, ho la patente americana.",phonetic:"[si o la pa-TEN-te a-me-ri-KA-na]",keywords:["patente","americana"]},
-              {it:"Sì, ma devo convertirla.",phonetic:"[si ma DE-vo kon-ver-TIR-la]",keywords:["convertirla"]}]},
+     answers:[{it:"Sì, ho la patente americana.",eng:"Yes, I have an American driving licence.",phonetic:"[si o la pa-TEN-te a-me-ri-KA-na]",keywords:["patente","americana"]},
+              {it:"Sì, ma devo convertirla.",eng:"Yes, but I need to convert it.",phonetic:"[si ma DE-vo kon-ver-TIR-la]",keywords:["convertirla"]}]},
     {q:"Quante ore di guida sono necessarie?",qPhonetic:"[KWAN-te O-re di GWI-da SO-no ne-ches-SA-rye]",eng:"How many driving hours are required?",
-     answers:[{it:"Non lo so, me lo può spiegare?",phonetic:"[non lo so me lo PWO spye-GA-re]",keywords:["spiegare"]},
-              {it:"Dipende dal mio livello.",phonetic:"[di-PEN-de dal MYO li-VEL-lo]",keywords:["dipende","livello"]}]},
+     answers:[{it:"Non lo so, me lo può spiegare?",eng:"I do not know, can you explain it to me?",phonetic:"[non lo so me lo PWO spye-GA-re]",keywords:["spiegare"]},
+              {it:"Dipende dal mio livello.",eng:"It depends on my level.",phonetic:"[di-PEN-de dal MYO li-VEL-lo]",keywords:["dipende","livello"]}]},
     {q:"Deve sostenere l'esame teorico prima.",qPhonetic:"[DE-ve sos-te-NE-re le-ZA-me te-O-ri-ko PRI-ma]",eng:"You must take the theory exam first.",
-     answers:[{it:"Va bene, quando posso iniziare?",phonetic:"[va BE-ne KWAN-do POS-so i-ni-TSYA-re]",keywords:["iniziare"]},
-              {it:"Capisco. Di cosa tratta l'esame?",phonetic:"[ka-PIS-ko di KO-za TRAT-ta le-ZA-me]",keywords:["capisco","esame"]}]},
+     answers:[{it:"Va bene, quando posso iniziare?",eng:"Fine, when can I start?",phonetic:"[va BE-ne KWAN-do POS-so i-ni-TSYA-re]",keywords:["iniziare"]},
+              {it:"Capisco. Di cosa tratta l'esame?",eng:"I understand. What does the exam cover?",phonetic:"[ka-PIS-ko di KO-za TRAT-ta le-ZA-me]",keywords:["capisco","esame"]}]},
     {q:"L'esame teorico è disponibile in inglese?",qPhonetic:"[le-ZA-me te-O-ri-ko EH dis-po-NI-bi-le in in-GLE-ze]",eng:"Is the theory exam available in English?",
-     answers:[{it:"Sì, ho sentito che è disponibile.",phonetic:"[si o sen-TI-to ke EH dis-po-NI-bi-le]",keywords:["disponibile"]},
-              {it:"Spero di sì, altrimenti ho bisogno di un traduttore.",phonetic:"[SPE-ro di si al-tri-MEN-ti o bi-ZO-nyo di un tra-dut-TO-re]",keywords:["traduttore"]}]},
+     answers:[{it:"Sì, ho sentito che è disponibile.",eng:"Yes, I heard it is available.",phonetic:"[si o sen-TI-to ke EH dis-po-NI-bi-le]",keywords:["disponibile"]},
+              {it:"Spero di sì, altrimenti ho bisogno di un traduttore.",eng:"I hope so, otherwise I need a translator.",phonetic:"[SPE-ro di si al-tri-MEN-ti o bi-ZO-nyo di un tra-dut-TO-re]",keywords:["traduttore"]}]},
     {q:"Ha superato l'esame teorico?",qPhonetic:"[a su-pe-RA-to le-ZA-me te-O-ri-ko]",eng:"Have you passed the theory exam?",
-     answers:[{it:"Sì, l'ho superato la settimana scorsa.",phonetic:"[si lo su-pe-RA-to la set-ti-MA-na SKOR-sa]",keywords:["superato","scorsa"]},
-              {it:"Non ancora, devo rifare il test.",phonetic:"[non an-KO-ra DE-vo ri-FA-re il test]",keywords:["ancora","rifare"]}]},
+     answers:[{it:"Sì, l'ho superato la settimana scorsa.",eng:"Yes, I passed it last week.",phonetic:"[si lo su-pe-RA-to la set-ti-MA-na SKOR-sa]",keywords:["superato","scorsa"]},
+              {it:"Non ancora, devo rifare il test.",eng:"Not yet, I need to retake the test.",phonetic:"[non an-KO-ra DE-vo ri-FA-re il test]",keywords:["ancora","rifare"]}]},
     {q:"Quando posso fare l'esame di guida pratico?",qPhonetic:"[KWAN-do POS-so FA-re le-ZA-me di GWI-da PRA-ti-ko]",eng:"When can I take the practical driving test?",
-     answers:[{it:"Quando l'istruttore dice che sono pronto.",phonetic:"[KWAN-do lis-trut-TO-re DI-che ke SO-no PRON-to]",keywords:["istruttore","pronto"]},
-              {it:"Dopo almeno venti ore di guida.",phonetic:"[DO-po al-ME-no VEN-ti O-re di GWI-da]",keywords:["almeno","guida"]}]},
+     answers:[{it:"Quando l'istruttore dice che sono pronto.",eng:"When the instructor says I am ready.",phonetic:"[KWAN-do lis-trut-TO-re DI-che ke SO-no PRON-to]",keywords:["istruttore","pronto"]},
+              {it:"Dopo almeno venti ore di guida.",eng:"After at least twenty hours of driving.",phonetic:"[DO-po al-ME-no VEN-ti O-re di GWI-da]",keywords:["almeno","guida"]}]},
     {q:"Può spiegare questo segnale stradale?",qPhonetic:"[PWO spye-GA-re KWES-to se-NYA-le stra-DA-le]",eng:"Can you explain this road sign?",
-     answers:[{it:"Indica che è vietato sorpassare.",phonetic:"[IN-di-ka ke EH vye-TA-to sor-pas-SA-re]",keywords:["vietato","sorpassare"]},
-              {it:"Significa che devo dare la precedenza.",phonetic:"[si-NYI-fi-ka ke DE-vo DA-re la pre-che-DEN-tsa]",keywords:["precedenza"]}]},
+     answers:[{it:"Indica che è vietato sorpassare.",eng:"It means overtaking is prohibited.",phonetic:"[IN-di-ka ke EH vye-TA-to sor-pas-SA-re]",keywords:["vietato","sorpassare"]},
+              {it:"Significa che devo dare la precedenza.",eng:"It means I must give way.",phonetic:"[si-NYI-fi-ka ke DE-vo DA-re la pre-che-DEN-tsa]",keywords:["precedenza"]}]},
     {q:"Quanto costa il corso completo?",qPhonetic:"[KWAN-to KOS-ta il KOR-so kom-PLE-to]",eng:"How much does the full course cost?",
-     answers:[{it:"Può farmi un preventivo?",phonetic:"[PWO far-mi un pre-ven-TI-vo]",keywords:["preventivo"]},
-              {it:"Include tutto, esame compreso?",phonetic:"[in-KLU-de TUT-to e-ZA-me kom-PRE-zo]",keywords:["include","esame"]}]}
+     answers:[{it:"Può farmi un preventivo?",eng:"Can you give me a quote?",phonetic:"[PWO far-mi un pre-ven-TI-vo]",keywords:["preventivo"]},
+              {it:"Include tutto, esame compreso?",eng:"Does it include everything, exam included?",phonetic:"[in-KLU-de TUT-to e-ZA-me kom-PRE-zo]",keywords:["include","esame"]}]}
   ],
   asl:[
     {q:"Buongiorno, cosa posso fare per lei?",qPhonetic:"[bwon-JOR-no KO-za POS-so FA-re per LEI]",eng:"Good morning, what can I do for you?",
-     answers:[{it:"Devo iscrivermi al medico di base.",phonetic:"[DE-vo is-KRIV-er-mi al ME-di-ko di BA-ze]",keywords:["iscrivermi","medico"]},
-              {it:"Vorrei registrarmi come nuovo assistito.",phonetic:"[vor-REI re-jis-TRAR-mi KO-me NWO-vo as-sis-TI-to]",keywords:["registrarmi","assistito"]}]},
+     answers:[{it:"Devo iscrivermi al medico di base.",eng:"I need to register with a general practitioner.",phonetic:"[DE-vo is-KRIV-er-mi al ME-di-ko di BA-ze]",keywords:["iscrivermi","medico"]},
+              {it:"Vorrei registrarmi come nuovo assistito.",eng:"I would like to register as a new patient.",phonetic:"[vor-REI re-jis-TRAR-mi KO-me NWO-vo as-sis-TI-to]",keywords:["registrarmi","assistito"]}]},
     {q:"Ha la tessera sanitaria?",qPhonetic:"[a la tes-SE-ra sa-ni-TA-rya]",eng:"Do you have your health card?",
-     answers:[{it:"Non ancora, devo richiederla.",phonetic:"[non an-KO-ra DE-vo ri-KYE-der-la]",keywords:["ancora","richiederla"]},
-              {it:"Sì, eccola.",phonetic:"[si EK-ko-la]",keywords:["eccola"]}]},
+     answers:[{it:"Non ancora, devo richiederla.",eng:"Not yet, I need to request it.",phonetic:"[non an-KO-ra DE-vo ri-KYE-der-la]",keywords:["ancora","richiederla"]},
+              {it:"Sì, eccola.",eng:"Yes, here it is.",phonetic:"[si EK-ko-la]",keywords:["eccola"]}]},
     {q:"Ha il permesso di soggiorno?",qPhonetic:"[a il per-MES-so di sod-JOR-no]",eng:"Do you have a residence permit?",
-     answers:[{it:"Sì, ho il permesso di soggiorno.",phonetic:"[si o il per-MES-so di sod-JOR-no]",keywords:["permesso","soggiorno"]},
-              {it:"Ho fatto domanda, è in elaborazione.",phonetic:"[o FAT-to do-MAN-da EH in e-la-bo-ra-TSYO-ne]",keywords:["domanda","elaborazione"]}]},
+     answers:[{it:"Sì, ho il permesso di soggiorno.",eng:"Yes, I have my residence permit.",phonetic:"[si o il per-MES-so di sod-JOR-no]",keywords:["permesso","soggiorno"]},
+              {it:"Ho fatto domanda, è in elaborazione.",eng:"I have applied, it is being processed.",phonetic:"[o FAT-to do-MAN-da EH in e-la-bo-ra-TSYO-ne]",keywords:["domanda","elaborazione"]}]},
     {q:"Quale medico di base vuole scegliere?",qPhonetic:"[KWA-le ME-di-ko di BA-ze VWO-le she-LYE-re]",eng:"Which general practitioner would you like to choose?",
-     answers:[{it:"Può consigliarmi qualcuno vicino a casa mia?",phonetic:"[PWO kon-sil-YAR-mi kwal-KU-no vi-CHI-no a KA-za MI-a]",keywords:["consigliarmi","vicino"]},
-              {it:"Non lo conosco, chi è disponibile?",phonetic:"[non lo ko-NOS-ko ki EH dis-po-NI-bi-le]",keywords:["disponibile"]}]},
+     answers:[{it:"Può consigliarmi qualcuno vicino a casa mia?",eng:"Can you recommend someone near my home?",phonetic:"[PWO kon-sil-YAR-mi kwal-KU-no vi-CHI-no a KA-za MI-a]",keywords:["consigliarmi","vicino"]},
+              {it:"Non lo conosco, chi è disponibile?",eng:"I do not know them, who is available?",phonetic:"[non lo ko-NOS-ko ki EH dis-po-NI-bi-le]",keywords:["disponibile"]}]},
     {q:"Ha bisogno di un esenzione ticket?",qPhonetic:"[a bi-ZO-nyo di u-ne-zen-TSYO-ne TIK-ket]",eng:"Do you need a co-payment exemption?",
-     answers:[{it:"Non so se ne ho diritto.",phonetic:"[non so se ne o di-RIT-to]",keywords:["diritto"]},
-              {it:"Può spiegarmi come funziona?",phonetic:"[PWO spye-GAR-mi KO-me fun-TSYO-na]",keywords:["spiegarmi","funziona"]}]},
+     answers:[{it:"Non so se ne ho diritto.",eng:"I do not know if I am entitled to it.",phonetic:"[non so se ne o di-RIT-to]",keywords:["diritto"]},
+              {it:"Può spiegarmi come funziona?",eng:"Can you explain to me how it works?",phonetic:"[PWO spye-GAR-mi KO-me fun-TSYO-na]",keywords:["spiegarmi","funziona"]}]},
     {q:"Deve portare il codice fiscale.",qPhonetic:"[DE-ve por-TA-re il KO-di-che fis-KA-le]",eng:"You need to bring your tax code.",
-     answers:[{it:"Ce l'ho qui.",phonetic:"[che lo kwi]",keywords:["qui"]},
-              {it:"L'ho lasciato a casa, posso tornare domani?",phonetic:"[lo la-SHA-to a KA-za POS-so tor-NA-re do-MA-ni]",keywords:["lasciato","domani"]}]},
+     answers:[{it:"Ce l'ho qui.",eng:"I have it here.",phonetic:"[che lo kwi]",keywords:["qui"]},
+              {it:"L'ho lasciato a casa, posso tornare domani?",eng:"I left it at home, can I come back tomorrow?",phonetic:"[lo la-SHA-to a KA-za POS-so tor-NA-re do-MA-ni]",keywords:["lasciato","domani"]}]},
     {q:"Vuole prenotare una visita?",qPhonetic:"[VWO-le pre-no-TA-re U-na VI-zi-ta]",eng:"Would you like to book an appointment?",
-     answers:[{it:"Sì, con il medico di base.",phonetic:"[si kon il ME-di-ko di BA-ze]",keywords:["medico","base"]},
-              {it:"Sì, quando c'è il primo posto disponibile?",phonetic:"[si KWAN-do chEH il PRI-mo POS-to dis-po-NI-bi-le]",keywords:["primo","disponibile"]}]},
+     answers:[{it:"Sì, con il medico di base.",eng:"Yes, with the general practitioner.",phonetic:"[si kon il ME-di-ko di BA-ze]",keywords:["medico","base"]},
+              {it:"Sì, quando c'è il primo posto disponibile?",eng:"Yes, when is the first available slot?",phonetic:"[si KWAN-do chEH il PRI-mo POS-to dis-po-NI-bi-le]",keywords:["primo","disponibile"]}]},
     {q:"C'è un numero da chiamare per le urgenze?",qPhonetic:"[chEH un NU-me-ro da KYA-ma-re per le ur-JEN-tse]",eng:"Is there a number to call for emergencies?",
-     answers:[{it:"Sì, qual è?",phonetic:"[si kwal EH]",keywords:["qual"]},
-              {it:"E per le urgenze non gravi?",phonetic:"[e per le ur-JEN-tse non GRA-vi]",keywords:["urgenze","gravi"]}]},
+     answers:[{it:"Sì, qual è?",eng:"Yes, what is it?",phonetic:"[si kwal EH]",keywords:["qual"]},
+              {it:"E per le urgenze non gravi?",eng:"And for non-serious emergencies?",phonetic:"[e per le ur-JEN-tse non GRA-vi]",keywords:["urgenze","gravi"]}]},
     {q:"La tessera sanitaria arriverà per posta.",qPhonetic:"[la tes-SE-ra sa-ni-TA-rya ar-ri-ve-RA per POS-ta]",eng:"The health card will arrive by post.",
-     answers:[{it:"Quanti giorni ci vogliono?",phonetic:"[KWAN-ti JOR-ni chi VOL-yo-no]",keywords:["giorni","vogliono"]},
-              {it:"Va bene, grazie.",phonetic:"[va BE-ne GRA-tsye]",keywords:["bene","grazie"]}]}
+     answers:[{it:"Quanti giorni ci vogliono?",eng:"How many days does it take?",phonetic:"[KWAN-ti JOR-ni chi VOL-yo-no]",keywords:["giorni","vogliono"]},
+              {it:"Va bene, grazie.",eng:"That is fine, thank you.",phonetic:"[va BE-ne GRA-tsye]",keywords:["bene","grazie"]}]}
   ],
   medico:[
     {q:"Buongiorno, ha un appuntamento?",qPhonetic:"[bwon-JOR-no a un ap-pun-ta-MEN-to]",eng:"Good morning, do you have an appointment?",
-     answers:[{it:"Sì, ho un appuntamento alle undici.",phonetic:"[si o un ap-pun-ta-MEN-to AL-le UN-di-chi]",keywords:["appuntamento","undici"]},
-              {it:"No, è urgente.",phonetic:"[no EH ur-JEN-te]",keywords:["urgente"]}]},
+     answers:[{it:"Sì, ho un appuntamento alle undici.",eng:"Yes, I have an appointment at eleven.",phonetic:"[si o un ap-pun-ta-MEN-to AL-le UN-di-chi]",keywords:["appuntamento","undici"]},
+              {it:"No, è urgente.",eng:"No, it is urgent.",phonetic:"[no EH ur-JEN-te]",keywords:["urgente"]}]},
     {q:"Dove fa male?",qPhonetic:"[DO-ve fa MA-le]",eng:"Where does it hurt?",
-     answers:[{it:"Ho mal di stomaco da due giorni.",phonetic:"[o mal di STO-ma-ko da DU-e JOR-ni]",keywords:["stomaco","giorni"]},
-              {it:"Mi fa male qui, in questa zona.",phonetic:"[mi fa MA-le kwi in KWES-ta DZO-na]",keywords:["male","zona"]}]},
+     answers:[{it:"Ho mal di stomaco da due giorni.",eng:"I have had a stomach ache for two days.",phonetic:"[o mal di STO-ma-ko da DU-e JOR-ni]",keywords:["stomaco","giorni"]},
+              {it:"Mi fa male qui, in questa zona.",eng:"It hurts here, in this area.",phonetic:"[mi fa MA-le kwi in KWES-ta DZO-na]",keywords:["male","zona"]}]},
     {q:"Da quanto tempo ha questi sintomi?",qPhonetic:"[da KWAN-to TEM-po a KWES-ti SIN-to-mi]",eng:"How long have you had these symptoms?",
-     answers:[{it:"Da tre giorni circa.",phonetic:"[da TRE JOR-ni CHIR-ka]",keywords:["tre","giorni"]},
-              {it:"Da una settimana, sta peggiorando.",phonetic:"[da U-na set-ti-MA-na sta ped-jyo-RAN-do]",keywords:["settimana","peggiorando"]}]},
+     answers:[{it:"Da tre giorni circa.",eng:"For about three days.",phonetic:"[da TRE JOR-ni CHIR-ka]",keywords:["tre","giorni"]},
+              {it:"Da una settimana, sta peggiorando.",eng:"For a week, it is getting worse.",phonetic:"[da U-na set-ti-MA-na sta ped-jyo-RAN-do]",keywords:["settimana","peggiorando"]}]},
     {q:"Ha allergie a farmaci?",qPhonetic:"[a al-LER-jye a far-MA-chi]",eng:"Are you allergic to any medications?",
-     answers:[{it:"No, nessuna allergia.",phonetic:"[no nes-SU-na al-ler-JI-a]",keywords:["nessuna","allergia"]},
-              {it:"Sì, sono allergico alla penicillina.",phonetic:"[si SO-no al-LER-ji-ko AL-la pe-ni-chil-LI-na]",keywords:["allergico","penicillina"]}]},
+     answers:[{it:"No, nessuna allergia.",eng:"No, no allergies.",phonetic:"[no nes-SU-na al-ler-JI-a]",keywords:["nessuna","allergia"]},
+              {it:"Sì, sono allergico alla penicillina.",eng:"Yes, I am allergic to penicillin.",phonetic:"[si SO-no al-LER-ji-ko AL-la pe-ni-chil-LI-na]",keywords:["allergico","penicillina"]}]},
     {q:"Prende farmaci regolarmente?",qPhonetic:"[PREN-de far-MA-chi re-go-lar-MEN-te]",eng:"Do you take any medication regularly?",
-     answers:[{it:"No, nessun farmaco.",phonetic:"[no nes-SUN far-MA-ko]",keywords:["nessun","farmaco"]},
-              {it:"Sì, prendo un antipertensivo.",phonetic:"[si PREN-do un an-ti-per-ten-SI-vo]",keywords:["antipertensivo"]}]},
+     answers:[{it:"No, nessun farmaco.",eng:"No, no medication.",phonetic:"[no nes-SUN far-MA-ko]",keywords:["nessun","farmaco"]},
+              {it:"Sì, prendo un antipertensivo.",eng:"Yes, I take a blood pressure medication.",phonetic:"[si PREN-do un an-ti-per-ten-SI-vo]",keywords:["antipertensivo"]}]},
     {q:"Le prescrivo una ricetta.",qPhonetic:"[le pre-SKRIV-o U-na ri-CHET-ta]",eng:"I will prescribe you a prescription.",
-     answers:[{it:"Grazie. Dove la porto?",phonetic:"[GRA-tsye DO-ve la POR-to]",keywords:["porto"]},
-              {it:"Devo portarla in farmacia?",phonetic:"[DE-vo por-TAR-la in far-MA-cha]",keywords:["farmacia"]}]},
+     answers:[{it:"Grazie. Dove la porto?",eng:"Thank you. Where do I take it?",phonetic:"[GRA-tsye DO-ve la POR-to]",keywords:["porto"]},
+              {it:"Devo portarla in farmacia?",eng:"Do I need to take it to the pharmacy?",phonetic:"[DE-vo por-TAR-la in far-MA-cha]",keywords:["farmacia"]}]},
     {q:"Deve fare delle analisi del sangue.",qPhonetic:"[DE-ve FA-re DEL-le a-NA-li-zi del SAN-gwe]",eng:"You need to have a blood test.",
-     answers:[{it:"Dove devo andare per le analisi?",phonetic:"[DO-ve DE-vo an-DA-re per le a-NA-li-zi]",keywords:["andare","analisi"]},
-              {it:"Devo essere a digiuno?",phonetic:"[DE-vo ES-se-re a di-JU-no]",keywords:["digiuno"]}]},
+     answers:[{it:"Dove devo andare per le analisi?",eng:"Where do I need to go for the tests?",phonetic:"[DO-ve DE-vo an-DA-re per le a-NA-li-zi]",keywords:["andare","analisi"]},
+              {it:"Devo essere a digiuno?",eng:"Do I need to fast?",phonetic:"[DE-vo ES-se-re a di-JU-no]",keywords:["digiuno"]}]},
     {q:"Come si sente adesso?",qPhonetic:"[KO-me si SEN-te a-DES-so]",eng:"How are you feeling now?",
-     answers:[{it:"Un po' meglio, grazie.",phonetic:"[un po MEL-yo GRA-tsye]",keywords:["meglio","grazie"]},
-              {it:"Ancora non bene, continua a farmi male.",phonetic:"[an-KO-ra non BE-ne kon-TI-nua a far-mi MA-le]",keywords:["ancora","male"]}]},
+     answers:[{it:"Un po' meglio, grazie.",eng:"A little better, thank you.",phonetic:"[un po MEL-yo GRA-tsye]",keywords:["meglio","grazie"]},
+              {it:"Ancora non bene, continua a farmi male.",eng:"Still not well, it keeps hurting.",phonetic:"[an-KO-ra non BE-ne kon-TI-nua a far-mi MA-le]",keywords:["ancora","male"]}]},
     {q:"Torni tra una settimana se non migliora.",qPhonetic:"[TOR-ni tra U-na set-ti-MA-na se non mil-YO-ra]",eng:"Come back in a week if it doesn't improve.",
-     answers:[{it:"Va bene, grazie dottore.",phonetic:"[va BE-ne GRA-tsye dot-TO-re]",keywords:["grazie","dottore"]},
-              {it:"E se peggiora prima?",phonetic:"[e se ped-JO-ra PRI-ma]",keywords:["peggiora","prima"]}]}
+     answers:[{it:"Va bene, grazie dottore.",eng:"Fine, thank you doctor.",phonetic:"[va BE-ne GRA-tsye dot-TO-re]",keywords:["grazie","dottore"]},
+              {it:"E se peggiora prima?",eng:"And if it gets worse before then?",phonetic:"[e se ped-JO-ra PRI-ma]",keywords:["peggiora","prima"]}]}
   ],
   commercialista:[
     {q:"Buongiorno, di cosa ha bisogno?",qPhonetic:"[bwon-JOR-no di KO-za a bi-ZO-nyo]",eng:"Good morning, what do you need?",
-     answers:[{it:"Devo aprire la partita IVA.",phonetic:"[DE-vo a-PRI-re la par-TI-ta i-VA]",keywords:["aprire","partita","iva"]},
-              {it:"Ho bisogno di aiuto per la dichiarazione dei redditi.",phonetic:"[o bi-ZO-nyo di a-YU-to per la di-kya-ra-TSYO-ne day RED-di-ti]",keywords:["dichiarazione","redditi"]}]},
+     answers:[{it:"Devo aprire la partita IVA.",eng:"I need to open a VAT number.",phonetic:"[DE-vo a-PRI-re la par-TI-ta i-VA]",keywords:["aprire","partita","iva"]},
+              {it:"Ho bisogno di aiuto per la dichiarazione dei redditi.",eng:"I need help with my tax return.",phonetic:"[o bi-ZO-nyo di a-YU-to per la di-kya-ra-TSYO-ne day RED-di-ti]",keywords:["dichiarazione","redditi"]}]},
     {q:"Che tipo di attività svolge?",qPhonetic:"[ke TI-po di at-ti-vi-TA ZVOL-je]",eng:"What type of business activity do you carry out?",
-     answers:[{it:"Sono consulente, lavoro nel settore tecnologico.",phonetic:"[SO-no kon-su-LEN-te la-VO-ro nel set-TO-re tek-no-LO-ji-ko]",keywords:["consulente","tecnologico"]},
-              {it:"Gestisco una SaaS company internazionale.",phonetic:"[jes-TIS-ko U-na SaaS KOM-pa-ni in-ter-na-tsyo-NA-le]",keywords:["gestisco","internazionale"]}]},
+     answers:[{it:"Sono consulente, lavoro nel settore tecnologico.",eng:"I am a consultant, I work in the technology sector.",phonetic:"[SO-no kon-su-LEN-te la-VO-ro nel set-TO-re tek-no-LO-ji-ko]",keywords:["consulente","tecnologico"]},
+              {it:"Gestisco una SaaS company internazionale.",eng:"I run an international SaaS company.",phonetic:"[jes-TIS-ko U-na SaaS KOM-pa-ni in-ter-na-tsyo-NA-le]",keywords:["gestisco","internazionale"]}]},
     {q:"Ha già il codice fiscale?",qPhonetic:"[a JA il KO-di-che fis-KA-le]",eng:"Do you already have a tax code?",
-     answers:[{it:"Sì, me lo ha assegnato l'Agenzia delle Entrate.",phonetic:"[si me lo a as-se-NYA-to la-JEN-tsya DEL-le en-TRA-te]",keywords:["assegnato","entrate"]},
-              {it:"Sì, eccolo.",phonetic:"[si EK-ko-lo]",keywords:["eccolo"]}]},
+     answers:[{it:"Sì, me lo ha assegnato l'Agenzia delle Entrate.",eng:"Yes, it was assigned to me by the Revenue Agency.",phonetic:"[si me lo a as-se-NYA-to la-JEN-tsya DEL-le en-TRA-te]",keywords:["assegnato","entrate"]},
+              {it:"Sì, eccolo.",eng:"Yes, here it is.",phonetic:"[si EK-ko-lo]",keywords:["eccolo"]}]},
     {q:"Ha redditi da dichiarare all'estero?",qPhonetic:"[a RED-di-ti da di-kya-RA-re al-LES-te-ro]",eng:"Do you have income to declare abroad?",
-     answers:[{it:"Sì, ho redditi dagli Stati Uniti.",phonetic:"[si o RED-di-ti DAL-yi STA-ti u-NI-ti]",keywords:["redditi","stati","uniti"]},
-              {it:"Sì, ho clienti internazionali.",phonetic:"[si o klyen-TI in-ter-na-tsyo-NA-li]",keywords:["clienti","internazionali"]}]},
+     answers:[{it:"Sì, ho redditi dagli Stati Uniti.",eng:"Yes, I have income from the United States.",phonetic:"[si o RED-di-ti DAL-yi STA-ti u-NI-ti]",keywords:["redditi","stati","uniti"]},
+              {it:"Sì, ho clienti internazionali.",eng:"Yes, I have international clients.",phonetic:"[si o klyen-TI in-ter-na-tsyo-NA-li]",keywords:["clienti","internazionali"]}]},
     {q:"Deve aprire una posizione INPS?",qPhonetic:"[DE-ve a-PRI-re U-na po-zi-TSYO-ne INPS]",eng:"Do you need to open an INPS position?",
-     answers:[{it:"Non lo so, dipende dalla mia situazione?",phonetic:"[non lo so di-PEN-de DAL-la MI-a si-twa-TSYO-ne]",keywords:["dipende","situazione"]},
-              {it:"Può spiegarmi di cosa si tratta?",phonetic:"[PWO spye-GAR-mi di KO-za si TRAT-ta]",keywords:["spiegarmi"]}]},
+     answers:[{it:"Non lo so, dipende dalla mia situazione?",eng:"I do not know, does it depend on my situation?",phonetic:"[non lo so di-PEN-de DAL-la MI-a si-twa-TSYO-ne]",keywords:["dipende","situazione"]},
+              {it:"Può spiegarmi di cosa si tratta?",eng:"Can you explain what it involves?",phonetic:"[PWO spye-GAR-mi di KO-za si TRAT-ta]",keywords:["spiegarmi"]}]},
     {q:"Quando scade la dichiarazione dei redditi?",qPhonetic:"[KWAN-do SKA-de la di-kya-ra-TSYO-ne day RED-di-ti]",eng:"When is the tax return deadline?",
-     answers:[{it:"Non lo so esattamente, quando?",phonetic:"[non lo so e-zat-ta-MEN-te KWAN-do]",keywords:["esattamente"]},
-              {it:"Di solito in ottobre, è corretto?",phonetic:"[di SO-li-to in ot-TO-bre EH kor-RET-to]",keywords:["ottobre","corretto"]}]},
+     answers:[{it:"Non lo so esattamente, quando?",eng:"I do not know exactly, when?",phonetic:"[non lo so e-zat-ta-MEN-te KWAN-do]",keywords:["esattamente"]},
+              {it:"Di solito in ottobre, è corretto?",eng:"Usually in October, is that correct?",phonetic:"[di SO-li-to in ot-TO-bre EH kor-RET-to]",keywords:["ottobre","corretto"]}]},
     {q:"Ha le ricevute di tutte le spese?",qPhonetic:"[a le ri-che-VU-te di TUT-te le SPE-ze]",eng:"Do you have receipts for all your expenses?",
-     answers:[{it:"Sì, ho tenuto tutto in ordine.",phonetic:"[si o te-NU-to TUT-to in OR-di-ne]",keywords:["tenuto","ordine"]},
-              {it:"La maggior parte sì, alcune le ho perse.",phonetic:"[la mad-JOR PAR-te si al-KU-ne le o PER-se]",keywords:["maggior","perse"]}]},
+     answers:[{it:"Sì, ho tenuto tutto in ordine.",eng:"Yes, I have kept everything in order.",phonetic:"[si o te-NU-to TUT-to in OR-di-ne]",keywords:["tenuto","ordine"]},
+              {it:"La maggior parte sì, alcune le ho perse.",eng:"Most of them yes, I lost a few.",phonetic:"[la mad-JOR PAR-te si al-KU-ne le o PER-se]",keywords:["maggior","perse"]}]},
     {q:"Conviene il regime forfettario per la sua situazione?",qPhonetic:"[kon-VYE-ne il re-JI-me for-fet-TA-ryo per la SWA si-twa-TSYO-ne]",eng:"Is the flat-rate tax regime beneficial for your situation?",
-     answers:[{it:"Non lo so, mi può fare un confronto?",phonetic:"[non lo so mi PWO FA-re un kon-FRON-to]",keywords:["confronto"]},
-              {it:"Dipende dal fatturato, giusto?",phonetic:"[di-PEN-de dal fat-tu-RA-to JUS-to]",keywords:["fatturato"]}]},
+     answers:[{it:"Non lo so, mi può fare un confronto?",eng:"I do not know, can you make a comparison for me?",phonetic:"[non lo so mi PWO FA-re un kon-FRON-to]",keywords:["confronto"]},
+              {it:"Dipende dal fatturato, giusto?",eng:"It depends on the turnover, right?",phonetic:"[di-PEN-de dal fat-tu-RA-to JUS-to]",keywords:["fatturato"]}]},
     {q:"Deve pagare l'IVA trimestralmente.",qPhonetic:"[DE-ve pa-GA-re li-VA tri-mes-tral-MEN-te]",eng:"You must pay VAT quarterly.",
-     answers:[{it:"Capisco. Quanto devo accantonare?",phonetic:"[ka-PIS-ko KWAN-to DE-vo ak-kan-to-NA-re]",keywords:["accantonare"]},
-              {it:"Mi manda le scadenze per email?",phonetic:"[mi MAN-da le ska-DEN-tse per e-mail]",keywords:["scadenze","email"]}]}
+     answers:[{it:"Capisco. Quanto devo accantonare?",eng:"I understand. How much should I set aside?",phonetic:"[ka-PIS-ko KWAN-to DE-vo ak-kan-to-NA-re]",keywords:["accantonare"]},
+              {it:"Mi manda le scadenze per email?",eng:"Can you send me the deadlines by email?",phonetic:"[mi MAN-da le ska-DEN-tse per e-mail]",keywords:["scadenze","email"]}]}
   ],
   agente:[
     {q:"Cerco un appartamento in affitto.",qPhonetic:"[CHER-ko un ap-par-ta-MEN-to in af-FIT-to]",eng:"I am looking for an apartment to rent.",
-     answers:[{it:"Cerco un bilocale, possibilmente con terrazzo.",phonetic:"[CHER-ko un bi-lo-KA-le pos-si-bil-MEN-te kon ter-RAT-tso]",keywords:["bilocale","terrazzo"]},
-              {it:"Ho bisogno di almeno due camere da letto.",phonetic:"[o bi-ZO-nyo di al-ME-no DU-e KA-me-re da LET-to]",keywords:["camere","letto"]}]},
+     answers:[{it:"Cerco un bilocale, possibilmente con terrazzo.",eng:"I am looking for a two-room apartment, preferably with a terrace.",phonetic:"[CHER-ko un bi-lo-KA-le pos-si-bil-MEN-te kon ter-RAT-tso]",keywords:["bilocale","terrazzo"]},
+              {it:"Ho bisogno di almeno due camere da letto.",eng:"I need at least two bedrooms.",phonetic:"[o bi-ZO-nyo di al-ME-no DU-e KA-me-re da LET-to]",keywords:["camere","letto"]}]},
     {q:"Qual è il canone mensile richiesto?",qPhonetic:"[kwal EH il KA-no-ne men-SI-le ri-KYE-sto]",eng:"What is the monthly rent being asked?",
-     answers:[{it:"È nella mia fascia, possiamo trattare?",phonetic:"[EH NEL-la MI-a FA-sha pos-SYA-mo trat-TA-re]",keywords:["fascia","trattare"]},
-              {it:"È un po' alto per me. C'è margine?",phonetic:"[EH un po AL-to per me chEH MAR-ji-ne]",keywords:["alto","margine"]}]},
+     answers:[{it:"È nella mia fascia, possiamo trattare?",eng:"It is within my range, can we negotiate?",phonetic:"[EH NEL-la MI-a FA-sha pos-SYA-mo trat-TA-re]",keywords:["fascia","trattare"]},
+              {it:"È un po' alto per me. C'è margine?",eng:"It is a bit high for me. Is there room to negotiate?",phonetic:"[EH un po AL-to per me chEH MAR-ji-ne]",keywords:["alto","margine"]}]},
     {q:"È disponibile da subito?",qPhonetic:"[EH dis-po-NI-bi-le da SU-bi-to]",eng:"Is it available immediately?",
-     answers:[{it:"Sì, quando posso visitarlo?",phonetic:"[si KWAN-do POS-so vi-zi-TAR-lo]",keywords:["visitarlo"]},
-              {it:"Ho bisogno di entrare entro il primo del mese.",phonetic:"[o bi-ZO-nyo di en-TRA-re EN-tro il PRI-mo del ME-ze]",keywords:["entrare","mese"]}]},
+     answers:[{it:"Sì, quando posso visitarlo?",eng:"Yes, when can I visit it?",phonetic:"[si KWAN-do POS-so vi-zi-TAR-lo]",keywords:["visitarlo"]},
+              {it:"Ho bisogno di entrare entro il primo del mese.",eng:"I need to move in by the first of the month.",phonetic:"[o bi-ZO-nyo di en-TRA-re EN-tro il PRI-mo del ME-ze]",keywords:["entrare","mese"]}]},
     {q:"Quanti mesi di deposito cauzionale richiede?",qPhonetic:"[KWAN-ti ME-zi di de-PO-zi-to kau-tsyo-NA-le ri-KYE-de]",eng:"How many months deposit do you require?",
-     answers:[{it:"Due mesi vanno bene.",phonetic:"[DU-e ME-zi VAN-no BE-ne]",keywords:["due","mesi"]},
-              {it:"Tre mesi sono tanti, possiamo accordarci su due?",phonetic:"[TRE ME-zi SO-no TAN-ti pos-SYA-mo ak-kor-DAR-chi su DU-e]",keywords:["accordarci","due"]}]},
+     answers:[{it:"Due mesi vanno bene.",eng:"Two months is fine.",phonetic:"[DU-e ME-zi VAN-no BE-ne]",keywords:["due","mesi"]},
+              {it:"Tre mesi sono tanti, possiamo accordarci su due?",eng:"Three months is a lot, can we agree on two?",phonetic:"[TRE ME-zi SO-no TAN-ti pos-SYA-mo ak-kor-DAR-chi su DU-e]",keywords:["accordarci","due"]}]},
     {q:"L'immobile è in buone condizioni?",qPhonetic:"[lim-MO-bi-le EH in BWO-ne kon-di-TSYO-ni]",eng:"Is the property in good condition?",
-     answers:[{it:"Ha bisogno di lavori o è pronto?",phonetic:"[a bi-ZO-nyo di la-VO-ri o EH PRON-to]",keywords:["lavori","pronto"]},
-              {it:"È stato ristrutturato di recente?",phonetic:"[EH STA-to ri-strut-tu-RA-to di re-CHEN-te]",keywords:["ristrutturato","recente"]}]},
+     answers:[{it:"Ha bisogno di lavori o è pronto?",eng:"Does it need work or is it move-in ready?",phonetic:"[a bi-ZO-nyo di la-VO-ri o EH PRON-to]",keywords:["lavori","pronto"]},
+              {it:"È stato ristrutturato di recente?",eng:"Has it been recently renovated?",phonetic:"[EH STA-to ri-strut-tu-RA-to di re-CHEN-te]",keywords:["ristrutturato","recente"]}]},
     {q:"Sono ammessi animali domestici?",qPhonetic:"[SO-no am-MES-si a-NI-ma-li do-MES-ti-chi]",eng:"Are pets allowed?",
-     answers:[{it:"Ho un cane di piccola taglia.",phonetic:"[o un KA-ne di PIK-ko-la TAL-ya]",keywords:["cane","taglia"]},
-              {it:"No, nessun animale.",phonetic:"[no nes-SUN a-ni-MA-le]",keywords:["nessun","animale"]}]},
+     answers:[{it:"Ho un cane di piccola taglia.",eng:"I have a small dog.",phonetic:"[o un KA-ne di PIK-ko-la TAL-ya]",keywords:["cane","taglia"]},
+              {it:"No, nessun animale.",eng:"No, no pets.",phonetic:"[no nes-SUN a-ni-MA-le]",keywords:["nessun","animale"]}]},
     {q:"Vorrei acquistare un immobile. Da dove inizio?",qPhonetic:"[vor-REI ak-kwis-TA-re un im-MO-bi-le da DO-ve i-NI-tsyo]",eng:"I would like to buy a property. Where do I start?",
-     answers:[{it:"Ho un budget di circa centomila euro.",phonetic:"[o un BUD-jet di CHIR-ka chen-to-MI-la EU-ro]",keywords:["budget","euro"]},
-              {it:"Sto cercando nella zona del centro storico.",phonetic:"[sto cher-KAN-do NEL-la DZO-na del CHEN-tro STO-ri-ko]",keywords:["centro","storico"]}]},
+     answers:[{it:"Ho un budget di circa centomila euro.",eng:"I have a budget of around one hundred thousand euros.",phonetic:"[o un BUD-jet di CHIR-ka chen-to-MI-la EU-ro]",keywords:["budget","euro"]},
+              {it:"Sto cercando nella zona del centro storico.",eng:"I am looking in the historic centre area.",phonetic:"[sto cher-KAN-do NEL-la DZO-na del CHEN-tro STO-ri-ko]",keywords:["centro","storico"]}]},
     {q:"L'immobile ha la certificazione energetica?",qPhonetic:"[lim-MO-bi-le a la cher-ti-fi-ka-TSYO-ne e-ner-JE-ti-ka]",eng:"Does the property have an energy certificate?",
-     answers:[{it:"Sì, qual è la classe energetica?",phonetic:"[si kwal EH la KLAS-se e-ner-JE-ti-ka]",keywords:["classe","energetica"]},
-              {it:"No, è obbligatoria per la vendita?",phonetic:"[no EH ob-bli-ga-TO-rya per la VEN-di-ta]",keywords:["obbligatoria","vendita"]}]},
+     answers:[{it:"Sì, qual è la classe energetica?",eng:"Yes, what is the energy class?",phonetic:"[si kwal EH la KLAS-se e-ner-JE-ti-ka]",keywords:["classe","energetica"]},
+              {it:"No, è obbligatoria per la vendita?",eng:"No, is it required for the sale?",phonetic:"[no EH ob-bli-ga-TO-rya per la VEN-di-ta]",keywords:["obbligatoria","vendita"]}]},
     {q:"Ci sono spese condominiali?",qPhonetic:"[chi SO-no SPE-ze kon-do-mi-NYA-li]",eng:"Are there condominium fees?",
-     answers:[{it:"Quanto sono le spese mensili?",phonetic:"[KWAN-to SO-no le SPE-ze men-SI-li]",keywords:["spese","mensili"]},
-              {it:"Sono incluse nel canone o separate?",phonetic:"[SO-no in-KLU-ze nel KA-no-ne o se-pa-RA-te]",keywords:["incluse","separate"]}]}
+     answers:[{it:"Quanto sono le spese mensili?",eng:"How much are the monthly fees?",phonetic:"[KWAN-to SO-no le SPE-ze men-SI-li]",keywords:["spese","mensili"]},
+              {it:"Sono incluse nel canone o separate?",eng:"Are they included in the rent or separate?",phonetic:"[SO-no in-KLU-ze nel KA-no-ne o se-pa-RA-te]",keywords:["incluse","separate"]}]}
   ],
   geometra:[
     {q:"Ho bisogno di una perizia per l'immobile.",qPhonetic:"[o bi-ZO-nyo di U-na pe-RI-tsya per lim-MO-bi-le]",eng:"I need a survey of the property.",
-     answers:[{it:"Può fare una perizia completa prima dell'acquisto?",phonetic:"[PWO FA-re U-na pe-RI-tsya kom-PLE-ta PRI-ma del-LAK-kwis-to]",keywords:["perizia","acquisto"]},
-              {it:"Ho bisogno di verificare la conformità urbanistica.",phonetic:"[o bi-ZO-nyo di ve-ri-fi-KA-re la kon-for-mi-TA ur-ba-NIS-ti-ka]",keywords:["conformità","urbanistica"]}]},
+     answers:[{it:"Può fare una perizia completa prima dell'acquisto?",eng:"Can you do a full survey before the purchase?",phonetic:"[PWO FA-re U-na pe-RI-tsya kom-PLE-ta PRI-ma del-LAK-kwis-to]",keywords:["perizia","acquisto"]},
+              {it:"Ho bisogno di verificare la conformità urbanistica.",eng:"I need to verify planning compliance.",phonetic:"[o bi-ZO-nyo di ve-ri-fi-KA-re la kon-for-mi-TA ur-ba-NIS-ti-ka]",keywords:["conformità","urbanistica"]}]},
     {q:"La planimetria catastale è aggiornata?",qPhonetic:"[la pla-ni-me-TRI-a ka-TAS-ta-le EH ad-jor-NA-ta]",eng:"Is the cadastral floor plan up to date?",
-     answers:[{it:"Non lo so, può verificarlo?",phonetic:"[non lo so PWO ve-ri-fi-KAR-lo]",keywords:["verificarlo"]},
-              {it:"Il venditore dice di sì, ma voglio conferma.",phonetic:"[il ven-di-TO-re DI-che di si ma VOL-yo kon-FER-ma]",keywords:["venditore","conferma"]}]},
+     answers:[{it:"Non lo so, può verificarlo?",eng:"I do not know, can you verify it?",phonetic:"[non lo so PWO ve-ri-fi-KAR-lo]",keywords:["verificarlo"]},
+              {it:"Il venditore dice di sì, ma voglio conferma.",eng:"The seller says yes, but I want confirmation.",phonetic:"[il ven-di-TO-re DI-che di si ma VOL-yo kon-FER-ma]",keywords:["venditore","conferma"]}]},
     {q:"Ci sono abusi edilizi da sanare?",qPhonetic:"[chi SO-no a-BU-zi e-di-LI-tsi da sa-NA-re]",eng:"Are there any building violations that need to be remedied?",
-     answers:[{it:"Me lo può dire chiaramente?",phonetic:"[me lo PWO DI-re kya-ra-MEN-te]",keywords:["chiaramente"]},
-              {it:"Se ci sono abusi, chi paga la sanatoria?",phonetic:"[se chi SO-no a-BU-zi ki PA-ga la sa-na-TO-rya]",keywords:["abusi","sanatoria"]}]},
+     answers:[{it:"Me lo può dire chiaramente?",eng:"Can you tell me clearly?",phonetic:"[me lo PWO DI-re kya-ra-MEN-te]",keywords:["chiaramente"]},
+              {it:"Se ci sono abusi, chi paga la sanatoria?",eng:"If there are violations, who pays for the amnesty?",phonetic:"[se chi SO-no a-BU-zi ki PA-ga la sa-na-TO-rya]",keywords:["abusi","sanatoria"]}]},
     {q:"Ho intenzione di ristrutturare l'appartamento.",qPhonetic:"[o in-ten-TSYO-ne di ri-strut-tu-RA-re lap-par-ta-MEN-to]",eng:"I intend to renovate the apartment.",
-     answers:[{it:"Che tipo di permessi servono?",phonetic:"[ke TI-po di per-MES-si SER-vo-no]",keywords:["permessi","servono"]},
-              {it:"Bastano opere interne o serve il permesso di costruire?",phonetic:"[BAS-ta-no O-pe-re in-TER-ne o SER-ve il per-MES-so di kos-TRU-i-re]",keywords:["permesso","costruire"]}]},
+     answers:[{it:"Che tipo di permessi servono?",eng:"What type of permits are needed?",phonetic:"[ke TI-po di per-MES-si SER-vo-no]",keywords:["permessi","servono"]},
+              {it:"Bastano opere interne o serve il permesso di costruire?",eng:"Is internal work enough or is a building permit needed?",phonetic:"[BAS-ta-no O-pe-re in-TER-ne o SER-ve il per-MES-so di kos-TRU-i-re]",keywords:["permesso","costruire"]}]},
     {q:"Serve una CILA o una SCIA per questi lavori?",qPhonetic:"[SER-ve U-na CHI-la o U-na SHA per KWES-ti la-VO-ri]",eng:"Do these works require a CILA or SCIA notification?",
-     answers:[{it:"Dipende dalla portata dei lavori, giusto?",phonetic:"[di-PEN-de DAL-la por-TA-ta day la-VO-ri JUS-to]",keywords:["portata","lavori"]},
-              {it:"Può presentare la pratica per me?",phonetic:"[PWO pre-zen-TA-re la PRA-ti-ka per me]",keywords:["presentare","pratica"]}]},
+     answers:[{it:"Dipende dalla portata dei lavori, giusto?",eng:"It depends on the scope of works, right?",phonetic:"[di-PEN-de DAL-la por-TA-ta day la-VO-ri JUS-to]",keywords:["portata","lavori"]},
+              {it:"Può presentare la pratica per me?",eng:"Can you file the application for me?",phonetic:"[PWO pre-zen-TA-re la PRA-ti-ka per me]",keywords:["presentare","pratica"]}]},
     {q:"Qual è la superficie commerciale dell'immobile?",qPhonetic:"[kwal EH la su-per-FI-che kom-mer-CHA-le del-lim-MO-bi-le]",eng:"What is the commercial floor area of the property?",
-     answers:[{it:"E la superficie calpestabile?",phonetic:"[e la su-per-FI-che kal-pes-TA-bi-le]",keywords:["calpestabile"]},
-              {it:"Ottantadue metri quadri commerciali.",phonetic:"[ot-tan-ta-DU-e ME-tri KWA-dri kom-mer-CHA-li]",keywords:["metri","quadri"]}]},
+     answers:[{it:"E la superficie calpestabile?",eng:"And the net floor area?",phonetic:"[e la su-per-FI-che kal-pes-TA-bi-le]",keywords:["calpestabile"]},
+              {it:"Ottantadue metri quadri commerciali.",eng:"Eighty-two commercial square metres.",phonetic:"[ot-tan-ta-DU-e ME-tri KWA-dri kom-mer-CHA-li]",keywords:["metri","quadri"]}]},
     {q:"L'impianto elettrico è a norma?",qPhonetic:"[lim-PYAN-to e-LET-tri-ko EH a NOR-ma]",eng:"Is the electrical system up to code?",
-     answers:[{it:"Ha il certificato di conformità?",phonetic:"[a il cher-ti-fi-KA-to di kon-for-mi-TA]",keywords:["certificato","conformità"]},
-              {it:"Se non è a norma, quanto costerebbe adeguarlo?",phonetic:"[se non EH a NOR-ma KWAN-to kos-te-REB-be a-de-GWAR-lo]",keywords:["adeguarlo"]}]},
+     answers:[{it:"Ha il certificato di conformità?",eng:"Do you have the certificate of compliance?",phonetic:"[a il cher-ti-fi-KA-to di kon-for-mi-TA]",keywords:["certificato","conformità"]},
+              {it:"Se non è a norma, quanto costerebbe adeguarlo?",eng:"If it is not up to code, how much would it cost to bring it up to standard?",phonetic:"[se non EH a NOR-ma KWAN-to kos-te-REB-be a-de-GWAR-lo]",keywords:["adeguarlo"]}]},
     {q:"Posso vedere la visura catastale?",qPhonetic:"[POS-so ve-DE-re la vi-ZU-ra ka-TAS-ta-le]",eng:"Can I see the cadastral registration document?",
-     answers:[{it:"Sì, può recuperarla dall'Agenzia delle Entrate.",phonetic:"[si PWO re-ku-pe-RAR-la dal-la-JEN-tsya DEL-le en-TRA-te]",keywords:["recuperarla","entrate"]},
-              {it:"Ho bisogno dei dati catastali per il notaio.",phonetic:"[o bi-ZO-nyo day DA-ti ka-TAS-ta-li per il no-TA-yo]",keywords:["catastali","notaio"]}]},
+     answers:[{it:"Sì, può recuperarla dall'Agenzia delle Entrate.",eng:"Yes, you can retrieve it from the Revenue Agency.",phonetic:"[si PWO re-ku-pe-RAR-la dal-la-JEN-tsya DEL-le en-TRA-te]",keywords:["recuperarla","entrate"]},
+              {it:"Ho bisogno dei dati catastali per il notaio.",eng:"I need the cadastral data for the notary.",phonetic:"[o bi-ZO-nyo day DA-ti ka-TAS-ta-li per il no-TA-yo]",keywords:["catastali","notaio"]}]},
     {q:"Qual è il costo stimato dei lavori di ristrutturazione?",qPhonetic:"[kwal EH il KOS-to sti-MA-to day la-VO-ri di ri-strut-tu-ra-TSYO-ne]",eng:"What is the estimated cost of the renovation works?",
-     answers:[{it:"Può farmi un computo metrico estimativo?",phonetic:"[PWO far-mi un KOM-pu-to ME-tri-ko es-ti-ma-TI-vo]",keywords:["computo","estimativo"]},
-              {it:"Voglio capire se rientra nel mio budget.",phonetic:"[VOL-yo ka-PI-re se RYEN-tra nel MYO BUD-jet]",keywords:["rientra","budget"]}]}
+     answers:[{it:"Può farmi un computo metrico estimativo?",eng:"Can you prepare a detailed cost estimate?",phonetic:"[PWO far-mi un KOM-pu-to ME-tri-ko es-ti-ma-TI-vo]",keywords:["computo","estimativo"]},
+              {it:"Voglio capire se rientra nel mio budget.",eng:"I want to understand if it fits my budget.",phonetic:"[VOL-yo ka-PI-re se RYEN-tra nel MYO BUD-jet]",keywords:["rientra","budget"]}]}
   ],
   avvocato:[
     {q:"Ho bisogno di un avvocato per l'acquisto di un immobile.",qPhonetic:"[o bi-ZO-nyo di un av-vo-KA-to per lak-KWIS-to di un im-MO-bi-le]",eng:"I need a lawyer for a property purchase.",
-     answers:[{it:"È la prima volta che compro in Italia.",phonetic:"[EH la PRI-ma VOL-ta ke KOM-pro in i-TA-lya]",keywords:["prima","italia"]},
-              {it:"Sono straniero, ho bisogno di assistenza legale.",phonetic:"[SO-no stra-NYE-ro o bi-ZO-nyo di as-sis-TEN-tsa le-GA-le]",keywords:["straniero","legale"]}]},
+     answers:[{it:"È la prima volta che compro in Italia.",eng:"It is the first time I am buying in Italy.",phonetic:"[EH la PRI-ma VOL-ta ke KOM-pro in i-TA-lya]",keywords:["prima","italia"]},
+              {it:"Sono straniero, ho bisogno di assistenza legale.",eng:"I am a foreigner, I need legal assistance.",phonetic:"[SO-no stra-NYE-ro o bi-ZO-nyo di as-sis-TEN-tsa le-GA-le]",keywords:["straniero","legale"]}]},
     {q:"Ha esaminato il compromesso?",qPhonetic:"[a e-za-mi-NA-to il kom-pro-MES-so]",eng:"Have you examined the preliminary contract?",
-     answers:[{it:"No, può farlo lei prima che firmi?",phonetic:"[no PWO FAR-lo LEI PRI-ma ke FIR-mi]",keywords:["farlo","firmi"]},
-              {it:"Ci sono clausole rischiose da eliminare?",phonetic:"[chi SO-no KLAU-zo-le ris-KYO-ze da e-li-mi-NA-re]",keywords:["clausole","eliminare"]}]},
+     answers:[{it:"No, può farlo lei prima che firmi?",eng:"No, can you review it before I sign?",phonetic:"[no PWO FAR-lo LEI PRI-ma ke FIR-mi]",keywords:["farlo","firmi"]},
+              {it:"Ci sono clausole rischiose da eliminare?",eng:"Are there any risky clauses to remove?",phonetic:"[chi SO-no KLAU-zo-le ris-KYO-ze da e-li-mi-NA-re]",keywords:["clausole","eliminare"]}]},
     {q:"L'immobile ha ipoteche o gravami?",qPhonetic:"[lim-MO-bi-le a i-po-TE-ke o gra-VA-mi]",eng:"Does the property have mortgages or encumbrances?",
-     answers:[{it:"Come posso verificarlo prima del rogito?",phonetic:"[KO-me POS-so ve-ri-fi-KAR-lo PRI-ma del RO-ji-to]",keywords:["verificarlo","rogito"]},
-              {it:"Il venditore assicura che è libero da vincoli.",phonetic:"[il ven-di-TO-re as-si-KU-ra ke EH LI-be-ro da VIN-ko-li]",keywords:["libero","vincoli"]}]},
+     answers:[{it:"Come posso verificarlo prima del rogito?",eng:"How can I verify it before the deed?",phonetic:"[KO-me POS-so ve-ri-fi-KAR-lo PRI-ma del RO-ji-to]",keywords:["verificarlo","rogito"]},
+              {it:"Il venditore assicura che è libero da vincoli.",eng:"The seller assures it is free of encumbrances.",phonetic:"[il ven-di-TO-re as-si-KU-ra ke EH LI-be-ro da VIN-ko-li]",keywords:["libero","vincoli"]}]},
     {q:"Qual è la differenza tra compromesso e rogito?",qPhonetic:"[kwal EH la dif-fe-REN-tsa tra kom-pro-MES-so e RO-ji-to]",eng:"What is the difference between the preliminary contract and the deed?",
-     answers:[{it:"Non ho capito bene, può spiegarmelo?",phonetic:"[non o ka-PI-to BE-ne PWO spye-GAR-me-lo]",keywords:["spiegarmelo"]},
-              {it:"Quanto tempo passa di solito tra i due?",phonetic:"[KWAN-to TEM-po PAS-sa di SO-li-to tra i DU-e]",keywords:["tempo","due"]}]},
+     answers:[{it:"Non ho capito bene, può spiegarmelo?",eng:"I did not understand well, can you explain it to me?",phonetic:"[non o ka-PI-to BE-ne PWO spye-GAR-me-lo]",keywords:["spiegarmelo"]},
+              {it:"Quanto tempo passa di solito tra i due?",eng:"How much time usually passes between the two?",phonetic:"[KWAN-to TEM-po PAS-sa di SO-li-to tra i DU-e]",keywords:["tempo","due"]}]},
     {q:"Devo versare una caparra confirmatoria?",qPhonetic:"[DE-vo ver-SA-re U-na ka-PAR-ra kon-fir-ma-TO-rya]",eng:"Do I need to pay a confirmatory deposit?",
-     answers:[{it:"Di solito quanto è la percentuale?",phonetic:"[di SO-li-to KWAN-to EH la per-chen-TWA-le]",keywords:["percentuale"]},
-              {it:"Cosa succede se il venditore si ritira?",phonetic:"[KO-za sut-CHE-de se il ven-di-TO-re si ri-TI-ra]",keywords:["venditore","ritira"]}]},
+     answers:[{it:"Di solito quanto è la percentuale?",eng:"How much is the percentage usually?",phonetic:"[di SO-li-to KWAN-to EH la per-chen-TWA-le]",keywords:["percentuale"]},
+              {it:"Cosa succede se il venditore si ritira?",eng:"What happens if the seller withdraws?",phonetic:"[KO-za sut-CHE-de se il ven-di-TO-re si ri-TI-ra]",keywords:["venditore","ritira"]}]},
     {q:"L'immobile è intestato correttamente?",qPhonetic:"[lim-MO-bi-le EH in-tes-TA-to kor-ret-ta-MEN-te]",eng:"Is the property correctly registered in the seller's name?",
-     answers:[{it:"Può fare una verifica all'Agenzia delle Entrate?",phonetic:"[PWO FA-re U-na ve-RI-fi-ka al-la-JEN-tsya DEL-le en-TRA-te]",keywords:["verifica","entrate"]},
-              {it:"Voglio essere sicuro prima di firmare qualsiasi cosa.",phonetic:"[VOL-yo ES-se-re si-KU-ro PRI-ma di fir-MA-re kwal-SYA-zi KO-za]",keywords:["sicuro","firmare"]}]},
+     answers:[{it:"Può fare una verifica all'Agenzia delle Entrate?",eng:"Can you run a check with the Revenue Agency.",phonetic:"[PWO FA-re U-na ve-RI-fi-ka al-la-JEN-tsya DEL-le en-TRA-te]",keywords:["verifica","entrate"]},
+              {it:"Voglio essere sicuro prima di firmare qualsiasi cosa.",eng:"I want to be certain before signing anything.",phonetic:"[VOL-yo ES-se-re si-KU-ro PRI-ma di fir-MA-re kwal-SYA-zi KO-za]",keywords:["sicuro","firmare"]}]},
     {q:"Ci sono vincoli urbanistici sull'immobile?",qPhonetic:"[chi SO-no VIN-ko-li ur-ba-NIS-ti-chi sul-lim-MO-bi-le]",eng:"Are there any planning restrictions on the property?",
-     answers:[{it:"Come posso saperlo con certezza?",phonetic:"[KO-me POS-so sa-PER-lo kon cher-TET-tsa]",keywords:["saperlo","certezza"]},
-              {it:"Ho intenzione di ristrutturare, è possibile?",phonetic:"[o in-ten-TSYO-ne di ri-strut-tu-RA-re EH pos-SI-bi-le]",keywords:["ristrutturare","possibile"]}]},
+     answers:[{it:"Come posso saperlo con certezza?",eng:"How can I know for certain?",phonetic:"[KO-me POS-so sa-PER-lo kon cher-TET-tsa]",keywords:["saperlo","certezza"]},
+              {it:"Ho intenzione di ristrutturare, è possibile?",eng:"I intend to renovate, is that possible?",phonetic:"[o in-ten-TSYO-ne di ri-strut-tu-RA-re EH pos-SI-bi-le]",keywords:["ristrutturare","possibile"]}]},
     {q:"Qual è la sua parcella per assistere all'atto?",qPhonetic:"[kwal EH la SWA par-CHEL-la per as-SIS-te-re al-LAT-to]",eng:"What is your fee for assisting with the deed?",
-     answers:[{it:"Può farmi un preventivo scritto?",phonetic:"[PWO far-mi un pre-ven-TI-vo SKRIT-to]",keywords:["preventivo","scritto"]},
-              {it:"È inclusa la due diligence nell'immobile?",phonetic:"[EH in-KLU-za la DU-e DIL-i-jens nel-lim-MO-bi-le]",keywords:["inclusa","diligence"]}]},
+     answers:[{it:"Può farmi un preventivo scritto?",eng:"Can you give me a written quote?",phonetic:"[PWO far-mi un pre-ven-TI-vo SKRIT-to]",keywords:["preventivo","scritto"]},
+              {it:"È inclusa la due diligence nell'immobile?",eng:"Is the property due diligence included?",phonetic:"[EH in-KLU-za la DU-e DIL-i-jens nel-lim-MO-bi-le]",keywords:["inclusa","diligence"]}]},
     {q:"Il contratto di affitto è regolare?",qPhonetic:"[il kon-TRAT-to di af-FIT-to EH re-go-LA-re]",eng:"Is the rental contract legally compliant?",
-     answers:[{it:"È registrato all'Agenzia delle Entrate?",phonetic:"[EH re-jis-TRA-to al-la-JEN-tsya DEL-le en-TRA-te]",keywords:["registrato","entrate"]},
-              {it:"Può verificare che tuteli i miei diritti?",phonetic:"[PWO ve-ri-fi-KA-re ke tu-TE-li i MYE-i di-RIT-ti]",keywords:["tuteli","diritti"]}]}
+     answers:[{it:"È registrato all'Agenzia delle Entrate?",eng:"Is it registered with the Revenue Agency?",phonetic:"[EH re-jis-TRA-to al-la-JEN-tsya DEL-le en-TRA-te]",keywords:["registrato","entrate"]},
+              {it:"Può verificare che tuteli i miei diritti?",eng:"Can you verify that it protects my rights?",phonetic:"[PWO ve-ri-fi-KA-re ke tu-TE-li i MYE-i di-RIT-ti]",keywords:["tuteli","diritti"]}]}
   ],
   notaio:[
     {q:"Buongiorno, sono qui per il rogito.",qPhonetic:"[bwon-JOR-no SO-no kwi per il RO-ji-to]",eng:"Good morning, I am here for the deed of sale.",
-     answers:[{it:"Ho tutti i documenti che ha richiesto.",phonetic:"[o TUT-ti i do-KU-men-ti ke a ri-KYE-sto]",keywords:["documenti","richiesto"]},
-              {it:"È la prima volta che compro casa in Italia.",phonetic:"[EH la PRI-ma VOL-ta ke KOM-pro KA-za in i-TA-lya]",keywords:["prima","italia"]}]},
+     answers:[{it:"Ho tutti i documenti che ha richiesto.",eng:"I have all the documents you requested.",phonetic:"[o TUT-ti i do-KU-men-ti ke a ri-KYE-sto]",keywords:["documenti","richiesto"]},
+              {it:"È la prima volta che compro casa in Italia.",eng:"It is the first time I am buying a home in Italy.",phonetic:"[EH la PRI-ma VOL-ta ke KOM-pro KA-za in i-TA-lya]",keywords:["prima","italia"]}]},
     {q:"Ha portato il codice fiscale e un documento d'identità?",qPhonetic:"[a por-TA-to il KO-di-che fis-KA-le e un do-KU-men-to di-den-ti-TA]",eng:"Have you brought your tax code and an identity document?",
-     answers:[{it:"Sì, ho il passaporto e il codice fiscale.",phonetic:"[si o il pas-sa-POR-to e il KO-di-che fis-KA-le]",keywords:["passaporto","fiscale"]},
-              {it:"Ho anche il permesso di soggiorno.",phonetic:"[o AN-ke il per-MES-so di sod-JOR-no]",keywords:["permesso","soggiorno"]}]},
+     answers:[{it:"Sì, ho il passaporto e il codice fiscale.",eng:"Yes, I have my passport and tax code.",phonetic:"[si o il pas-sa-POR-to e il KO-di-che fis-KA-le]",keywords:["passaporto","fiscale"]},
+              {it:"Ho anche il permesso di soggiorno.",eng:"I also have my residence permit.",phonetic:"[o AN-ke il per-MES-so di sod-JOR-no]",keywords:["permesso","soggiorno"]}]},
     {q:"Le spiego le imposte dovute per l'acquisto.",qPhonetic:"[le SPYE-go le im-POS-te do-VU-te per lak-KWIS-to]",eng:"I will explain the taxes due for the purchase.",
-     answers:[{it:"È la mia prima casa, ho diritto alle agevolazioni?",phonetic:"[EH la MYA PRI-ma KA-za o di-RIT-to AL-le a-je-vo-la-TSYO-ni]",keywords:["prima","agevolazioni"]},
-              {it:"Può spiegarmi la differenza tra imposta di registro e IVA?",phonetic:"[PWO spye-GAR-mi la dif-fe-REN-tsa tra im-POS-ta di re-JIS-tro e i-VA]",keywords:["registro","iva"]}]},
+     answers:[{it:"È la mia prima casa, ho diritto alle agevolazioni?",eng:"It is my first home, am I entitled to the tax benefits?",phonetic:"[EH la MYA PRI-ma KA-za o di-RIT-to AL-le a-je-vo-la-TSYO-ni]",keywords:["prima","agevolazioni"]},
+              {it:"Può spiegarmi la differenza tra imposta di registro e IVA?",eng:"Can you explain the difference between registration tax and VAT?",phonetic:"[PWO spye-GAR-mi la dif-fe-REN-tsa tra im-POS-ta di re-JIS-tro e i-VA]",keywords:["registro","iva"]}]},
     {q:"Il prezzo dichiarato corrisponde al prezzo reale?",qPhonetic:"[il PRET-tso di-kya-RA-to kor-ris-PON-de al PRET-tso re-A-le]",eng:"Does the declared price correspond to the actual price?",
-     answers:[{it:"Sì, il prezzo dichiarato è quello reale.",phonetic:"[si il PRET-tso di-kya-RA-to EH KWEL-lo re-A-le]",keywords:["dichiarato","reale"]},
-              {it:"Voglio essere completamente in regola.",phonetic:"[VOL-yo ES-se-re kom-ple-ta-MEN-te in RE-go-la]",keywords:["completamente","regola"]}]},
+     answers:[{it:"Sì, il prezzo dichiarato è quello reale.",eng:"Yes, the declared price is the actual price.",phonetic:"[si il PRET-tso di-kya-RA-to EH KWEL-lo re-A-le]",keywords:["dichiarato","reale"]},
+              {it:"Voglio essere completamente in regola.",eng:"I want to be fully compliant.",phonetic:"[VOL-yo ES-se-re kom-ple-ta-MEN-te in RE-go-la]",keywords:["completamente","regola"]}]},
     {q:"Ha già provveduto al bonifico?",qPhonetic:"[a JA prov-ve-DU-to al bo-NI-fi-ko]",eng:"Have you already arranged the bank transfer?",
-     answers:[{it:"Sì, ho fatto il bonifico ieri.",phonetic:"[si o FAT-to il bo-NI-fi-ko YE-ri]",keywords:["bonifico","ieri"]},
-              {it:"Quanto tempo prima del rogito devo farlo?",phonetic:"[KWAN-to TEM-po PRI-ma del RO-ji-to DE-vo FAR-lo]",keywords:["prima","farlo"]}]},
+     answers:[{it:"Sì, ho fatto il bonifico ieri.",eng:"Yes, I made the bank transfer yesterday.",phonetic:"[si o FAT-to il bo-NI-fi-ko YE-ri]",keywords:["bonifico","ieri"]},
+              {it:"Quanto tempo prima del rogito devo farlo?",eng:"How long before the deed do I need to do it?",phonetic:"[KWAN-to TEM-po PRI-ma del RO-ji-to DE-vo FAR-lo]",keywords:["prima","farlo"]}]},
     {q:"Le leggo l'atto. Ha domande?",qPhonetic:"[le LEG-go LAT-to a do-MAN-de]",eng:"I will read the deed to you. Do you have any questions?",
-     answers:[{it:"Può leggere lentamente, per favore?",phonetic:"[PWO LEG-je-re len-ta-MEN-te per fa-VO-re]",keywords:["lentamente","favore"]},
-              {it:"Non ho capito questa clausola, può spiegarla?",phonetic:"[non o ka-PI-to KWES-ta KLAU-zo-la PWO spye-GAR-la]",keywords:["clausola","spiegarla"]}]},
+     answers:[{it:"Può leggere lentamente, per favore?",eng:"Can you read slowly, please?",phonetic:"[PWO LEG-je-re len-ta-MEN-te per fa-VO-re]",keywords:["lentamente","favore"]},
+              {it:"Non ho capito questa clausola, può spiegarla?",eng:"I did not understand this clause, can you explain it?",phonetic:"[non o ka-PI-to KWES-ta KLAU-zo-la PWO spye-GAR-la]",keywords:["clausola","spiegarla"]}]},
     {q:"Deve firmare qui e mettere le iniziali qui.",qPhonetic:"[DE-ve fir-MA-re kwi e MET-te-re le i-ni-TSYA-li kwi]",eng:"You need to sign here and initial here.",
-     answers:[{it:"Certo, dove esattamente?",phonetic:"[CHER-to DO-ve e-zat-ta-MEN-te]",keywords:["dove","esattamente"]},
-              {it:"Posso leggere ancora una volta prima di firmare?",phonetic:"[POS-so LEG-je-re an-KO-ra U-na VOL-ta PRI-ma di fir-MA-re]",keywords:["leggere","firmare"]}]},
+     answers:[{it:"Certo, dove esattamente?",eng:"Of course, exactly where?",phonetic:"[CHER-to DO-ve e-zat-ta-MEN-te]",keywords:["dove","esattamente"]},
+              {it:"Posso leggere ancora una volta prima di firmare?",eng:"Can I read it one more time before signing?",phonetic:"[POS-so LEG-je-re an-KO-ra U-na VOL-ta PRI-ma di fir-MA-re]",keywords:["leggere","firmare"]}]},
     {q:"Quando riceverà le chiavi?",qPhonetic:"[KWAN-do ri-che-ve-RA le KYA-vi]",eng:"When will you receive the keys?",
-     answers:[{it:"Oggi stesso, dopo la firma?",phonetic:"[OD-ji STES-so DO-po la FIR-ma]",keywords:["oggi","firma"]},
-              {it:"Il venditore ha detto entro la fine della settimana.",phonetic:"[il ven-di-TO-re a DET-to EN-tro la FI-ne DEL-la set-ti-MA-na]",keywords:["venditore","settimana"]}]},
+     answers:[{it:"Oggi stesso, dopo la firma?",eng:"Today itself, after the signing?",phonetic:"[OD-ji STES-so DO-po la FIR-ma]",keywords:["oggi","firma"]},
+              {it:"Il venditore ha detto entro la fine della settimana.",eng:"The seller said by the end of the week.",phonetic:"[il ven-di-TO-re a DET-to EN-tro la FI-ne DEL-la set-ti-MA-na]",keywords:["venditore","settimana"]}]},
     {q:"Quali sono i prossimi passi dopo il rogito?",qPhonetic:"[KWA-li SO-no i PROS-si-mi PAS-si DO-po il RO-ji-to]",eng:"What are the next steps after the deed?",
-     answers:[{it:"Devo fare qualcosa per la residenza?",phonetic:"[DE-vo FA-re kwal-KO-za per la re-zi-DEN-tsa]",keywords:["residenza"]},
-              {it:"Quando viene trascritto nei registri immobiliari?",phonetic:"[KWAN-do VYE-ne tra-SKRIT-to nay re-JIS-tri im-mo-bi-LYA-ri]",keywords:["trascritto","immobiliari"]}]}
+     answers:[{it:"Devo fare qualcosa per la residenza?",eng:"Do I need to do anything for residency?",phonetic:"[DE-vo FA-re kwal-KO-za per la re-zi-DEN-tsa]",keywords:["residenza"]},
+              {it:"Quando viene trascritto nei registri immobiliari?",eng:"When will it be recorded in the property register?",phonetic:"[KWAN-do VYE-ne tra-SKRIT-to nay re-JIS-tri im-mo-bi-LYA-ri]",keywords:["trascritto","immobiliari"]}]}
   ]
 };
 
@@ -1443,8 +1534,7 @@ function renderQa() {
     document.getElementById('qaPhonetic').textContent = '';
     document.getElementById('qaAnswers').innerHTML = '';
     document.getElementById('qaDots').innerHTML = '';
-    document.getElementById('qaListenBtn').style.display = 'none';
-    document.getElementById('qaFeedbackText').textContent = '';
+      document.getElementById('qaFeedbackText').textContent = '';
     return;
   }
   const q = qs[qaIndex], total = qs.length;
@@ -1454,28 +1544,50 @@ function renderQa() {
   document.getElementById('qaEnglish').textContent = q.eng;
   document.getElementById('qaEnglish').style.display = 'none';
   document.getElementById('btnRevealEng').textContent = 'Show English';
-  document.getElementById('qaListenBtn').style.display = 'none';
   document.getElementById('qaFeedbackText').textContent = '';
   document.getElementById('qaFeedback').className = 'feedback';
   qaSelectedAnswer = null;
   const ad = document.getElementById('qaAnswers');
   ad.innerHTML = '';
   q.answers.forEach(function(ans, i) {
-    const row = document.createElement('div');
-    row.style.cssText = 'display:flex;align-items:flex-start;gap:.5rem;';
-    const sp = document.createElement('button');
-    sp.className = 'btn btn-play';
-    sp.style.cssText = 'min-width:2.4rem;padding:.4rem .6rem;font-size:.85rem;flex-shrink:0;margin-top:.05rem;';
-    sp.innerHTML = '&#9654;';
-    sp.title = 'Hear this answer';
-    sp.onclick = function() { qaSpeak(ans.it); };
-    const ab = document.createElement('button');
-    ab.className = 'btn btn-table';
-    ab.style.cssText = 'flex:1;text-align:left;padding:.5rem .8rem;font-size:.95rem;line-height:1.45;font-weight:500;';
-    ab.textContent = ans.it;
-    ab.dataset.ansIdx = i;
-    ab.onclick = function() { qaSelect(ab, i); };
-    row.appendChild(sp); row.appendChild(ab); ad.appendChild(row);
+    const card = document.createElement('div');
+    card.style.cssText = 'border:1px solid var(--stone-light);border-radius:6px;padding:.6rem .75rem;background:white;';
+    // Play + Italian
+    const topRow = document.createElement('div');
+    topRow.style.cssText = 'display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.25rem;';
+    const playBtn = document.createElement('button');
+    playBtn.className = 'btn btn-play';
+    playBtn.style.cssText = 'min-width:2.4rem;padding:.4rem .6rem;font-size:.85rem;flex-shrink:0;';
+    playBtn.innerHTML = '&#9654;';
+    playBtn.title = 'Hear this answer';
+    playBtn.onclick = function() { qaSpeak(ans.it); };
+    const itDiv = document.createElement('div');
+    itDiv.style.cssText = 'font-size:.95rem;font-weight:500;line-height:1.45;color:var(--ink);padding-top:.25rem;';
+    itDiv.textContent = ans.it;
+    topRow.appendChild(playBtn);
+    topRow.appendChild(itDiv);
+    // English translation
+    const engDiv = document.createElement('div');
+    engDiv.style.cssText = 'font-size:.82rem;color:var(--ink-soft);font-style:italic;margin-bottom:.4rem;padding-left:2.9rem;';
+    engDiv.textContent = ans.eng || '';
+    // Speak + inline feedback
+    const speakRow = document.createElement('div');
+    speakRow.style.cssText = 'display:flex;align-items:center;gap:.6rem;padding-left:2.9rem;';
+    const speakBtn = document.createElement('button');
+    speakBtn.className = 'btn btn-listen';
+    speakBtn.style.cssText = 'font-size:.78rem;padding:.28rem .65rem;';
+    speakBtn.innerHTML = '&#127897; Speak';
+    const fbSpan = document.createElement('span');
+    fbSpan.style.cssText = 'font-size:.82rem;font-weight:600;';
+    speakBtn.onclick = (function(a, fb, sb) {
+      return function() { qaListen(a, fb, sb); };
+    })(ans, fbSpan, speakBtn);
+    speakRow.appendChild(speakBtn);
+    speakRow.appendChild(fbSpan);
+    card.appendChild(topRow);
+    card.appendChild(engDiv);
+    card.appendChild(speakRow);
+    ad.appendChild(card);
   });
   const dots = document.getElementById('qaDots');
   dots.innerHTML = '';
@@ -1495,61 +1607,53 @@ function qaSpeak(text) {
   if (itV) u.voice = itV;
   window.speechSynthesis.speak(u);
 }
-function qaSelect(btn, idx) {
-  document.querySelectorAll('#qaAnswers .btn-table').forEach(b => {
-    b.style.background = ''; b.style.borderColor = ''; b.style.color = '';
-  });
-  btn.style.background = 'var(--gold)'; btn.style.borderColor = 'var(--gold)'; btn.style.color = 'white';
-  qaSelectedAnswer = idx;
-  document.getElementById('qaListenBtn').style.display = 'inline-flex';
-  document.getElementById('qaListenLabel').textContent = 'Speak answer';
-  document.getElementById('qaListenIcon').textContent = '&#127897;';
-  document.getElementById('qaFeedbackText').textContent = '';
-  document.getElementById('qaFeedback').className = 'feedback';
-}
-function qaEval(transcripts) {
-  if (qaSelectedAnswer === null) return;
-  const ans = qaData[qaSubtab][qaIndex].answers[qaSelectedAnswer];
-  const heard = transcripts[0];
-  function n(s){ return s.toLowerCase().replace(/[\u00e0\u00e1]/g,'a').replace(/[\u00e8\u00e9]/g,'e').replace(/[\u00ec\u00ed]/g,'i').replace(/[\u00f2\u00f3]/g,'o').replace(/[\u00f9\u00fa]/g,'u').replace(/[.,?!']/g,'').trim(); }
-  const hN = n(heard), tN = n(ans.it);
-  const kHit = ans.keywords.filter(k => hN.includes(k.toLowerCase()));
-  const kScore = ans.keywords.length ? kHit.length / ans.keywords.length : 0;
-  const tw = tN.split(' '), hw = hN.split(' ');
-  const wHit = tw.filter(w => hw.some(h => h.includes(w)||w.includes(h)));
-  const c = kScore*0.6 + (wHit.length/tw.length)*0.4;
-  const fb = document.getElementById('qaFeedback'), ft = document.getElementById('qaFeedbackText');
-  if (c >= 0.75 || hN === tN) {
-    fb.className = 'feedback show success';
-    ft.innerHTML = '\u2713 Eccellente! Perfetto.';
-  } else if (c >= 0.4) {
-    fb.className = 'feedback show partial';
-    ft.innerHTML = 'Capito, ma migliorabile.<br><small>Sentito: \u201c' + heard + '\u201d</small>';
-  } else {
-    fb.className = 'feedback show retry';
-    ft.innerHTML = 'Riprova \u2014 ascolta e parla lentamente.<br><small>Sentito: \u201c' + heard + '\u201d</small>';
-  }
-  document.getElementById('qaListenIcon').textContent = '&#127897;';
-  document.getElementById('qaListenLabel').textContent = 'Speak answer';
-}
-document.getElementById('qaListenBtn').addEventListener('click', function() {
+function qaListen(ans, fbSpan, btn) {
   if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
     alert('Speech recognition not supported. Please use Chrome on HTTPS.'); return;
   }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   const rec = new SR();
   rec.lang = 'it-IT'; rec.interimResults = false; rec.maxAlternatives = 3;
-  document.getElementById('qaListenIcon').textContent = '\u23f9';
-  document.getElementById('qaListenLabel').textContent = 'Listening...';
+  btn.innerHTML = '⏹ Listening...';
+  btn.disabled = true;
   rec.onresult = function(e) {
-    qaEval(Array.from(e.results[0]).map(r => r.transcript));
+    const transcripts = Array.from(e.results[0]).map(function(r) { return r.transcript; });
+    btn.innerHTML = '&#127897; Speak';
+    btn.disabled = false;
+    qaRate(ans, transcripts[0], fbSpan);
   };
   rec.onerror = function() {
-    document.getElementById('qaListenIcon').textContent = '&#127897;';
-    document.getElementById('qaListenLabel').textContent = 'Speak answer';
+    btn.innerHTML = '&#127897; Speak';
+    btn.disabled = false;
+    fbSpan.textContent = '';
   };
   rec.start();
-});
+}
+function qaRate(ans, heard, fbSpan) {
+  function n(s) {
+    return s.toLowerCase()
+      .replace(/[àá]/g,'a').replace(/[èé]/g,'e')
+      .replace(/[ìí]/g,'i').replace(/[òó]/g,'o')
+      .replace(/[ùú]/g,'u').replace(/[.,?!']/g,'').trim();
+  }
+  const hN = n(heard), tN = n(ans.it);
+  const kHit = ans.keywords.filter(function(k) { return hN.includes(k.toLowerCase()); });
+  const kScore = ans.keywords.length ? kHit.length / ans.keywords.length : 0;
+  const tw = tN.split(' '), hw = hN.split(' ');
+  const wHit = tw.filter(function(w) { return hw.some(function(h) { return h.includes(w)||w.includes(h); }); });
+  const c = kScore*0.6 + (wHit.length/tw.length)*0.4;
+  if (c >= 0.75 || hN === tN) {
+    fbSpan.style.color = 'var(--success)';
+    fbSpan.textContent = '✓ Eccellente!';
+  } else if (c >= 0.4) {
+    fbSpan.style.color = 'var(--gold)';
+    fbSpan.textContent = 'Capito — migliorabile';
+  } else {
+    fbSpan.style.color = 'var(--terra)';
+    fbSpan.textContent = 'Riprova: “' + heard + '”';
+  }
+}
+
 document.getElementById('qaBtnNext').addEventListener('click', function() {
   const qs = qaData[qaSubtab];
   if (!qs || qs.length === 0) return;
