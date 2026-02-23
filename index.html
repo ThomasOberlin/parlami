@@ -1160,21 +1160,33 @@ function renderPhrase() {
   document.getElementById('btnNext').textContent = currentIndex < total-1 ? 'Next →' : 'Finish';
 }
 
+function norm(s) {
+  return s.toLowerCase()
+    .replace(/[àá]/g,'a').replace(/[èé]/g,'e')
+    .replace(/[ìí]/g,'i').replace(/[òó]/g,'o')
+    .replace(/[ùú]/g,'u').replace(/[.,?!’']/g,'').trim();
+}
 function evaluateSpeech(transcripts) {
   const p = currentPhrases[currentIndex];
-  const heard = transcripts[0], heardN = norm(heard), targetN = norm(p.it);
-  const kHit = p.keywords.filter(k => heardN.includes(norm(k)));
-  const kScore = kHit.length / p.keywords.length;
-  const tw = targetN.split(' '), hw = heardN.split(' ');
-  const wHit = tw.filter(w => hw.some(h => h.includes(w)||w.includes(h)));
-  const combined = kScore*0.6 + (wHit.length/tw.length)*0.4;
-  if (combined >= 0.75 || heardN === targetN) {
+  const targetN = norm(p.it);
+  let bestScore = 0, bestHeard = transcripts[0];
+  transcripts.forEach(heard => {
+    const hN = norm(heard);
+    const kHit = p.keywords.filter(k => hN.includes(norm(k)));
+    const kScore = p.keywords.length ? kHit.length / p.keywords.length : 0;
+    const tw = targetN.split(' '), hw = hN.split(' ');
+    const wHit = tw.filter(w => hw.some(h => h.includes(w)||w.includes(h)));
+    const c = kScore*0.6 + (tw.length ? wHit.length/tw.length : 0)*0.4;
+    if (c > bestScore || (c === bestScore && hN === targetN)) { bestScore = c; bestHeard = heard; }
+  });
+  const heardN = norm(bestHeard);
+  if (bestScore >= 0.75 || heardN === targetN) {
     score++;
-    showFeedback('success','✓ Ottimo! That sounded great.',`Heard: "${heard}"`);
-  } else if (combined >= 0.4) {
-    showFeedback('partial','Almost — you got part of it. Try once more.',`Heard: "${heard}" · Target: "${p.it}"`);
+    showFeedback('success','✓ Ottimo! That sounded great.',`Heard: "${bestHeard}"`);
+  } else if (bestScore >= 0.4) {
+    showFeedback('partial','Almost — you got part of it. Try once more.',`Heard: "${bestHeard}" · Target: "${p.it}"`);
   } else {
-    showFeedback('retry','Not quite. Listen again, then speak slowly.',`Heard: "${heard}" · Target: "${p.it}"`);
+    showFeedback('retry','Not quite. Listen again, then speak slowly.',`Heard: "${bestHeard}" · Target: "${p.it}"`);
   }
 }
 
@@ -1201,20 +1213,40 @@ document.getElementById('btnPlay').addEventListener('click', () => {
 
 // ─── LISTEN BUTTON ────────────────────────────────────────────────────────────
 document.getElementById('btnListen').addEventListener('click', () => {
-  if (!hasSTT) { alert('Speech recognition not supported. Please use Chrome on HTTPS.'); return; }
+  if (!hasSTT) {
+    showFeedback('retry', 'Speech recognition requires Chrome on HTTPS.', '');
+    return;
+  }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   const rec = new SR();
-  rec.lang = 'it-IT'; rec.interimResults = false; rec.maxAlternatives = 3;
-  document.getElementById('listenIcon').textContent = '⏹';
-  document.getElementById('listenLabel').textContent = 'Listening...';
+  rec.lang = 'it-IT'; rec.interimResults = false; rec.maxAlternatives = 5;
+  const icon = document.getElementById('listenIcon');
+  const label = document.getElementById('listenLabel');
+  icon.textContent = '⏹';
+  label.textContent = 'Listening…';
+  showFeedback('partial', 'Listening…', '');
+  let gotResult = false;
   rec.onresult = e => {
+    gotResult = true;
     evaluateSpeech(Array.from(e.results[0]).map(r => r.transcript));
-    document.getElementById('listenIcon').textContent = '🎙';
-    document.getElementById('listenLabel').textContent = 'Speak';
+    icon.textContent = '🎙';
+    label.textContent = 'Speak';
   };
-  rec.onerror = () => {
-    document.getElementById('listenIcon').textContent = '🎙';
-    document.getElementById('listenLabel').textContent = 'Speak';
+  rec.onerror = e => {
+    icon.textContent = '🎙';
+    label.textContent = 'Speak';
+    if (e.error === 'no-speech') {
+      showFeedback('retry', 'No speech heard — try again.', '');
+    } else if (e.error === 'not-allowed') {
+      showFeedback('retry', 'Microphone blocked — check browser permissions.', '');
+    } else {
+      showFeedback('retry', 'Could not hear — try again.', '');
+    }
+  };
+  rec.onend = () => {
+    icon.textContent = '🎙';
+    label.textContent = 'Speak';
+    if (!gotResult) showFeedback('retry', 'Nothing heard — speak clearly and try again.', '');
   };
   rec.start();
 });
