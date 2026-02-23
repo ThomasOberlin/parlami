@@ -1641,48 +1641,79 @@ function qaSpeak(text) {
 }
 function qaListen(ans, fbSpan, btn) {
   if (!window.SpeechRecognition && !window.webkitSpeechRecognition) {
-    alert('Speech recognition not supported. Please use Chrome on HTTPS.'); return;
+    fbSpan.style.color = 'var(--terra)';
+    fbSpan.textContent = 'Speech recognition requires Chrome.';
+    return;
   }
   const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   const rec = new SR();
-  rec.lang = 'it-IT'; rec.interimResults = false; rec.maxAlternatives = 3;
-  btn.innerHTML = '⏹ Listening...';
+  rec.lang = 'it-IT'; rec.interimResults = false; rec.maxAlternatives = 5;
+  btn.innerHTML = '&#9634; Listening…';
   btn.disabled = true;
+  fbSpan.style.color = 'var(--stone)';
+  fbSpan.textContent = 'Listening…';
+  let gotResult = false;
   rec.onresult = function(e) {
+    gotResult = true;
     const transcripts = Array.from(e.results[0]).map(function(r) { return r.transcript; });
     btn.innerHTML = '&#127897; Speak';
     btn.disabled = false;
-    qaRate(ans, transcripts[0], fbSpan);
+    qaRate(ans, transcripts, fbSpan);
   };
-  rec.onerror = function() {
+  rec.onerror = function(e) {
     btn.innerHTML = '&#127897; Speak';
     btn.disabled = false;
-    fbSpan.textContent = '';
+    if (e.error === 'no-speech') {
+      fbSpan.style.color = 'var(--stone)';
+      fbSpan.textContent = 'No speech heard — try again.';
+    } else if (e.error === 'not-allowed') {
+      fbSpan.style.color = 'var(--terra)';
+      fbSpan.textContent = 'Microphone blocked — check browser permissions.';
+    } else {
+      fbSpan.style.color = 'var(--stone)';
+      fbSpan.textContent = 'Could not hear — try again.';
+    }
+  };
+  rec.onend = function() {
+    btn.innerHTML = '&#127897; Speak';
+    btn.disabled = false;
+    if (!gotResult) {
+      fbSpan.style.color = 'var(--stone)';
+      fbSpan.textContent = 'Nothing heard — speak clearly and try again.';
+    }
   };
   rec.start();
 }
-function qaRate(ans, heard, fbSpan) {
+function qaRate(ans, transcripts, fbSpan) {
   function n(s) {
     return s.toLowerCase()
       .replace(/[àá]/g,'a').replace(/[èé]/g,'e')
       .replace(/[ìí]/g,'i').replace(/[òó]/g,'o')
-      .replace(/[ùú]/g,'u').replace(/[.,?!']/g,'').trim();
+      .replace(/[ùú]/g,'u').replace(/[.,?!’']/g,'').trim();
   }
-  const hN = n(heard), tN = n(ans.it);
-  const kHit = ans.keywords.filter(function(k) { return hN.includes(k.toLowerCase()); });
-  const kScore = ans.keywords.length ? kHit.length / ans.keywords.length : 0;
-  const tw = tN.split(' '), hw = hN.split(' ');
-  const wHit = tw.filter(function(w) { return hw.some(function(h) { return h.includes(w)||w.includes(h); }); });
-  const c = kScore*0.6 + (wHit.length/tw.length)*0.4;
-  if (c >= 0.75 || hN === tN) {
-    fbSpan.style.color = 'var(--success)';
-    fbSpan.textContent = '✓ Eccellente!';
-  } else if (c >= 0.4) {
-    fbSpan.style.color = 'var(--gold)';
-    fbSpan.textContent = 'Capito — migliorabile';
+  const tN = n(ans.it);
+  let bestScore = 0, bestHeard = transcripts[0];
+  transcripts.forEach(function(heard) {
+    const hN = n(heard);
+    const kHit = ans.keywords.filter(function(k) { return hN.includes(n(k)); });
+    const kScore = ans.keywords.length ? kHit.length / ans.keywords.length : 0;
+    const tw = tN.split(' '), hw = hN.split(' ');
+    const wHit = tw.filter(function(w) { return hw.some(function(h) { return h.includes(w) || w.includes(h); }); });
+    const c = kScore * 0.6 + (tw.length ? wHit.length / tw.length : 0) * 0.4;
+    if (c > bestScore || (c === bestScore && n(heard) === tN)) {
+      bestScore = c; bestHeard = heard;
+    }
+  });
+  const hN = n(bestHeard);
+  if (bestScore >= 0.75 || hN === tN) {
+    fbSpan.innerHTML = '<span style="color:var(--success);font-weight:700;">✓ Eccellente!</span>'
+      + '<span style="display:block;font-size:.74rem;color:var(--stone);font-style:italic;font-weight:400;">Heard: “' + bestHeard + '”</span>';
+  } else if (bestScore >= 0.4) {
+    fbSpan.innerHTML = '<span style="color:var(--gold);font-weight:700;">Capito — migliorabile</span>'
+      + '<span style="display:block;font-size:.74rem;color:var(--stone);font-style:italic;font-weight:400;">Heard: “' + bestHeard + '”</span>';
   } else {
-    fbSpan.style.color = 'var(--terra)';
-    fbSpan.textContent = 'Riprova: “' + heard + '”';
+    fbSpan.innerHTML = '<span style="color:var(--terra);font-weight:700;">Riprova</span>'
+      + '<span style="display:block;font-size:.74rem;color:var(--stone);font-style:italic;font-weight:400;">Heard: “' + bestHeard + '” · Target: “' + ans.it + '”</span>';
   }
 }
 
