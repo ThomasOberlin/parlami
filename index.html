@@ -1130,6 +1130,19 @@ function loadVerbSession() {
 }
 
 // ─── RENDER ──────────────────────────────────────────────────────────────────
+function renderDots() {
+  const container = document.getElementById('progressDots');
+  if (!container) return;
+  container.innerHTML = '';
+  const total = currentPhrases ? currentPhrases.length : 0;
+  for (let i = 0; i < total; i++) {
+    const d = document.createElement('div');
+    if (i < currentIndex) d.className = 'dot done';
+    else if (i === currentIndex) d.className = 'dot current';
+    else d.className = 'dot';
+    container.appendChild(d);
+  }
+}
 function renderPhrase() {
   const p = currentPhrases[currentIndex];
   const total = currentPhrases.length;
